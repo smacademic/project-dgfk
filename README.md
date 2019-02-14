@@ -11,7 +11,7 @@ and as such our team would like to avoid duplicating work when possible. Instead
 requirement 8 (manage courses) and 11 (manage sections, along with potentially 13 (manage attendance), time permitting.
 We intend to extend the web client, and will be using Node JS for this purpose. 
 
-We intened to model our file structure after the current Gradebook implementation; I.E. 3 main folders: docs, src, and tests. 
+We intend to model our file structure after the current Gradebook implementation; I.E. 3 main folders: docs, src, and tests. 
 Src will be divided into DB files and web app files, with the web app being divided into client side and server side code.
 
 2/14/19
