@@ -13,8 +13,12 @@ We shall also be integrating work previously done on grade tier and score manage
 The files shall be separated into two directories: docs, for documentation, and src, for code. The src directory shall be split into DB (database) and WebApp, and WebApp will be split into client and server side files. 
 
 ## Members 
-Bruno Desilva 
-Cris Fitzgerald 
-Eliot Griffin 
-Kenneth Kozlowski 
+Bruno Desilva  
+
+Cris Fitzgerald  
+
+Eliot Griffin  
+
+Kenneth Kozlowski  
+
 
