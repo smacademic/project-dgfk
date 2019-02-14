@@ -1,14 +1,18 @@
-# Project GEEKS 
+# Project GEEKS
 
-This project is based on the DASSL Gradebook Product (found here: https://github.com/DASSL/Gradebook) 
+This project is based on the DASSL Gradebook Product (found here: https://github.com/DASSL/Gradebook), and will be a continuation of the projects worked on by Cris Fitzgerald <!--Insert link for GitHub Repo here--> and Ken Kozlowski (found here: https://github.com/CS305-F18-TeamDOS/Gradebook)  
 
-## Objective 
+---
 
-This is an extension of the current functionality of the Gradebook product, with the inclusion of previous work. 
-Specifically, the extension intends to focus on the management of courses and sections (functional requirements 8 and 11, found in the GradebookRequirements.pdf included with this file). 
-The extension will also be integrating work previously done on grade tier and score management (functional requirements 10 and 12). 
+## Objective
 
-## File Structure 
+This is an extension of the current functionality of the Gradebook product, with the inclusion of previous work.
+Specifically, the extension intends to focus on the management of courses and sections (functional requirements 8 and 11, found in the GradebookRequirements.pdf included with this file).
+The extension will also be integrating work previously done on grade tier and score management (functional requirements 10 and 12).
+
+---
+
+## File Structure
 
 The files will be separated into three directories:  
 * docs - for documentation  
@@ -21,7 +25,9 @@ The src directory will be split into two sub-directories:
   * Client Files  
   * Server files
 
-## Members 
+---  
+
+## Members
 Bruno Desilva  
 
 Cris Fitzgerald  
@@ -29,5 +35,3 @@ Cris Fitzgerald
 Eliot Griffin  
 
 Kenneth Kozlowski  
-
-
