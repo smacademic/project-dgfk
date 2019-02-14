@@ -10,7 +10,16 @@ We shall also be integrating work previously done on grade tier and score manage
 
 ## File Structure 
 
-The files shall be separated into two directories: docs, for documentation, and src, for code. The src directory shall be split into DB (database) and WebApp, and WebApp will be split into client and server side files. 
+The files shall be separated into two directories:  
+* docs - for documentation  
+* src - for all source code files.  
+* tests - for all testing documentation used in verifying the functionality of the program.  
+
+The src directory shall be split into:  
+* DB (database)  
+* WebApp  
+  * Client Files  
+  * Server files
 
 ## Members 
 Bruno Desilva  
