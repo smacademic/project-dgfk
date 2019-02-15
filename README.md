@@ -1,6 +1,6 @@
 # Project GEEKS
 
-This project is based on the DASSL Gradebook Product (found here: https://github.com/DASSL/Gradebook), and will be a continuation of the projects worked on by Cris Fitzgerald <!--Insert link for GitHub Repo here--> and Ken Kozlowski (found here: https://github.com/CS305-F18-TeamDOS/Gradebook)  
+This project is based on the DASSL Gradebook Product (found here: https://github.com/DASSL/Gradebook), and will be a continuation of the projects worked on by Cris Fitzgerald (found here: https://github.com/S4PPH1QU3/CS-305-NERDS) and Ken Kozlowski (found here: https://github.com/CS305-F18-TeamDOS/Gradebook)  
 
 ---
 
