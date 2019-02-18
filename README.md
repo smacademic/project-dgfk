@@ -1,17 +1,37 @@
-SPRING 2019
-CS 298-01
-TEAM GEEKS 
-Bruno DeSilva, Cris Fitzgerald, Eliot Griffin, Kenneth Kozlowski
+# Project GEEKS
 
-OBJECTIVE:
-Continue work on the DASSL Gradebook product.
+This project is based on the DASSL Gradebook Product (found here: https://github.com/DASSL/Gradebook), and will be a continuation of the projects worked on by Cris Fitzgerald (found here: https://github.com/S4PPH1QU3/CS-305-NERDS) and Ken Kozlowski (found here: https://github.com/CS305-F18-TeamDOS/Gradebook)  
 
-Both Kenneth and Cris worked on functional requirements 10 and 12 (manage grade tiers and manage scores respectively), 
-and as such our team would like to avoid duplicating work when possible. Instead, we have elected to focus on functional 
-requirement 8 (manage courses) and 11 (manage sections, along with potentially 13 (manage attendance), time permitting.
-We intend to extend the web client, and will be using Node JS for this purpose. 
+---
 
-We intend to model our file structure after the current Gradebook implementation; I.E. 3 main folders: docs, src, and tests. 
-Src will be divided into DB files and web app files, with the web app being divided into client side and server side code.
+## Objective
 
-2/14/19
+This is an extension of the current functionality of the Gradebook product, with the inclusion of previous work.
+Specifically, the extension intends to focus on the management of courses and sections (functional requirements 8 and 11, found in the GradebookRequirements.pdf included with this file).
+The extension will also be integrating work previously done on grade tier and score management (functional requirements 10 and 12).
+
+---
+
+## File Structure
+
+The files will be separated into three directories:  
+* docs - for documentation  
+* src - for all source code files
+* tests - for all testing documentation used in verifying the functionality of the program
+
+The src directory will be split into two sub-directories:  
+* DB (database)  
+* WebApp  
+  * Client Files  
+  * Server files
+
+---  
+
+## Members
+Bruno Desilva  
+
+Cris Fitzgerald  
+
+Eliot Griffin  
+
+Kenneth Kozlowski  
