@@ -7,7 +7,7 @@ This project is based on the DASSL Gradebook Product (found here: https://github
 ## Objective
 
 This is an extension of the current functionality of the Gradebook product, with the inclusion of previous work.
-Specifically, the extension intends to focus on the management of courses and sections (functional requirements 8 and 11, found in the GradebookRequirements.pdf included with this file).
+Specifically, the extension intends to focus on the management of courses and sections (functional requirements 8 and 11, found in the [GradebookRequirements.pdf](https://github.com/smacademic/project-GEEKS/blob/dev/docs/GradebookRequirements.pdf)).<!--This link will not work until the issue is pushed into the dev branch because it is an absolute link to the dev branches copy of this file.-->
 The extension will also be integrating work previously done on grade tier and score management (functional requirements 10 and 12).
 
 ---
