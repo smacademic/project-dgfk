@@ -20,12 +20,17 @@
 
 --This script assumes a schema named "Gradebook" already exists and is empty
 
+---------------------------------------------------------------------------------------
+-- Original content updated by Team GEEKS
+-- Bruno DaSilva, Cristian Fitzgerald, Eliot Griffin, Kenneth Kozlowski 
+
 
 CREATE TABLE Gradebook.Course
 (
    --Wonder if this table will eventually need a separate ID field
-   Number VARCHAR(8) NOT NULL PRIMARY KEY, --e.g., 'CS170'
-   Title VARCHAR(100) NOT NULL --e.g., 'C++ Programming'
+   Number VARCHAR(10) NOT NULL PRIMARY KEY, --e.g., 'CS170'
+   Title VARCHAR(100) NOT NULL, --e.g., 'C++ Programming'
+   Credits INT NOT NULL --e.g., '4'
 );
 
 
