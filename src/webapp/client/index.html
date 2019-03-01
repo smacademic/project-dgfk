@@ -41,7 +41,7 @@ Currently, only attendance information is served
 	</style>
 	</head>
 	<body>
-	
+
 	<!--Top of screen banner (navbar) - Includes logo, profile, and tabs-->
 	<nav class="nav-extended">
 		<div class="nav-wrapper">
@@ -62,6 +62,8 @@ Currently, only attendance information is served
 		<div class="nav-content">
 			<ul class="tabs tabs-transparent">
 				<li id="loginTab" class="tab"><a href="#login">Login</a></li>
+				<li id="courseTab" class="tab"><a href="#course_mgmt"></a></li>
+				<!--Added for course mgmt, anchor needs to be placed lower down in the code-->
 				<li id="rosterTab" class="tab" style="display: none"><a href="#roster">Roster</a></li>
 				<li id="attnTab" class="tab" style="display: none"><a href="#attendance">Attendance</a></li>
 				<li id="gradesTab" class="tab" style="display: none"><a href="#grades">Grades</a></li>
@@ -72,201 +74,201 @@ Currently, only attendance information is served
 			</ul>
 		</div>
 	</nav>
-	
-	
+
+
 	<div class="container"> <!--Adds left and right spacing for content-->
-	<div class="section"> <!--Adds spacing between navbar and content-->
-	
-	<div id="login">		
-		<div class="row">
-			<h5>Login</h5>
-		</div>
-		<div class="row">
-			<div class="input-field col s12 m6 l3">
-				<i class="material-icons prefix">mail</i>
-				<input id="email" type="email"/>
-				<label for="email">Email</label>
-			</div>
-			<div class="input-field col s12 m6 l3">
-				<i class="material-icons prefix">lock</i>
-				<input id="passwordBox" type="password"/>
-				<label for="passwordBox">Password</label>
-			</div>
-			<a id="btnLogin" class="waves-effect waves-light btn">Login</a>
-		</div>
-		
-		<div class="divider"></div><br/>
-		
-		<ul id="dbInfoBox" class="collapsible" data-collapsible="expandable"><li>
-		<div class="collapsible-header">
-			<i id="dbInfoArrow" class="material-icons">keyboard_arrow_down</i>DB Info
-		</div>
-		<div class="collapsible-body">
-			<div class="row">
-			<div class="input-field col s12 m6 l3">
-				<input id="host" type="text" value="localhost"/>
-				<label for="host">Host name</label>
-			</div>
-			<div class="input-field col s12 m6 l3">
-				<input id="port" type="text" value="5432"/>
-				<label for="port">Port</label>
-			</div>
-			<div class="input-field col s12 m6 l3">
-				<input id="database" type="text" value="gradebook"/>
-				<label for="database">Database</label>
-			</div>
-			<div class="input-field col s12 m6 l3">
-				<input id="user" type="text" value="gb_webapp"/>
-				<label for="user">DB Username</label>
-			</div>
-			</div>
-		</div>
-		</li></ul>
-	</div>
-	
-	<div id="roster">
-		<p class="center-align">The Roster page is not yet implemented</p>
-	</div>
-	
-	<div id="attendance">
-	<div class="row">
-		<div class="input-field col s12 m6 l3">
-			<select id="yearSelect" disabled="true">
-				<option value="" disabled="true" selected="true">Choose year</option>
-			</select>
-			<label>Year</label>
-		</div>
-		<div class="input-field col s12 m6 l3">
-			<select id="seasonSelect" disabled="true">
-				<option value="" disabled="true" selected="true">Choose season</option>
-			</select>
-			<label>Season</label>
-		</div>
-		<div class="input-field col s12 m6 l3">
-			<select id="courseSelect" disabled="true">
-				<option value="" disabled="true" selected="true">Choose course</option>
-			</select>
-			<label>Course</label>
-		</div>
-		<div class="input-field col s12 m6 l3">
-			<select id="sectionSelect" disabled="true">
-				<option value="" disabled="true" selected="true">Choose section</option>
-			</select>
-			<label>Section</label>
-		</div>
-	</div>
-	
-	<div class="divider"></div>
-	
-	<ul id="attnOptionsBox" class="collapsible" style="display: none" data-collapsible="expandable">
-	<li>
-		<div class="collapsible-header">
-			<i id="optionsArrow" class="material-icons">keyboard_arrow_down</i>Options
-		</div>
-		<div class="collapsible-body">
-			<div class="switch">
-			Display 'P' attendance code
-			<label>
-				<input id="opt-showPresent" type="checkbox">
-				<span class="lever"></span>
-			</label>
-			</div>
-			<br/>
-			<div class="switch">
-			Display compact table
-			<label>
-				<input id="opt-compactTab" type="checkbox">
-				<span class="lever"></span>
-			</label>
-			</div>
-		</div>
-	</li>
-	</ul>
-	
-	<br/>
-	<div id="attendanceData" class="col s12" style="overflow-x:auto">
-		<!--Populated dynamically-->
-	</div>
-	
-	</div>
-	
-	<div id="grades">
-		<p class="center-align">The Grades page is not yet implemented</p>
-	</div>
-	
-	<div id="reports">
-		<p class="center-align">The Reports page is not yet implemented</p>
-	</div>
-	
-	<div id="about">
-		<h4>About Gradebook</h4>
-		<p>Gradebook is an open-source product for instructors to record student
-		 assessment and attendance. It is developed at the Data Science &amp;
-		 Systems Lab (<a href="https://dassl.github.io" target="_blank">DASSL</a>
-		 , read <em>dazzle</em>) at the Western Connecticut State University 
-		 (<a href="http://wcsu.edu/" target="_blank">WCSU</a>).</p>
-		<h5>Goals</h5>
-		<p>Gradebook is developed with the following goals:</p>
-		<ol>
-			<li>Provide instructors a free, open, and modern tool to record 
-			 student assessment and attendance</li>
-			<li>Provide instructors a framework to surface, analyze, and visualize
-			 patterns in student performance</li>
-			<li>Use (and demonstrate the use of) modern tools and processes in
-			 software and data engineering</li>
-			<li>Provide Computer Science students a real-life application to
-			 develop and maintain as both curricular and co-curricular activity</li>
-			<li>Provide Computer Science students a framework to experience
-			 first-hand topics such as: web and mobile application development;
-			 RESTful APIs; multi-tenancy; scalability; and cloud-based services.</li>
-		</ol>
-		<h5>Status</h5>
-		<p>Gradebook is still in early stages of development (“alpha stage”).
-		 Much of its external documentation is in the form of README files
-		 contained in various directories within the product repository. The
-		 source code is commented reasonably well. More information about Gradebook
-		 can be found by visiting its
-		 <a href="https://github.com/DASSL/Gradebook" target="_blank"> repository
-		 on GitHub</a>.</p>
-		<p><strong>Caution:</strong> Because the product is still in very early
-		 stages of development, it should not be used as a production system in
-		 its current state. There are no guarantees that future development
-		 releases will provide any kind of backward compatibility or portability.</p>
-		<h5>Contributors</h5>
-		<p>Gradebook was conceived by and is designed by 
-		 <a href="http://sites.wcsu.edu/murthys/" target="_blank">Sean Murthy</a>,
-		 a member of the Computer Science faculty at WCSU.</p>
-		<p>The following undergraduate Computer Science students at WCSU
-		 contribute(d) to the development of Gradebook:</p>
-		<ul class="browser-default">
-			<li><a href="https://github.com/bella004" target="_blank">Kyle Bella</a></li>
-			<li><a href="https://github.com/zbhujwala" target="_blank">Zaid Bhujwala</a></li>
-			<li><a href="https://github.com/ZBoylan" target="_blank">Zach Boylan</a></li>
-			<li><a href="https://github.com/afig" target="_blank">Andrew Figueroa</a></li>
-			<li><a href="https://github.com/griffine" target="_blank">Elly Griffin</a></li>
-			<li><a href="https://github.com/srrollo" target="_blank">Steven Rollo</a></li>
-			<li><a href="https://github.com/hunterSchloss" target="_blank">Hunter Schloss</a></li>
-		</ul>
-		<h5>Legal Stuff</h5>
-			<p>© 2017- DASSL. ALL RIGHTS RESERVED.</p>
-			<p>Gradebook is distributed under
-			 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">
-			 Creative Commons License BY-NC-SA 4.0</a>.</p>
-			<p>PROVIDED AS IS. NO WARRANTIES EXPRESSED OR IMPLIED. USE AT YOUR OWN
-			 RISK.</p>
-	</div>
-	
-	<!--Generic alert used by showAlert() in index.js-->
-	<div id="msg-genericAlert" class="modal">
-		<div id="genericAlertBody" class="modal-content"></div>
-		<div class="modal-footer">
-			<a href="#!" class="modal-action modal-close waves-effect waves-gray btn-flat">OK</a>
-		</div>
-	</div>
-	
-	</div>
-	</div>
-	
+		<div class="section"> <!--Adds spacing between navbar and content-->
+
+			<div id="login">
+				<div class="row">
+					<h5>Login</h5>
+				</div>
+				<div class="row">
+					<div class="input-field col s12 m6 l3">
+						<i class="material-icons prefix">mail</i>
+						<input id="email" type="email"/>
+						<label for="email">Email</label>
+					</div>
+					<div class="input-field col s12 m6 l3">
+						<i class="material-icons prefix">lock</i>
+						<input id="passwordBox" type="password"/>
+						<label for="passwordBox">Password</label>
+					</div>
+					<a id="btnLogin" class="waves-effect waves-light btn">Login</a>
+				</div>
+
+				<div class="divider"></div><br/>
+
+				<ul id="dbInfoBox" class="collapsible" data-collapsible="expandable"><li>
+				<div class="collapsible-header">
+					<i id="dbInfoArrow" class="material-icons">keyboard_arrow_down</i>DB Info
+				</div>
+				<div class="collapsible-body">
+					<div class="row">
+						<div class="input-field col s12 m6 l3">
+							<input id="host" type="text" value="localhost"/>
+							<label for="host">Host name</label>
+						</div>
+						<div class="input-field col s12 m6 l3">
+							<input id="port" type="text" value="5432"/>
+							<label for="port">Port</label>
+						</div>
+						<div class="input-field col s12 m6 l3">
+							<input id="database" type="text" value="gradebook"/>
+							<label for="database">Database</label>
+						</div>
+						<div class="input-field col s12 m6 l3">
+							<input id="user" type="text" value="gb_webapp"/>
+							<label for="user">DB Username</label>
+						</div>
+					</div>
+				</div>
+				</li></ul>
+			</div><!--End login div-->
+
+			<div id="roster">
+				<p class="center-align">The Roster page is not yet implemented</p>
+			</div><!--End roster div-->
+
+			<div id="attendance">
+				<div class="row">
+					<div class="input-field col s12 m6 l3">
+						<select id="yearSelect" disabled="true">
+							<option value="" disabled="true" selected="true">Choose year</option>
+						</select>
+						<label>Year</label>
+					</div>
+					<div class="input-field col s12 m6 l3">
+						<select id="seasonSelect" disabled="true">
+							<option value="" disabled="true" selected="true">Choose season</option>
+						</select>
+						<label>Season</label>
+					</div>
+					<div class="input-field col s12 m6 l3">
+						<select id="courseSelect" disabled="true">
+							<option value="" disabled="true" selected="true">Choose course</option>
+						</select>
+						<label>Course</label>
+					</div>
+					<div class="input-field col s12 m6 l3">
+						<select id="sectionSelect" disabled="true">
+							<option value="" disabled="true" selected="true">Choose section</option>
+						</select>
+						<label>Section</label>
+					</div>
+				</div><!--End attendance selection box div-->
+
+				<div class="divider"></div>
+
+				<ul id="attnOptionsBox" class="collapsible" style="display: none" data-collapsible="expandable">
+				<li>
+					<div class="collapsible-header">
+						<i id="optionsArrow" class="material-icons">keyboard_arrow_down</i>Options
+					</div>
+					<div class="collapsible-body">
+						<div class="switch">
+							Display 'P' attendance code
+							<label>
+								<input id="opt-showPresent" type="checkbox">
+								<span class="lever"></span>
+							</label>
+						</div>
+						<br/>
+						<div class="switch">
+							Display compact table
+							<label>
+								<input id="opt-compactTab" type="checkbox">
+								<span class="lever"></span>
+							</label>
+						</div>
+					</div><!--End collapsible body-->
+				</li>
+				</ul>
+
+				<br/>
+				<div id="attendanceData" class="col s12" style="overflow-x:auto">
+					<!--Populated dynamically-->
+				</div>
+
+			</div><!--End Attendance Tab-->
+
+			<div id="grades">
+				<p class="center-align">The Grades page is not yet implemented</p>
+			</div><!--End Grades Tab-->
+
+			<div id="reports">
+				<p class="center-align">The Reports page is not yet implemented</p>
+			</div><!--End reports Tab -->
+
+			<div id="about">
+				<h4>About Gradebook</h4>
+				<p>Gradebook is an open-source product for instructors to record student
+				 assessment and attendance. It is developed at the Data Science &amp;
+				 Systems Lab (<a href="https://dassl.github.io" target="_blank">DASSL</a>
+				 , read <em>dazzle</em>) at the Western Connecticut State University
+				 (<a href="http://wcsu.edu/" target="_blank">WCSU</a>).</p>
+				<h5>Goals</h5>
+				<p>Gradebook is developed with the following goals:</p>
+				<ol>
+					<li>Provide instructors a free, open, and modern tool to record
+					 student assessment and attendance</li>
+					<li>Provide instructors a framework to surface, analyze, and visualize
+					 patterns in student performance</li>
+					<li>Use (and demonstrate the use of) modern tools and processes in
+					 software and data engineering</li>
+					<li>Provide Computer Science students a real-life application to
+					 develop and maintain as both curricular and co-curricular activity</li>
+					<li>Provide Computer Science students a framework to experience
+					 first-hand topics such as: web and mobile application development;
+					 RESTful APIs; multi-tenancy; scalability; and cloud-based services.</li>
+				</ol>
+				<h5>Status</h5>
+				<p>Gradebook is still in early stages of development (“alpha stage”).
+				 Much of its external documentation is in the form of README files
+				 contained in various directories within the product repository. The
+				 source code is commented reasonably well. More information about Gradebook
+				 can be found by visiting its
+				 <a href="https://github.com/DASSL/Gradebook" target="_blank"> repository
+				 on GitHub</a>.</p>
+				<p><strong>Caution:</strong> Because the product is still in very early
+				 stages of development, it should not be used as a production system in
+				 its current state. There are no guarantees that future development
+				 releases will provide any kind of backward compatibility or portability.</p>
+				<h5>Contributors</h5>
+				<p>Gradebook was conceived by and is designed by
+				 <a href="http://sites.wcsu.edu/murthys/" target="_blank">Sean Murthy</a>,
+				 a member of the Computer Science faculty at WCSU.</p>
+				<p>The following undergraduate Computer Science students at WCSU
+				 contribute(d) to the development of Gradebook:</p>
+				<ul class="browser-default">
+					<li><a href="https://github.com/bella004" target="_blank">Kyle Bella</a></li>
+					<li><a href="https://github.com/zbhujwala" target="_blank">Zaid Bhujwala</a></li>
+					<li><a href="https://github.com/ZBoylan" target="_blank">Zach Boylan</a></li>
+					<li><a href="https://github.com/afig" target="_blank">Andrew Figueroa</a></li>
+					<li><a href="https://github.com/griffine" target="_blank">Elly Griffin</a></li>
+					<li><a href="https://github.com/srrollo" target="_blank">Steven Rollo</a></li>
+					<li><a href="https://github.com/hunterSchloss" target="_blank">Hunter Schloss</a></li>
+				</ul>
+				<h5>Legal Stuff</h5>
+					<p>© 2017- DASSL. ALL RIGHTS RESERVED.</p>
+					<p>Gradebook is distributed under
+					 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">
+					 Creative Commons License BY-NC-SA 4.0</a>.</p>
+					<p>PROVIDED AS IS. NO WARRANTIES EXPRESSED OR IMPLIED. USE AT YOUR OWN
+					 RISK.</p>
+			</div><!--End About Tab-->
+
+			<!--Generic alert used by showAlert() in index.js-->
+			<div id="msg-genericAlert" class="modal">
+				<div id="genericAlertBody" class="modal-content"></div>
+				<div class="modal-footer">
+					<a href="#!" class="modal-action modal-close waves-effect waves-gray btn-flat">OK</a>
+				</div>
+			</div><!--End alert box div-->
+
+		</div><!--End Section div-->
+	</div><!--End Container div-->
+
 	</body>
 
 	<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
