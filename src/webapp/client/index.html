@@ -63,7 +63,6 @@ Currently, only attendance information is served
 			<ul class="tabs tabs-transparent">
 				<li id="loginTab" class="tab"><a href="#login">Login</a></li>
 				<li id="courseTab" class="tab"><a href="#course_mgmt"></a></li>
-				<!--Added for course mgmt, anchor needs to be placed lower down in the code-->
 				<li id="rosterTab" class="tab" style="display: none"><a href="#roster">Roster</a></li>
 				<li id="attnTab" class="tab" style="display: none"><a href="#attendance">Attendance</a></li>
 				<li id="gradesTab" class="tab" style="display: none"><a href="#grades">Grades</a></li>
@@ -73,7 +72,7 @@ Currently, only attendance information is served
 					 how to use tabs for navigation-->
 			</ul>
 		</div>
-	</nav>
+	</nav><!--End navigation section-->
 
 
 	<div class="container"> <!--Adds left and right spacing for content-->
@@ -201,6 +200,10 @@ Currently, only attendance information is served
 			</div><!--End reports Tab -->
 
 			<div id="course_mgmt">
+				<!--
+				When verifiying that all of the text inputs were showing:
+				remove the: id="course_mgmt" when undable to login.
+				-->
 				<h2><center>Course Management</center></h2>
 				<p class="center-align">This page is currently under development</p>
 
@@ -232,6 +235,30 @@ Currently, only attendance information is served
 						<label>Season</label>
 					</div>
 				</div><!--End of the selection row div-->
+
+				<!--
+				The following row contains the input fields so that a new course
+				could be added to the application. There will be a series of
+				input fields followed by a button called "add course" which would
+				send the infomation to the webserver before it is sent to the
+				database.
+				-->
+				<div class="row">
+					<div class="input-field col s12 m6 l3">
+						<input placeholder="CS/MAT165" id="courseName">
+						<label for="courseName">Course Name</label>
+					</div>
+					<div class="input-field col s12 m6 l3">
+						<input placeholder="Discrete Mathmatics" id="courseTitle">
+						<label for="couseTitle">Course Title</label>
+					</div>
+					<div class="input-field col s12 m6 l3">
+						<input placeholder="4" id="courseCredits">
+						<label for="couseCredits">Number of Credits</label>
+					</div>
+
+					<a id="btnAddCourse" class="waves-effect waves-light btn">Add Course</a>
+				</div><!--End of add course row.-->
 
 			</div><!--End Course Management Tab-->
 
