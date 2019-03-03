@@ -203,6 +203,36 @@ Currently, only attendance information is served
 			<div id="course_mgmt">
 				<h2><center>Course Management</center></h2>
 				<p class="center-align">This page is currently under development</p>
+
+				<!--
+				The following div with the two selection boxes to select the year and
+				the season where modifications need to be made.
+
+				If needed, more drop down selection menus could be added to narrow any
+				results shown for example by the department and even by the name of the
+				course.
+
+				These drop down menus now have the "reg" prefix on the id value because
+				for the registrar they would need to (it would seem) so that any edits
+				need to be made. The only restriction to this would need to be that edits
+				should not be made to courses that are over 1 year old and courses should
+				not be allowed to be made for example a course that will be in 2022.
+				-->
+				<div class="row">
+					<div class="input-field col s12 m6 l3">
+						<select id="reg_yearSelect" disabled="true">
+							<option value="" disabled="true" selected="true">Choose year</option>
+						</select>
+						<label>Year</label>
+					</div>
+					<div class="input-field col s12 m6 l3">
+						<select id="reg_seasonSelect" disabled="true">
+							<option value="" disabled="true" selected="true">Choose season</option>
+						</select>
+						<label>Season</label>
+					</div>
+				</div><!--End of the selection row div-->
+
 			</div><!--End Course Management Tab-->
 
 
