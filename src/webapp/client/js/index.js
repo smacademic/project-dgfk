@@ -13,7 +13,7 @@ ALL ARTIFACTS PROVIDED AS IS. NO WARRANTIES EXPRESSED OR IMPLIED. USE AT YOUR OW
 This JavaScript file provides the client-side JS code that is used by the index.html
 page. The functionality provided includes accessing the REST API provided by the web
 server component of the Gradebook webapp, along with providing interactivity for the
-index.html webpage. 
+index.html webpage.
 */
 
 /*
@@ -27,8 +27,8 @@ var dbInfo = {
 };
 var instInfo = { "fname":null, "mname":null, "lname": null, "dept":null };
 
-/* 
-Each instance of connInfo as a parameter in a function definition refers to an 
+/*
+Each instance of connInfo as a parameter in a function definition refers to an
  object with the following keys, which are used as part of the REST API calls to
  the Gradebook server:
 	"host":String, "port":Number, "database":String, "user":String,
@@ -38,7 +38,7 @@ Each instance of connInfo as a parameter in a function definition refers to an
 
 $(document).ready(function() {
 	$('select').material_select(); //load dropdown boxes
-	
+
 	$('#dbInfoBox').collapsible({
 		onOpen: function() {
 			$('#dbInfoArrow').html('keyboard_arrow_up');
@@ -47,7 +47,7 @@ $(document).ready(function() {
 			$('#dbInfoArrow').html('keyboard_arrow_down');
 		}
 	});
-	
+
 	$('#attnOptionsBox').collapsible({
 		onOpen: function() {
 			$('#optionsArrow').html('keyboard_arrow_up');
@@ -56,66 +56,96 @@ $(document).ready(function() {
 			$('#optionsArrow').html('keyboard_arrow_down');
 		}
 	});
-	
-	$('#btnLogin').click(function() {
+
+	$('#btnLogin').click(function()
+	{
 		dbInfo = getDBFields();
 		var email = $('#email').val().trim();
-		if (dbInfo != null && email != '') {
-			serverLogin(dbInfo, email, function() {
-				//clear login fields and close DB Info box
-				$('#email').val('');
-				$('#passwordBox').val('');
-				$('#dbInfoBox').collapsible('close', 0);
-				$('#dbInfoArrow').html('keyboard_arrow_down');
-				
-				popYears(dbInfo);
-			});
+
+		/*This outer if/else checks to verify the domain name of the email address to verify that the user is logging
+		in with the correct email address. This will also help to prevent unauthorized users to log into the system
+		if the case would arrive where someone would use an email address like 'something@gmail.com' to spoof the
+		username of 'something@example.edu' for example to gain access into the system.
+
+		The 'example.edu' domain name and the 'connect.example.edu' domain name can be changed to match any domain name
+		that the end uer needs to make  sure will work.
+
+		The connect.example.edu domain name is there to verify that when a student logs into the application that their
+		email address will be verified as correct. A different check is done in the if to make sure that a student
+		can log in as well as instructors. This is here to make sure that institutions that use different email
+		domains for students and faculty is covered.
+
+		This portion of code comes from team DOSs project.
+		*/
+		if(email.endsWith('@example.edu') || email.endsWith('@connect.example.edu'))
+		{
+	    if (dbInfo != null && email != '')
+	    {
+        var tmpEmail = $('#email').val();
+				var username = tmpEmail.substring(0,tmpEmail.indexOf('@'));
+				dbInfo.user = username;
+				serverLogin(dbInfo, email, function()
+				{
+					//clear login fields and close DB Info box
+					$('#email').val('');
+					$('#passwordBox').val('');
+					$('#dbInfoBox').collapsible('close', 0);
+					$('#dbInfoArrow').html('keyboard_arrow_down');
+
+					popYears(dbInfo);
+				});
+			}
+			 else //else for if username and password are filled in
+			 {
+		 	 		showAlert('<h5><u>ERROR</u></h5><p>The username or password field is not filled in.' +
+				  'Please make sure all fields are filled in</p>');
+			 }
 		}
-		else {
-			showAlert('<h5>Missing field(s)</h5><p>One or more fields are ' +
-			 'not filled in.</p><p>All fields are required, including those in ' +
-			 'DB Info.</p>');
+		else //Else for email domain name check
+		{
+			showAlert('<h5><u>Login Incomplete</u></h5><p>The domain name of the email address provided is not recognized' +
+	  	'by the server.<br> Please try again or contact support if you believe this is an error.</p>');
 		}
 	});
-	
+
 	$('#yearSelect').change(function() {
 		var year = $('#yearSelect').val();
 		popSeasons(dbInfo, year);
 	});
-	
+
 	$('#seasonSelect').change(function() {
 		var year = $('#yearSelect').val();
 		var season = $('#seasonSelect').val();
 		popCourses(dbInfo, year, season);
 	});
-	
+
 	$('#courseSelect').change(function() {
 		var year = $('#yearSelect').val();
 		var season = $('#seasonSelect').val();
 		var course = $('#courseSelect').val();
 		popSections(dbInfo, year, season, course);
 	});
-	
+
 	$('#sectionSelect').change(function() {
 		var sectionID = $('#sectionSelect').val();
 		popAttendance(dbInfo, sectionID);
 	});
-	
+
 	$('#opt-showPresent, #opt-compactTab').change(function() {
 		//reload attendance table since options were modified
 		var sectionID = $('#sectionSelect').val();
 		popAttendance(dbInfo, sectionID);
 	});
-	
+
 	$('#logout').click(function() {
 		dbInfo = null;
 		instInfo = null;
 		setYears(null); //reset Attendance dropdowns
-		
+
 		//hide and reset profile
 		$('#profile').css('display', 'none');
 		$('#instName').html('');
-		
+
 		//show Login tab, hide Roster, Attendance, Grades, and Reports tabs
 		$('#loginTab').css('display', 'inline');
 		$('#rosterTab, #attnTab, #gradesTab, #reportsTab').css('display', 'none');
@@ -134,13 +164,13 @@ function getDBFields() {
 	var db = $('#database').val().trim();
 	var uname = $('#user').val().trim();
 	var pw =  $('#passwordBox').val().trim();
-	
+
 	if (host === "" || port === "" || db === "" || uname === "" || pw === "") {
 		return null;
 	}
-	
+
 	pw = JSON.stringify(sjcl.encrypt('dassl2017', pw));
-	
+
 	var connInfo = { 'host':host, 'port':parseInt(port, 10), 'database':db,
 	 'user':uname, 'password':pw };
 	return connInfo;
@@ -155,21 +185,21 @@ function serverLogin(connInfo, email, callback) {
 		success: function(result) {
 			//populate dbInfo and instInfo with info from response
 			dbInfo.instructorid = result.instructor.id;
-			instInfo = { fname:result.instructor.fname, 
+			instInfo = { fname:result.instructor.fname,
 			mname:result.instructor.mname, lname:result.instructor.lname,
 			dept:result.instructor.department };
-			
+
 			//hide Login tab, show Roster, Attendance, Grades, and Reports tabs
 			$('#loginTab').css('display', 'none');
 			$('#rosterTab, #attnTab, #gradesTab, #reportsTab').css('display', 'inline');
 			$('ul.tabs').tabs('select_tab', 'attendance');
-			
+
 			//populate instructor name and display profile (including logout menu)
 			//Array.prototype.join is used because in JS: '' + null = 'null'
 			var instName = [instInfo.fname, instInfo.mname, instInfo.lname].join(' ');
 			$('#instName').html(instName);
 			$('#profile').css('display', 'inline');
-			
+
 			callback();
 		},
 		error: function(result) {
@@ -228,7 +258,7 @@ function popCourses(connInfo, year, seasonorder) {
 		success: function(result) {
 			var courses = '';
 			for (var i = 0; i < result.courses.length; i++) {
-				courses += '<option value="' + result.courses[i] + '">' + 
+				courses += '<option value="' + result.courses[i] + '">' +
 				 result.courses[i] + '</option>';
 			}
 			setCourses(courses);
@@ -288,7 +318,7 @@ function setYears(htmlText) {
 	$('#yearSelect').html(content);
 	$('#yearSelect').prop('disabled', htmlText == null);
 	$('#yearSelect').material_select(); //reload dropdown
-	
+
 	setSeasons(null); //reset dependent fields
 };
 
@@ -298,7 +328,7 @@ function setSeasons(htmlText) {
 	$('#seasonSelect').html(content);
 	$('#seasonSelect').prop('disabled', htmlText == null);
 	$('#seasonSelect').material_select(); //reload dropdown
-	
+
 	setCourses(null); //reset dependent fields
 };
 
@@ -308,7 +338,7 @@ function setCourses(htmlText) {
 	$('#courseSelect').html(content);
 	$('#courseSelect').prop('disabled', htmlText == null);
 	$('#courseSelect').material_select(); //reload dropdown
-	
+
 	setSections(null); //reset dependent fields
 };
 
@@ -318,14 +348,14 @@ function setSections(htmlText) {
 	$('#sectionSelect').html(content);
 	$('#sectionSelect').prop('disabled', htmlText == null);
 	$('#sectionSelect').material_select(); //reload dropdown
-	
+
 	setAttendance(null);
 };
 
 function setAttendance(htmlText) {
 	var showPs = $('#opt-showPresent').is(':checked');
 	var isCompact = $('#opt-compactTab').is(':checked');
-	
+
 	if (htmlText == null) {
 		$('#attendanceData').html('');
 		$('#attnOptionsBox').css('display', 'none');
@@ -344,7 +374,7 @@ function setAttendance(htmlText) {
 				//add attibutes to <table> tag to use compact framework styling
 				htmlText = '<table class="striped" style="line-height:1.1;">' +
 				 htmlText.substring(7);
-				 
+
 				//give all td tags the "compact" class
 				htmlText = htmlText.replace(/<td /g, '<td class="compact" ');
 			}
