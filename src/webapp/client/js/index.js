@@ -22,7 +22,7 @@ Currently, a globally scoped variable is used to store login information.
  client cookies.
 */
 var dbInfo = {
-	"host":'localhost', "port":54312, "database":null, "user":null, "password":null,
+	"host":null, "port":null, "database":null, "user":null, "password":null,
 	 "instructorid":null
 };
 var instInfo = { "fname":null, "mname":null, "lname": null, "dept":null };
