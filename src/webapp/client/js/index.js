@@ -121,6 +121,21 @@ $(document).ready(function() {
 		$('#rosterTab, #attnTab, #gradesTab, #reportsTab').css('display', 'none');
 		$('ul.tabs').tabs('select_tab', 'login');
 	});
+	
+	//On click of the AddCourse button, execute
+	$('#btnAddCourse').click(function(){
+		var num = $('#courseName').val();
+		var title = $('#courseTitle').val();
+		var credits = $('#courseCredits').val();
+
+		addCourse(dbInfo, num, title, credits);
+		/*  used to reload information, will be implemented once viewing courses is active.
+		sleep(150).then(() => {
+		defaultCourse(dbInfo, sectionID);})
+		} 
+		*/
+		else{}
+	});
 });
 
 function showAlert(htmlContent) {
@@ -356,4 +371,22 @@ function setAttendance(htmlText) {
 		$('#attnOptionsBox').css('display', 'block');
 		$('#attendanceData').html(htmlText);
 	}
+};
+
+//The course_mgmt Tab resets.
+function defaultCourse_mgmt(connInfo){
+	//used to reload information, will be implemented once viewing courses is active.	
+};
+
+//Calls gradebookServer.js API to add a course.
+function addCourse(connInfo, num, title, credits) {
+        var urlParams = $.extend({}, connInfo, {num:num, title:title, credits:credits});
+        $.ajax('insertCourse', {
+                data: urlParams,
+				success: function(result) {},
+				error: function(result) {
+					showAlert('<p>Error while adding course: This course is already represented.</p>');
+				console.log(result);
+				}
+        });
 };
