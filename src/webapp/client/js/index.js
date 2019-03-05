@@ -164,7 +164,6 @@ $(document).ready(function() {
 		defaultCourse(dbInfo, sectionID);})
 		} 
 		*/
-		else{}
 	});
 });
 
