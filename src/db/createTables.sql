@@ -27,10 +27,10 @@
 
 CREATE TABLE Gradebook.Course
 (
-   --Wonder if this table will eventually need a separate ID field
-   Number VARCHAR(11) NOT NULL PRIMARY KEY, --e.g., 'CS170'
+   Number VARCHAR(11) NOT NULL, --e.g., 'CS170'
    Title VARCHAR(100) NOT NULL, --e.g., 'C++ Programming'
-   Credits INT NOT NULL --e.g., '4'
+   Credits INT NOT NULL, --e.g., '4'
+   PRIMARY KEY (Number,Title)
 );
 
 
