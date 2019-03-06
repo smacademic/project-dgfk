@@ -166,6 +166,19 @@ $(document).ready(function() {
 		*/
 		else{}
 	});
+
+	//On click of the RemoveCourse button, execute
+	$('#btnRemoveCourse').click(function(){
+		var num = $('#courseName').val();
+		var title = $('#courseTitle').val();
+
+		removeCourse(dbInfo, num, title);
+		/*  used to reload information, will be implemented once viewing courses is active.
+		sleep(150).then(() => {
+		defaultCourse(dbInfo, sectionID);})
+		} 
+		*/
+	});
 });
 
 function showAlert(htmlContent) {
@@ -420,3 +433,17 @@ function addCourse(connInfo, num, title, credits) {
 				}
         });
 };
+
+//Calls gradebookServer.js API to remove a course.
+function removeCourse(connInfo, num, title) {
+	var urlParams = $.extend({}, connInfo, {num:num, title:title});
+	$.ajax('removeCourse', {
+					data: urlParams,
+	success: function(result) {},
+	error: function(result) {
+		showAlert('<p>Error while removing course: This course does not exist.</p>');
+	console.log(result);
+	}
+	});
+};
+
