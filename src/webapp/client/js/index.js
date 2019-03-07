@@ -154,9 +154,9 @@ $(document).ready(function() {
 	
 	//On click of the AddCourse button, execute
 	$('#btnAddCourse').click(function(){
-		var num = $('#courseName').val();
-		var title = $('#courseTitle').val();
-		var credits = $('#courseCredits').val();
+		var num = $('#addCourseName').val();
+		var title = $('#addCourseTitle').val();
+		var credits = $('#addCourseCredits').val();
 
 		addCourse(dbInfo, num, title, credits);
 		/*  used to reload information, will be implemented once viewing courses is active.
@@ -169,8 +169,8 @@ $(document).ready(function() {
 
 	//On click of the RemoveCourse button, execute
 	$('#btnRemoveCourse').click(function(){
-		var num = $('#courseName').val();
-		var title = $('#courseTitle').val();
+		var num = $('#removeCourseName').val();
+		var title = $('#removeCourseTitle').val();
 
 		removeCourse(dbInfo, num, title);
 		/*  used to reload information, will be implemented once viewing courses is active.
