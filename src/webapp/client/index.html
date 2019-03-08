@@ -62,7 +62,7 @@ Currently, only attendance information is served
 		<div class="nav-content">
 			<ul class="tabs tabs-transparent">
 				<li id="loginTab" class="tab"><a href="#login">Login</a></li>
-				<li id="courseTab" class="tab"><a href="#course_mgmt"></a></li>
+				<li id="courseTab" class="tab"><a href="#course_mgmt">Course Management</a></li>
 				<li id="rosterTab" class="tab" style="display: none"><a href="#roster">Roster</a></li>
 				<li id="attnTab" class="tab" style="display: none"><a href="#attendance">Attendance</a></li>
 				<li id="gradesTab" class="tab" style="display: none"><a href="#grades">Grades</a></li>
@@ -98,31 +98,33 @@ Currently, only attendance information is served
 
 				<div class="divider"></div><br/>
 
-				<ul id="dbInfoBox" class="collapsible" data-collapsible="expandable"><li>
-				<div class="collapsible-header">
-					<i id="dbInfoArrow" class="material-icons">keyboard_arrow_down</i>DB Info
-				</div>
-				<div class="collapsible-body">
-					<div class="row">
-						<div class="input-field col s12 m6 l3">
-							<input id="host" type="text" value="localhost"/>
-							<label for="host">Host name</label>
+				<ul id="dbInfoBox" class="collapsible" data-collapsible="expandable">
+					<li>
+						<div class="collapsible-header">
+							<i id="dbInfoArrow" class="material-icons">keyboard_arrow_down</i>DB Info
 						</div>
-						<div class="input-field col s12 m6 l3">
-							<input id="port" type="text" value="5432"/>
-							<label for="port">Port</label>
+						<div class="collapsible-body">
+							<div class="row">
+								<div class="input-field col s12 m6 l3">
+									<input id="host" type="text" value="localhost"/>
+									<label for="host">Host name</label>
+								</div>
+								<div class="input-field col s12 m6 l3">
+									<input id="port" type="text" value="5432"/>
+									<label for="port">Port</label>
+								</div>
+								<div class="input-field col s12 m6 l3">
+									<input id="database" type="text" value="gradebook"/>
+									<label for="database">Database</label>
+								</div>
+								<div class="input-field col s12 m6 l3">
+									<input id="user" type="text" value="gb_webapp"/>
+									<label for="user">DB Username</label>
+								</div>
+							</div>
 						</div>
-						<div class="input-field col s12 m6 l3">
-							<input id="database" type="text" value="gradebook"/>
-							<label for="database">Database</label>
-						</div>
-						<div class="input-field col s12 m6 l3">
-							<input id="user" type="text" value="gb_webapp"/>
-							<label for="user">DB Username</label>
-						</div>
-					</div>
-				</div>
-				</li></ul>
+					</li>
+				</ul>
 			</div><!--End login div-->
 
 			<div id="roster">
@@ -199,7 +201,7 @@ Currently, only attendance information is served
 				<p class="center-align">The Reports page is not yet implemented</p>
 			</div><!--End reports Tab -->
 
-			<div>
+			<div id="course_mgmt">
 				<!--
 				When verifiying that all of the text inputs were showing:
 				remove the: id="course_mgmt" when undable to login.
@@ -213,23 +215,56 @@ Currently, only attendance information is served
 				input fields followed by a button called "add course" which would
 				send the infomation to the webserver before it is sent to the
 				database.
-				-->
-				<div class="row">
-					<div class="input-field col s12 m6 l3">
-						<input placeholder="CS/MAT165" id="courseName">
-						<label for="courseName">Course Name</label>
-					</div>
-					<div class="input-field col s12 m6 l3">
-						<input placeholder="Discrete Mathmatics" id="courseTitle">
-						<label for="couseTitle">Course Title</label>
-					</div>
-					<div class="input-field col s12 m6 l3">
-						<input placeholder="4" id="courseCredits">
-						<label for="couseCredits">Number of Credits</label>
-					</div>
 
-					<a id="btnAddCourse" class="waves-effect waves-light btn">Add Course</a>
-				</div><!--End of add course row.-->
+				All of these options are inclosed in a drop down box so that the user
+				can select to view these options or not to save screen space.
+				-->
+				<ul id="addCourseBox" class="collapsible" data-collapsible="expandable">
+					<li>
+						<div class="collapsible-header">
+							<i id="dbInfoArrow" class="material-icons">keyboard_arrow_down</i>Add A Course
+						</div>
+						<div class="collapsible-body">
+							<div class="row">
+								<div class="input-field col s12 m6 l3">
+									<input placeholder="CS/MAT165" id="addCourseName">
+									<label for="addCourseName">Course Name</label>
+								</div>
+								<div class="input-field col s12 m6 l3">
+									<input placeholder="Discrete Mathmatics" id="addCourseTitle">
+									<label for="addCouseTitle">Course Title</label>
+								</div>
+								<div class="input-field col s12 m6 l3">
+									<input placeholder="4" id="addCourseCredits">
+									<label for="addCouseCredits">Number of Credits</label>
+								</div>
+
+								<a id="btnAddCourse" class="waves-effect waves-light btn">Add Course</a>
+							</div><!--End of add course row.-->
+						</div>
+					</li>
+				</ul><!--End of add course drop down menu-->
+
+				<ul id="removecourseBox" class="collapsible" data-collapsible="expandable">
+					<li>
+						<div class="collapsible-header">
+							<i id="dbInfoArrow" class="material-icons">keyboard_arrow_down</i>Remove A Course
+						</div>
+						<div class="collapsible-body">
+							<div class="row">
+								<div class="input-field col s12 m6 l3">
+									<input id="removeCourseName">
+									<label for="removeCourseName">Course Name</label>
+								</div>
+								<div class="input-field col s12 m6 l3">
+									<input id="removeCourseTitle">
+									<label for="removeCouseTitle">Course Title</label>
+								</div>
+
+								<a id="btnRemoveCourse" class="waves-effect waves-light btn">Delete Course</a>
+						</div><!--End of Remove A course row-->
+					</li>
+				</ul><!--End of Remove Course Drop Down-->
 
 			</div><!--End Course Management Tab-->
 
