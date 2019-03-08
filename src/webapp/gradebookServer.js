@@ -412,7 +412,6 @@ app.get('/attendance', function(request, response) {
    });
 });
 
-
 app.get('/insertCourse', function(request, response) {
     //Decrypt the password received from the client.
     //NOTE: We need to substitute superSecret with what we're actually implementing
@@ -435,6 +434,29 @@ app.get('/insertCourse', function(request, response) {
     executeQuery(response, config, queryText, queryParams, function(result) {
         response.send(JSON.stringify({}));
     });
+});
+
+app.get('/removeCourse', function(request, response) {
+   //Decrypt the password received from the client.
+   //NOTE: We need to substitute superSecret with what we're actually implementing
+   var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
+
+   //Connection parameters for the Postgres client received in the request
+   var config = createConnectionParams(request.query.user, request.query.database,
+       passwordText, request.query.host, request.query.port);
+
+   //Get the params from the url
+   var num = request.query.num;
+   var title = request.query.title;
+
+   //Set the query text
+   var queryText = 'SELECT removeCourse($1, $2);';
+   var queryParams = [num, title];
+
+   //Execute the query
+   executeQuery(response, config, queryText, queryParams, function(result) {
+       response.send(JSON.stringify({}));
+   });
 });
 
 app.use(function(err, req, res, next){
