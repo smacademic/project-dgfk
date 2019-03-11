@@ -44,7 +44,7 @@ LANGUAGE plpgsql;
 -- parameters: Num (VARCHAR) -- i.e "CS/MAT165"
 --             oldTitle (VARCHAR) -- i.e "Discrete Math"
 
-DROP FUNCTION IF EXISTS removeCourse(Num VARCHAR, oldTitle VARCHAR);
+DROP FUNCTION IF EXISTS removeCourse(Num VARCHAR, Title VARCHAR);
 
 CREATE OR REPLACE FUNCTION removeCourse(Num VARCHAR, oldTitle VARCHAR)
    RETURNS VOID AS
