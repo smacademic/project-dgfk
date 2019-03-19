@@ -151,7 +151,7 @@ $(document).ready(function() {
 		$('#rosterTab, #attnTab, #gradesTab, #reportsTab').css('display', 'none');
 		$('ul.tabs').tabs('select_tab', 'login');
 	});
-	
+
 	//On click of the AddCourse button, execute
 	$('#btnAddCourse').click(function(){
 		var num = $('#addCourseName').val();
@@ -162,7 +162,7 @@ $(document).ready(function() {
 		/*  used to reload information, will be implemented once viewing courses is active.
 		sleep(150).then(() => {
 		defaultCourse(dbInfo, sectionID);})
-		} 
+		}
 		*/
 	});
 
@@ -175,7 +175,7 @@ $(document).ready(function() {
 		/*  used to reload information, will be implemented once viewing courses is active.
 		sleep(150).then(() => {
 		defaultCourse(dbInfo, sectionID);})
-		} 
+		}
 		*/
 	});
 });
@@ -218,7 +218,7 @@ function serverLogin(connInfo, email, callback) {
 
 			//hide Login tab, show Roster, Attendance, Grades, and Reports tabs
 			$('#loginTab').css('display', 'none');
-			$('#rosterTab, #attnTab, #gradesTab, #reportsTab').css('display', 'inline');
+			$('#rosterTab, #attnTab, #gradesTab, #reportsTab, #courseTab').css('display', 'inline');
 			$('ul.tabs').tabs('select_tab', 'attendance');
 
 			//populate instructor name and display profile (including logout menu)
@@ -417,7 +417,7 @@ function setAttendance(htmlText) {
 
 //The course_mgmt Tab resets.
 function defaultCourse_mgmt(connInfo){
-	//used to reload information, will be implemented once viewing courses is active.	
+	//used to reload information, will be implemented once viewing courses is active.
 };
 
 //Calls gradebookServer.js API to add a course.
@@ -445,4 +445,3 @@ function removeCourse(connInfo, num, title) {
 	}
 	});
 };
-
