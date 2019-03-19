@@ -112,7 +112,7 @@ BEGIN
    THEN 
       IF EXISTS 
       (
-         SELECT * FROM Course WHERE Course.Number = cNumber
+         SELECT * FROM Gradebook.Course WHERE Course.Number = cNumber
                               AND Course.Title = cTitle
       )
       THEN
@@ -123,7 +123,7 @@ BEGIN
    -- evaluate if credits are given
    IF EXISTS
    (
-      SELECT * FROM Course WHERE Course.Number = cNumber
+      SELECT * FROM Gradebook.Course WHERE Course.Number = cNumber
                               AND Course.Title = cTitle
                               AND Course.Credits = cCredits
    )
