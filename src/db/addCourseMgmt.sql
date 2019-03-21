@@ -20,23 +20,23 @@ CREATE OR REPLACE FUNCTION insertCourse(Num VARCHAR, newTitle VARCHAR, Credits I
 
 RETURNS VOID AS
 $$
-BEGIN 
+BEGIN
 
     -- check if course exists
     -- and throw exception if exists already
     IF EXISTS
     (
-        SELECT * FROM Course WHERE Course.Number = Num AND Course.Title = newTitle
+        SELECT * FROM Gradebook.Course WHERE Course.Number = Num AND Course.Title = newTitle
     )
     THEN
         RAISE EXCEPTION 'Course already exists';
     END IF;
 
     -- insert course
-    INSERT INTO Course VALUES (Num, newTitle, Credits);
+    INSERT INTO Gradebook.Course VALUES (Num, newTitle, Credits);
 
 END
-$$ 
+$$
 LANGUAGE plpgsql;
 
 
@@ -49,27 +49,21 @@ DROP FUNCTION IF EXISTS removeCourse(Num VARCHAR, Title VARCHAR);
 CREATE OR REPLACE FUNCTION removeCourse(Num VARCHAR, oldTitle VARCHAR)
    RETURNS VOID AS
 $$
-BEGIN 
+BEGIN
 
    -- Make sure course exists
    -- throw exception otherwise
-   IF NOT EXISTS 
+   IF NOT EXISTS
    (
-      SELECT * FROM Course WHERE Course.Number = Num AND Course.Title = oldTitle
+      SELECT * FROM Gradebook.Course WHERE Course.Number = Num AND Course.Title = oldTitle
    )
-   THEN 
+   THEN
       RAISE EXCEPTION 'Course does not exist';
    END IF;
-   
+
    -- remove course
-   DELETE FROM Course WHERE Course.Number = Num AND Course.Title = oldTitle;
+   DELETE FROM Gradebook.Course WHERE Course.Number = Num AND Course.Title = oldTitle;
 
 END
 $$
 LANGUAGE plpgsql;
-
-
-
-
-
-
