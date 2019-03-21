@@ -62,7 +62,7 @@ Currently, only attendance information is served
 		<div class="nav-content">
 			<ul class="tabs tabs-transparent">
 				<li id="loginTab" class="tab"><a href="#login">Login</a></li>
-				<li id="courseTab" class="tab"><a href="#course_mgmt">Course Management</a></li>
+				<li id="courseTab" class="tab" style="display: none"><a href="#course_mgmt">Course Management</a></li>
 				<li id="rosterTab" class="tab" style="display: none"><a href="#roster">Roster</a></li>
 				<li id="attnTab" class="tab" style="display: none"><a href="#attendance">Attendance</a></li>
 				<li id="gradesTab" class="tab" style="display: none"><a href="#grades">Grades</a></li>
@@ -218,6 +218,10 @@ Currently, only attendance information is served
 
 				All of these options are inclosed in a drop down box so that the user
 				can select to view these options or not to save screen space.
+
+				The addition of the class = "validate" and type = "text" fixes the issues
+				with the labels for the input fields for add and remove course where they
+				would be displaying over the input fields which is now corrected.
 				-->
 				<ul id="addCourseBox" class="collapsible" data-collapsible="expandable">
 					<li>
@@ -227,15 +231,15 @@ Currently, only attendance information is served
 						<div class="collapsible-body">
 							<div class="row">
 								<div class="input-field col s12 m6 l3">
-									<input placeholder="CS/MAT165" id="addCourseName">
+									<input placeholder="CS/MAT165" id="addCourseName" class="validate" type="text">
 									<label for="addCourseName">Course Name</label>
 								</div>
 								<div class="input-field col s12 m6 l3">
-									<input placeholder="Discrete Mathmatics" id="addCourseTitle">
+									<input placeholder="Discrete Mathmatics" id="addCourseTitle" class="validate" type="text">
 									<label for="addCouseTitle">Course Title</label>
 								</div>
 								<div class="input-field col s12 m6 l3">
-									<input placeholder="4" id="addCourseCredits">
+									<input placeholder="4" id="addCourseCredits" class="validate" type="text">
 									<label for="addCouseCredits">Number of Credits</label>
 								</div>
 
@@ -253,11 +257,11 @@ Currently, only attendance information is served
 						<div class="collapsible-body">
 							<div class="row">
 								<div class="input-field col s12 m6 l3">
-									<input id="removeCourseName">
+									<input id="removeCourseName" class="validate" type="text">
 									<label for="removeCourseName">Course Name</label>
 								</div>
 								<div class="input-field col s12 m6 l3">
-									<input id="removeCourseTitle">
+									<input id="removeCourseTitle" class="validate" type="text">
 									<label for="removeCouseTitle">Course Title</label>
 								</div>
 
