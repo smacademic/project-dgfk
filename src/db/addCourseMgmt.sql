@@ -135,6 +135,22 @@ BEGIN
    RETURN FALSE;
 
 END
+
 $$
 LANGUAGE plpgsql;
+
+-- function to return a list of all current courses
+-- parameters: currently none, but if a search functionality is to be implemented, can be added
+
+CREATE OR REPLACE FUNCTION getCourses()
+RETURNS SETOF RECORD AS
+$$
+BEGIN
+	SELECT Number,Title,Credits
+	FROM Gradebook.Course;
+END
+
+$$
+LANGUAGE plpgsql;
+
 
