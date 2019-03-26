@@ -151,7 +151,7 @@ $(document).ready(function() {
 
 		//show Login tab, hide Roster, Attendance, Grades, and Reports tabs
 		$('#loginTab').css('display', 'inline');
-		$('#rosterTab, #attnTab, #gradesTab, #reportsTab').css('display', 'none');
+		$('#rosterTab, #attnTab, #gradesTab, #reportsTab, #course_mgmt').css('display', 'none');
 		$('ul.tabs').tabs('select_tab', 'login');
 	});
 	
@@ -165,9 +165,9 @@ $(document).ready(function() {
 		//sleep(150).then(() => {
 		//defaultCourse(dbInfo, sectionID);})
 	});
-	
+
 	/* When a user wishes to edit a course,
-	they click the submit button next to the row. */	
+	they click the submit button next to the row. */
 	$('#coursesTable').on('click', '.edit', function() {
 		$('#' + this.id).hide();
 		$('#remove' + this.id).hide();
@@ -180,7 +180,7 @@ $(document).ready(function() {
 		$('#credits' + this.id).hide();
 		$('#newcredits' + this.id).show();
 	});
-	
+
 	/* When a user wishes to submit a course edit,
 	they click the submit button next to the row. */
 	$('#coursesTable').on('click', '.submit', function() {
@@ -195,7 +195,7 @@ $(document).ready(function() {
 		//sleep(150).then(() => {
 		//defaultCourse(dbInfo);})
 	});
-	
+
 	/* When a user wishes to remove a course,
 	they click the remove button next to the row. */
 	$('#coursesTable').on('click', '.remove', function() {
@@ -209,7 +209,7 @@ $(document).ready(function() {
 		//defaultCourse(dbInfo);})
 		}
 	});
-	
+
 	/* When a user wishes to cancel a course edit,
 	they click the cancel button next to the row. */
 	$('#coursesTable').on('click', '.cancel', function() {
@@ -224,7 +224,7 @@ $(document).ready(function() {
 		$('#credits' + this.id).show();
 		$('#newcredits' + this.id).hide();
 	});
-	
+
 	//On click of the RemoveCourse button, execute
 	$('#btnRemoveCourse').click(function(){
 		var num = $('#removeCourseName').val();
@@ -282,7 +282,7 @@ function serverLogin(connInfo, email, callback) {
 			var instName = [instInfo.fname, instInfo.mname, instInfo.lname].join(' ');
 			$('#instName').html(instName);
 			$('#profile').css('display', 'inline');
-
+			console.log(result);
 			callback();
 		},
 		error: function(result) {
@@ -304,6 +304,7 @@ function popYears(connInfo) {
 				years += '<option value="' + result.years[i] + '">' +
 				 result.years[i] + '</option>';
 			}
+			console.log(result);
 			setYears(years);
 		},
 		error: function(result) {
@@ -324,6 +325,7 @@ function popSeasons(connInfo, year) {
 				seasons += '<option value="' + result.seasons[i].seasonorder +
 				 '">' + result.seasons[i].seasonname + '</option>';
 			}
+			console.log(result);
 			setSeasons(seasons);
 		},
 		error: function(result) {
@@ -344,6 +346,7 @@ function popCourses(connInfo, year, seasonorder) {
 				courses += '<option value="' + result.courses[i] + '">' +
 				 result.courses[i] + '</option>';
 			}
+			console.log(result);
 			setCourses(courses);
 		},
 		error: function(result) {
@@ -365,6 +368,7 @@ function popSections(connInfo, year, seasonorder, coursenumber) {
 				sections += '<option value="' + result.sections[i].sectionid +
 				 '">' + result.sections[i].sectionnumber + '</option>';
 			}
+			console.log(result);
 			setSections(sections);
 		},
 		error: function(result) {
@@ -380,6 +384,7 @@ function popAttendance(connInfo, sectionid) {
 		dataType: 'html',
 		data: urlParams,
 		success: function(result) {
+			console.log(result);
 			setAttendance(result);
 		},
 		error: function(result) {
@@ -473,7 +478,7 @@ function setAttendance(htmlText) {
 
 //The course_mgmt Tab resets.
 function defaultCourse_mgmt(connInfo){
-	
+
 };
 
 //Calls gradebookServer.js API to add a course.
@@ -481,7 +486,9 @@ function addCourse(connInfo, num, title, credits) {
         var urlParams = $.extend({}, connInfo, {num:num, title:title, credits:credits});
         $.ajax('insertCourse', {
                 data: urlParams,
-				success: function(result) {},
+				success: function(result) {
+					console.log(result);
+				},
 				error: function(result) {
 					showAlert('<p>Error while adding course: This course is already represented.</p>');
 				console.log(result);
@@ -494,7 +501,9 @@ function removeCourse(connInfo, num, title) {
 	var urlParams = $.extend({}, connInfo, {num:num, title:title});
 	$.ajax('removeCourse', {
 					data: urlParams,
-	success: function(result) {},
+	success: function(result) {
+		console.log(result);
+	},
 	error: function(result) {
 		showAlert('<p>Error while removing course: This course does not exist.</p>');
 	console.log(result);
@@ -507,7 +516,9 @@ function updateCourses(connInfo, num, title, newnum, newtitle, newcredits){
 	var urlParams = $.extend({}, connInfo, {num:num, title:title, newnum:newnum, newtitle:newtitle, newcredits:newcredits});
 	$.ajax('modCourses',{
             data: urlParams,
-			success: function(result) {},
+			success: function(result) {
+				console.log(result);
+			},
 			error: function(result) {
 				showAlert('<p>Error while modifying course.</p>');
 			console.log(result);
@@ -535,21 +546,22 @@ function getCourses(connInfo){
 			courses += '<td> <a id=\"remove' + result.courses[i].Number + "-" + result.courses[i].Title + '\" class=\"waves-effect waves-light btn remove\">Remove</a>';
 			courses += '<td> <a id=\"cancel' + result.courses[i].Number + "-" + result.courses[i].Title + '\" class=\"waves-effect waves-light btn cancel\" style=\"display:none\">Cancel</a>';
 			courses += '<td> <a id=\"submit' + result.courses[i].Number + "-" + result.courses[i].Title + '\" type=\"submit\" class=\"waves-effect waves-light btn submit\" style=\"display:none\">Submit</a></td>';
-			
+
 			courses += '<td style=\"border: 1px solid black\"><span id=\"number' + result.courses[i].Number + "-" + result.courses[i].Title + '\">' + result.courses[i].Number + '</span>';
 			courses += '<input id=\"newnumber' + result.courses[i].Number + "-" + result.courses[i].Title + '\" class = \"validate\" type=\"text\" maxlength=\"11\" style=\"display:none\" value=\"' + result.courses[i].Number + '\">';
 			courses += '<label class="active" for=\"newnumber' + result.courses[i].Number + "-" + result.courses[i].Title + '\"></label>' + '<span class="helper-text" data-error="wrong" data-success="right"> </span> </td>';
-			
+
 			courses += '<td style=\"border: 1px solid black\"><span id=\"title' + result.courses[i].Number + "-" + result.courses[i].Title + '\">' + result.courses[i].Title + '</span>';
 			courses += '<input id=\"newtitle' + result.courses[i].Number + "-" + result.courses[i].Title + '\" class = \"validate\" type=\"text\" maxlength=\"100\" style=\"display:none\" value=\"' + result.courses[i]Title + '\">';
 			courses += '<label class="active" for=\"newtitle' + result.courses[i].Number + "-" + result.courses[i].Title + '\"></label>' + '<span class="helper-text" data-error="wrong" data-success="right"> </span> </td>';
-			
+
 			courses += '<td style=\"border: 1px solid black\"><span id=\"credits' + result.courses[i].Number + "-" + result.courses[i].Title + '\">' + result.courses[i].Credits + '</span>';
 			courses += '<input id=\"newcredits' + result.courses[i].Number + "-" + result.courses[i].Title + '\" class = \"validate\" type=\"number\" style=\"display:none\" value=\"' + result.courses[i].Credits + '\">';
 			courses += '<label class="active" for=\"newcredits' + result.courses[i].Number + "-" + result.courses[i].Title + '\"></label>' + '<span class="helper-text" data-error="wrong" data-success="right"> </span> </td>';
 			courses += '</tr>';
 		}
 		setCoursesTable(courses);
+		console.log(result);
 	}
 	error: function(result) {
 		showAlert('<p>Error while retrieving courses.</p>');
@@ -559,7 +571,7 @@ function getCourses(connInfo){
 };
 
 
-//dynamically populates the coursesTable element 
+//dynamically populates the coursesTable element
 function setCoursesTable(htmlText){
 	$('#coursesTable').html(htmlText);
 };
