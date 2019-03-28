@@ -82,11 +82,12 @@ $(document).ready(function() {
 		*/
 		if(email.endsWith('@example.edu') || email.endsWith('@connect.example.edu'))
 		{
+			var tmpEmail = $('#email').val();
+			var username = tmpEmail.substring(0,tmpEmail.indexOf('@'));
+			dbInfo.user = username;
 	    if (dbInfo != null && email != '')
 	    {
-        var tmpEmail = $('#email').val();
-				var username = tmpEmail.substring(0,tmpEmail.indexOf('@'));
-				dbInfo.user = username;
+
 				serverLogin(dbInfo, email, function()
 				{
 					//clear login fields and close DB Info box
