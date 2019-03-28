@@ -550,7 +550,7 @@ function getCourses(connInfo){
 			courses += '</tr>';
 		}
 		setCoursesTable(courses);
-	}
+	},
 	error: function(result) {
 		showAlert('<p>Error while retrieving courses.</p>');
 	console.log(result);
