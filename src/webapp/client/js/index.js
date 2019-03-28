@@ -225,6 +225,7 @@ $(document).ready(function() {
 		$('#newtitle' + this.id).hide();
 		$('#credits' + this.id).show();
 		$('#newcredits' + this.id).hide();
+
 	});
 
 	//On click of the RemoveCourse button, execute
@@ -235,6 +236,7 @@ $(document).ready(function() {
 		removeCourse(dbInfo, num, title);
 		//sleep(150).then(() => {
 		//defaultCourse(dbInfo);})
+
 	});
 });
 
@@ -482,6 +484,7 @@ function setAttendance(htmlText) {
 function defaultCourse_mgmt(connInfo){
 
 	getCourses(connInfo);
+
 };
 
 //Calls gradebookServer.js API to add a course.
@@ -579,3 +582,4 @@ function getCourses(connInfo){
 function setCoursesTable(htmlText){
 	$('#coursesTable').html(htmlText);
 };
+
