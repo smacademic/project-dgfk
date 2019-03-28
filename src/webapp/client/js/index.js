@@ -541,7 +541,7 @@ function getCourses(connInfo){
 			courses += '<label class="active" for=\"newnumber' + result.courses[i].Number + "-" + result.courses[i].Title + '\"></label>' + '<span class="helper-text" data-error="wrong" data-success="right"> </span> </td>';
 			
 			courses += '<td style=\"border: 1px solid black\"><span id=\"title' + result.courses[i].Number + "-" + result.courses[i].Title + '\">' + result.courses[i].Title + '</span>';
-			courses += '<input id=\"newtitle' + result.courses[i].Number + "-" + result.courses[i].Title + '\" class = \"validate\" type=\"text\" maxlength=\"100\" style=\"display:none\" value=\"' + result.courses[i]Title + '\">';
+			courses += '<input id=\"newtitle' + result.courses[i].Number + "-" + result.courses[i].Title + '\" class = \"validate\" type=\"text\" maxlength=\"100\" style=\"display:none\" value=\"' + result.courses[i].Title + '\">';
 			courses += '<label class="active" for=\"newtitle' + result.courses[i].Number + "-" + result.courses[i].Title + '\"></label>' + '<span class="helper-text" data-error="wrong" data-success="right"> </span> </td>';
 			
 			courses += '<td style=\"border: 1px solid black\"><span id=\"credits' + result.courses[i].Number + "-" + result.courses[i].Title + '\">' + result.courses[i].Credits + '</span>';
