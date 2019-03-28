@@ -96,6 +96,7 @@ $(document).ready(function() {
 					$('#dbInfoArrow').html('keyboard_arrow_down');
 
 					popYears(dbInfo);
+					getCourses(connInfo);
 				});
 			}
 			 else //else for if username and password are filled in
@@ -110,7 +111,7 @@ $(document).ready(function() {
 	  	'by the server.<br> Please try again or contact support if you believe this is an error.</p>');
 		}
 	});
-
+	
 	$('#yearSelect').change(function() {
 		var year = $('#yearSelect').val();
 		popSeasons(dbInfo, year);
@@ -479,6 +480,7 @@ function setAttendance(htmlText) {
 //The course_mgmt Tab resets.
 function defaultCourse_mgmt(connInfo){
 
+	getCourses(connInfo);
 };
 
 //Calls gradebookServer.js API to add a course.
@@ -561,8 +563,9 @@ function getCourses(connInfo){
 			courses += '</tr>';
 		}
 		setCoursesTable(courses);
-		console.log(result);
-	}
+    console.log(result);
+	},
+    
 	error: function(result) {
 		showAlert('<p>Error while retrieving courses.</p>');
 	console.log(result);
