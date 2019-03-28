@@ -151,10 +151,10 @@ $(document).ready(function() {
 
 		//show Login tab, hide Roster, Attendance, Grades, and Reports tabs
 		$('#loginTab').css('display', 'inline');
-		$('#rosterTab, #attnTab, #gradesTab, #reportsTab, #course_mgmt').css('display', 'none');
+		$('#rosterTab, #attnTab, #gradesTab, #reportsTab, #courseTab').css('display', 'none');
 		$('ul.tabs').tabs('select_tab', 'login');
 	});
-	
+
 	//On click of the AddCourse button, execute
 	$('#btnAddCourse').click(function(){
 		var num = $('#addCourseName').val();
@@ -274,7 +274,7 @@ function serverLogin(connInfo, email, callback) {
 
 			//hide Login tab, show Roster, Attendance, Grades, and Reports tabs
 			$('#loginTab').css('display', 'none');
-			$('#rosterTab, #attnTab, #gradesTab, #reportsTab').css('display', 'inline');
+			$('#rosterTab, #attnTab, #gradesTab, #reportsTab, #courseTab').css('display', 'inline');
 			$('ul.tabs').tabs('select_tab', 'attendance');
 
 			//populate instructor name and display profile (including logout menu)
