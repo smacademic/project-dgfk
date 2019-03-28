@@ -42,305 +42,340 @@ Currently, only attendance information is served
 	</head>
 	<body>
 
-	<!--Top of screen banner (navbar) - Includes logo, profile, and tabs-->
-	<nav class="nav-extended">
-		<div class="nav-wrapper">
-			<a href="#" class="brand-logo left" style="margin-left: 1%">Gradebook</a>
-			<ul id="profile" class="right" style="display: none">
-				<li><i class="medium material-icons">portrait</i></li>
-				<li><span id="instName" style="margin-left: 10px">Placeholder Name</span></li>
-				<li>
-					<a id="profileArrow" class="dropdown-button" data-belowOrigin="true" data-activates="profileBox">
-						<i class="small material-icons">arrow_drop_down</i>
-					</a>
-					<ul id="profileBox" class="dropdown-content">
-						<li><a id="logout">Logout</a></li>
-					</ul>
-				</li>
-			</ul>
-		</div>
-		<div class="nav-content">
-			<ul class="tabs tabs-transparent">
-				<li id="loginTab" class="tab"><a href="#login">Login</a></li>
-				<li id="courseTab" class="tab" style="display: none"><a href="#course_mgmt">Course Management</a></li>
-				<li id="rosterTab" class="tab" style="display: none"><a href="#roster">Roster</a></li>
-				<li id="attnTab" class="tab" style="display: none"><a href="#attendance">Attendance</a></li>
-				<li id="gradesTab" class="tab" style="display: none"><a href="#grades">Grades</a></li>
-				<li id="reportsTab" class="tab" style="display: none"><a href="#reports">Reports</a></li>
-				<li id="aboutTab" class="tab"><a href="#about">About</a></li>
-				<!--See http://materializecss.com/navbar.html#navbar-tabs for examples on
-					 how to use tabs for navigation-->
-			</ul>
-		</div>
-	</nav><!--End navigation section-->
+		<!--Top of screen banner (navbar) - Includes logo, profile, and tabs-->
+		<nav class="nav-extended">
+			<div class="nav-wrapper">
+				<a href="#" class="brand-logo left" style="margin-left: 1%">Gradebook</a>
+				<ul id="profile" class="right" style="display: none">
+					<li><i class="medium material-icons">portrait</i></li>
+					<li><span id="instName" style="margin-left: 10px">Placeholder Name</span></li>
 
-
-	<div class="container"> <!--Adds left and right spacing for content-->
-		<div class="section"> <!--Adds spacing between navbar and content-->
-
-			<div id="login">
-				<div class="row">
-					<h5>Login</h5>
-				</div>
-				<div class="row">
-					<div class="input-field col s12 m6 l3">
-						<i class="material-icons prefix">mail</i>
-						<input id="email" type="email"/>
-						<label for="email">Email</label>
-					</div>
-					<div class="input-field col s12 m6 l3">
-						<i class="material-icons prefix">lock</i>
-						<input id="passwordBox" type="password"/>
-						<label for="passwordBox">Password</label>
-					</div>
-					<a id="btnLogin" class="waves-effect waves-light btn">Login</a>
-				</div>
-
-				<div class="divider"></div><br/>
-
-				<ul id="dbInfoBox" class="collapsible" data-collapsible="expandable">
 					<li>
-						<div class="collapsible-header">
-							<i id="dbInfoArrow" class="material-icons">keyboard_arrow_down</i>DB Info
+						<a id="profileArrow" class="dropdown-button" data-belowOrigin="true" data-activates="profileBox">
+							<i class="small material-icons">arrow_drop_down</i>
+						</a>
+						<ul id="profileBox" class="dropdown-content">
+							<li><a id="logout">Logout</a></li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+			<div class="nav-content">
+				<ul class="tabs tabs-transparent">
+					<li id="loginTab" class="tab"><a href="#login">Login</a></li>
+					<li id="courseTab" class="tab" style="display: none"><a href="#course_mgmt">Course Management</a></li>
+					<li id="rosterTab" class="tab" style="display: none"><a href="#roster">Roster</a></li>
+					<li id="attnTab" class="tab" style="display: none"><a href="#attendance">Attendance</a></li>
+					<li id="gradesTab" class="tab" style="display: none"><a href="#grades">Grades</a></li>
+					<li id="reportsTab" class="tab" style="display: none"><a href="#reports">Reports</a></li>
+					<li id="aboutTab" class="tab"><a href="#about">About</a></li>
+					<!--See http://materializecss.com/navbar.html#navbar-tabs for examples on
+						 how to use tabs for navigation-->
+				</ul>
+			</div>
+		</nav><!--End navigation section-->
+
+
+		<div class="container"> <!--Adds left and right spacing for content-->
+			<div class="section"> <!--Adds spacing between navbar and content-->
+
+				<div id="login">
+					<div class="row">
+						<h5>Login</h5>
+					</div>
+					<div class="row">
+						<div class="input-field col s12 m6 l3">
+							<i class="material-icons prefix">mail</i>
+							<input id="email" type="email"/>
+							<label for="email">Email</label>
 						</div>
-						<div class="collapsible-body">
-							<div class="row">
-								<div class="input-field col s12 m6 l3">
-									<input id="host" type="text" value="localhost"/>
-									<label for="host">Host name</label>
-								</div>
-								<div class="input-field col s12 m6 l3">
-									<input id="port" type="text" value="5432"/>
-									<label for="port">Port</label>
-								</div>
-								<div class="input-field col s12 m6 l3">
-									<input id="database" type="text" value="gradebook"/>
-									<label for="database">Database</label>
-								</div>
-								<div class="input-field col s12 m6 l3">
-									<input id="user" type="text" value="gb_webapp"/>
-									<label for="user">DB Username</label>
+						<div class="input-field col s12 m6 l3">
+							<i class="material-icons prefix">lock</i>
+							<input id="passwordBox" type="password"/>
+							<label for="passwordBox">Password</label>
+						</div>
+						<a id="btnLogin" class="waves-effect waves-light btn">Login</a>
+					</div>
+
+
+					<div class="divider"></div><br/>
+
+
+					<ul id="dbInfoBox" class="collapsible" data-collapsible="expandable">
+						<li>
+							<div class="collapsible-header">
+								<i id="dbInfoArrow" class="material-icons">keyboard_arrow_down</i>DB Info
+							</div>
+							<div class="collapsible-body">
+								<div class="row">
+									<div class="input-field col s12 m6 l3">
+										<input id="host" type="text" value="localhost"/>
+										<label for="host">Host name</label>
+									</div>
+									<div class="input-field col s12 m6 l3">
+										<input id="port" type="text" value="5432"/>
+										<label for="port">Port</label>
+									</div>
+									<div class="input-field col s12 m6 l3">
+										<input id="database" type="text" value="gradebook"/>
+										<label for="database">Database</label>
+									</div>
+									<div class="input-field col s12 m6 l3">
+										<input id="user" type="text" value="gb_webapp"/>
+										<label for="user">DB Username</label>
+									</div>
 								</div>
 							</div>
+						</li>
+					</ul>
+				</div><!--End login div-->
+
+				<div id="roster">
+					<p class="center-align">The Roster page is not yet implemented</p>
+				</div><!--End roster div-->
+
+				<div id="attendance">
+					<div class="row">
+						<div class="input-field col s12 m6 l3">
+							<select id="yearSelect" disabled="true">
+								<option value="" disabled="true" selected="true">Choose year</option>
+							</select>
+							<label>Year</label>
 						</div>
-					</li>
-				</ul>
-			</div><!--End login div-->
-
-			<div id="roster">
-				<p class="center-align">The Roster page is not yet implemented</p>
-			</div><!--End roster div-->
-
-			<div id="attendance">
-				<div class="row">
-					<div class="input-field col s12 m6 l3">
-						<select id="yearSelect" disabled="true">
-							<option value="" disabled="true" selected="true">Choose year</option>
-						</select>
-						<label>Year</label>
-					</div>
-					<div class="input-field col s12 m6 l3">
-						<select id="seasonSelect" disabled="true">
-							<option value="" disabled="true" selected="true">Choose season</option>
-						</select>
-						<label>Season</label>
-					</div>
-					<div class="input-field col s12 m6 l3">
-						<select id="courseSelect" disabled="true">
-							<option value="" disabled="true" selected="true">Choose course</option>
-						</select>
-						<label>Course</label>
-					</div>
-					<div class="input-field col s12 m6 l3">
-						<select id="sectionSelect" disabled="true">
-							<option value="" disabled="true" selected="true">Choose section</option>
-						</select>
-						<label>Section</label>
-					</div>
-				</div><!--End attendance selection box div-->
-
-				<div class="divider"></div>
-
-				<ul id="attnOptionsBox" class="collapsible" style="display: none" data-collapsible="expandable">
-				<li>
-					<div class="collapsible-header">
-						<i id="optionsArrow" class="material-icons">keyboard_arrow_down</i>Options
-					</div>
-					<div class="collapsible-body">
-						<div class="switch">
-							Display 'P' attendance code
-							<label>
-								<input id="opt-showPresent" type="checkbox">
-								<span class="lever"></span>
-							</label>
+						<div class="input-field col s12 m6 l3">
+							<select id="seasonSelect" disabled="true">
+								<option value="" disabled="true" selected="true">Choose season</option>
+							</select>
+							<label>Season</label>
 						</div>
-						<br/>
-						<div class="switch">
-							Display compact table
-							<label>
-								<input id="opt-compactTab" type="checkbox">
-								<span class="lever"></span>
-							</label>
+						<div class="input-field col s12 m6 l3">
+							<select id="courseSelect" disabled="true">
+								<option value="" disabled="true" selected="true">Choose course</option>
+							</select>
+							<label>Course</label>
 						</div>
-					</div><!--End collapsible body-->
-				</li>
-				</ul>
+						<div class="input-field col s12 m6 l3">
+							<select id="sectionSelect" disabled="true">
+								<option value="" disabled="true" selected="true">Choose section</option>
+							</select>
+							<label>Section</label>
+						</div>
+					</div><!--End attendance selection box div-->
 
-				<br/>
-				<div id="attendanceData" class="col s12" style="overflow-x:auto">
-					<!--Populated dynamically-->
-				</div>
+					<div class="divider"></div>
 
-			</div><!--End Attendance Tab-->
-
-			<div id="grades">
-				<p class="center-align">The Grades page is not yet implemented</p>
-			</div><!--End Grades Tab-->
-
-			<div id="reports">
-				<p class="center-align">The Reports page is not yet implemented</p>
-			</div><!--End reports Tab -->
-
-			<div id="course_mgmt">
-				<!--
-				When verifiying that all of the text inputs were showing:
-				remove the: id="course_mgmt" when undable to login.
-				-->
-				<h2><center>Course Management</center></h2>
-				<p class="center-align">This page is currently under development</p>
-
-				<!--
-				The following row contains the input fields so that a new course
-				could be added to the application. There will be a series of
-				input fields followed by a button called "add course" which would
-				send the infomation to the webserver before it is sent to the
-				database.
-
-				All of these options are inclosed in a drop down box so that the user
-				can select to view these options or not to save screen space.
-
-				The addition of the class = "validate" and type = "text" fixes the issues
-				with the labels for the input fields for add and remove course where they
-				would be displaying over the input fields which is now corrected.
-				-->
-				<ul id="addCourseBox" class="collapsible" data-collapsible="expandable">
+					<ul id="attnOptionsBox" class="collapsible" style="display: none" data-collapsible="expandable">
 					<li>
 						<div class="collapsible-header">
-							<i id="dbInfoArrow" class="material-icons">keyboard_arrow_down</i>Add A Course
+							<i id="optionsArrow" class="material-icons">keyboard_arrow_down</i>Options
 						</div>
 						<div class="collapsible-body">
-							<div class="row">
-								<div class="input-field col s12 m6 l3">
-									<input placeholder="CS/MAT165" id="addCourseName" class="validate" type="text">
-									<label for="addCourseName">Course Name</label>
-								</div>
-								<div class="input-field col s12 m6 l3">
-									<input placeholder="Discrete Mathmatics" id="addCourseTitle" class="validate" type="text">
-									<label for="addCouseTitle">Course Title</label>
-								</div>
-								<div class="input-field col s12 m6 l3">
-									<input placeholder="4" id="addCourseCredits" class="validate" type="text">
-									<label for="addCouseCredits">Number of Credits</label>
-								</div>
 
-								<a id="btnAddCourse" class="waves-effect waves-light btn">Add Course</a>
-							</div><!--End of add course row.-->
-						</div>
+							<div class="switch">
+								Display 'P' attendance code
+								<label>
+									<input id="opt-showPresent" type="checkbox">
+									<span class="lever"></span>
+								</label>
+							</div>
+							<br/>
+							<div class="switch">
+								Display compact table
+								<label>
+									<input id="opt-compactTab" type="checkbox">
+									<span class="lever"></span>
+								</label>
+							</div>
+						</div><!--End collapsible body-->
 					</li>
-				</ul><!--End of add course drop down menu-->
+					</ul>
 
-				<ul id="removecourseBox" class="collapsible" data-collapsible="expandable">
-					<li>
-						<div class="collapsible-header">
-							<i id="dbInfoArrow" class="material-icons">keyboard_arrow_down</i>Remove A Course
-						</div>
-						<div class="collapsible-body">
-							<div class="row">
-								<div class="input-field col s12 m6 l3">
-									<input id="removeCourseName" class="validate" type="text">
-									<label for="removeCourseName">Course Name</label>
+					<br/>
+					<div id="attendanceData" class="col s12" style="overflow-x:auto">
+						<!--Populated dynamically-->
+					</div>
+
+				</div><!--End Attendance Tab-->
+
+				<div id="grades">
+					<p class="center-align">The Grades page is not yet implemented</p>
+				</div><!--End Grades Tab-->
+
+				<div id="reports">
+					<p class="center-align">The Reports page is not yet implemented</p>
+				</div><!--End reports Tab -->
+
+				<div id="course_mgmt">
+
+					<h2><center>Course Management</center></h2>
+					<p class="center-align">This page is currently under development</p>
+
+					<!--
+					The following row contains the input fields so that a new course
+					could be added to the application. There will be a series of
+					input fields followed by a button called "add course" which would
+					send the infomation to the webserver before it is sent to the
+					database.
+
+					All of these options are inclosed in a drop down box so that the user
+					can select to view these options or not to save screen space.
+					-->
+					<ul id="addCourseBox" class="collapsible" data-collapsible="expandable">
+						<li>
+							<div class="collapsible-header">
+								<i id="dbInfoArrow" class="material-icons">keyboard_arrow_down</i>Add A Course
+							</div>
+							<div class="collapsible-body">
+								<div class="row">
+									<div class="input-field col s12 m6 l3">
+										<input placeholder="CS/MAT165" id="addCourseName">
+										<label for="addCourseName">Course Name</label>
+									</div>
+									<div class="input-field col s12 m6 l3">
+										<input placeholder="Discrete Mathmatics" id="addCourseTitle">
+										<label for="addCouseTitle">Course Title</label>
+									</div>
+									<div class="input-field col s12 m6 l3">
+										<input placeholder="4" id="addCourseCredits">
+										<label for="addCouseCredits">Number of Credits</label>
+									</div>
+
+									<a id="btnAddCourse" class="waves-effect waves-light btn">Add Course</a>
+								</div><!--End of add course row.-->
+							</div>
+						</li>
+					</ul><!--End of add course drop down menu-->
+
+					<ul id="removecourseBox" class="collapsible" data-collapsible="expandable">
+						<li>
+							<div class="collapsible-header">
+								<i id="dbInfoArrow" class="material-icons">keyboard_arrow_down</i>Remove A Course
+							</div>
+							<div class="collapsible-body">
+								<div class="row">
+									<div class="input-field col s12 m6 l3">
+										<input id="removeCourseName">
+										<label for="removeCourseName">Course Name</label>
+									</div>
+									<div class="input-field col s12 m6 l3">
+										<input id="removeCourseTitle">
+										<label for="removeCouseTitle">Course Title</label>
+									</div>
+
+									<a id="btnRemoveCourse" class="waves-effect waves-light btn">Delete Course</a>
+							</div><!--End of Remove A course row-->
+						</li>
+					</ul><!--End of Remove Course Drop Down-->
+
+					<!--
+					The following section below contains the code to view and modify any of the courses that
+					are added to the database.
+
+					There will also be a drop down menu above the table with some searching functionality to
+					help find more specific courses.
+					-->
+					<div>
+						<ul id="searchCourseBox" class="collapsible" data-collapsible="expandable">
+							<li>
+								<div class="collapsible-header">
+									<i id="dbInfoArrow" class="material-icons">keyboard_arrow_down</i>S
+									Sesrch for courses
 								</div>
-								<div class="input-field col s12 m6 l3">
-									<input id="removeCourseTitle" class="validate" type="text">
-									<label for="removeCouseTitle">Course Title</label>
+								<div class="collapsible-body">
+									<div class="row">
+										<!--Add in searching options later-->
+									</div>
+									<a id="btnPerformSearch" class="waves-effect waves-light btn">
+										Search for courses
+									</a>
+
 								</div>
+							</li>
+						</ul><!--End of search options drop down box-->
 
-								<a id="btnRemoveCourse" class="waves-effect waves-light btn">Delete Course</a>
-						</div><!--End of Remove A course row-->
-					</li>
-				</ul><!--End of Remove Course Drop Down-->
+						<!--
+							This table will be populated automatically from the webserver based
+							on the search results.
 
-			</div><!--End Course Management Tab-->
+							3/23/19: NOTE: Not sure if anything else will need to be added for
+							modifying a course, scuh as input fields.
+						-->
+						<table id="coursesTable">
+							<!--This will be populated dynamically-->
+						</table>
+					</div><!--End of view/modify courses div-->
+
+				</div><!--End Course Management Tab-->
 
 
-			<div id="about">
-				<h4>About Gradebook</h4>
-				<p>Gradebook is an open-source product for instructors to record student
-				 assessment and attendance. It is developed at the Data Science &amp;
-				 Systems Lab (<a href="https://dassl.github.io" target="_blank">DASSL</a>
-				 , read <em>dazzle</em>) at the Western Connecticut State University
-				 (<a href="http://wcsu.edu/" target="_blank">WCSU</a>).</p>
-				<h5>Goals</h5>
-				<p>Gradebook is developed with the following goals:</p>
-				<ol>
-					<li>Provide instructors a free, open, and modern tool to record
-					 student assessment and attendance</li>
-					<li>Provide instructors a framework to surface, analyze, and visualize
-					 patterns in student performance</li>
-					<li>Use (and demonstrate the use of) modern tools and processes in
-					 software and data engineering</li>
-					<li>Provide Computer Science students a real-life application to
-					 develop and maintain as both curricular and co-curricular activity</li>
-					<li>Provide Computer Science students a framework to experience
-					 first-hand topics such as: web and mobile application development;
-					 RESTful APIs; multi-tenancy; scalability; and cloud-based services.</li>
-				</ol>
-				<h5>Status</h5>
-				<p>Gradebook is still in early stages of development (“alpha stage”).
-				 Much of its external documentation is in the form of README files
-				 contained in various directories within the product repository. The
-				 source code is commented reasonably well. More information about Gradebook
-				 can be found by visiting its
-				 <a href="https://github.com/DASSL/Gradebook" target="_blank"> repository
-				 on GitHub</a>.</p>
-				<p><strong>Caution:</strong> Because the product is still in very early
-				 stages of development, it should not be used as a production system in
-				 its current state. There are no guarantees that future development
-				 releases will provide any kind of backward compatibility or portability.</p>
-				<h5>Contributors</h5>
-				<p>Gradebook was conceived by and is designed by
-				 <a href="http://sites.wcsu.edu/murthys/" target="_blank">Sean Murthy</a>,
-				 a member of the Computer Science faculty at WCSU.</p>
-				<p>The following undergraduate Computer Science students at WCSU
-				 contribute(d) to the development of Gradebook:</p>
-				<ul class="browser-default">
-					<li><a href="https://github.com/bella004" target="_blank">Kyle Bella</a></li>
-					<li><a href="https://github.com/zbhujwala" target="_blank">Zaid Bhujwala</a></li>
-					<li><a href="https://github.com/ZBoylan" target="_blank">Zach Boylan</a></li>
-					<li><a href="https://github.com/afig" target="_blank">Andrew Figueroa</a></li>
-					<li><a href="https://github.com/griffine" target="_blank">Elly Griffin</a></li>
-					<li><a href="https://github.com/srrollo" target="_blank">Steven Rollo</a></li>
-					<li><a href="https://github.com/hunterSchloss" target="_blank">Hunter Schloss</a></li>
-				</ul>
-				<h5>Legal Stuff</h5>
-					<p>© 2017- DASSL. ALL RIGHTS RESERVED.</p>
-					<p>Gradebook is distributed under
-					 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">
-					 Creative Commons License BY-NC-SA 4.0</a>.</p>
-					<p>PROVIDED AS IS. NO WARRANTIES EXPRESSED OR IMPLIED. USE AT YOUR OWN
-					 RISK.</p>
-			</div><!--End About Tab-->
+				<div id="about">
+					<h4>About Gradebook</h4>
+					<p>Gradebook is an open-source product for instructors to record student
+					 assessment and attendance. It is developed at the Data Science &amp;
+					 Systems Lab (<a href="https://dassl.github.io" target="_blank">DASSL</a>
+					 , read <em>dazzle</em>) at the Western Connecticut State University
+					 (<a href="http://wcsu.edu/" target="_blank">WCSU</a>).</p>
+					<h5>Goals</h5>
+					<p>Gradebook is developed with the following goals:</p>
+					<ol>
+						<li>Provide instructors a free, open, and modern tool to record
+						 student assessment and attendance</li>
+						<li>Provide instructors a framework to surface, analyze, and visualize
+						 patterns in student performance</li>
+						<li>Use (and demonstrate the use of) modern tools and processes in
+						 software and data engineering</li>
+						<li>Provide Computer Science students a real-life application to
+						 develop and maintain as both curricular and co-curricular activity</li>
+						<li>Provide Computer Science students a framework to experience
+						 first-hand topics such as: web and mobile application development;
+						 RESTful APIs; multi-tenancy; scalability; and cloud-based services.</li>
+					</ol>
+					<h5>Status</h5>
+					<p>Gradebook is still in early stages of development (“alpha stage”).
+					 Much of its external documentation is in the form of README files
+					 contained in various directories within the product repository. The
+					 source code is commented reasonably well. More information about Gradebook
+					 can be found by visiting its
+					 <a href="https://github.com/DASSL/Gradebook" target="_blank"> repository
+					 on GitHub</a>.</p>
+					<p><strong>Caution:</strong> Because the product is still in very early
+					 stages of development, it should not be used as a production system in
+					 its current state. There are no guarantees that future development
+					 releases will provide any kind of backward compatibility or portability.</p>
+					<h5>Contributors</h5>
+					<p>Gradebook was conceived by and is designed by
+					 <a href="http://sites.wcsu.edu/murthys/" target="_blank">Sean Murthy</a>,
+					 a member of the Computer Science faculty at WCSU.</p>
+					<p>The following undergraduate Computer Science students at WCSU
+					 contribute(d) to the development of Gradebook:</p>
+					<ul class="browser-default">
+						<li><a href="https://github.com/bella004" target="_blank">Kyle Bella</a></li>
+						<li><a href="https://github.com/zbhujwala" target="_blank">Zaid Bhujwala</a></li>
+						<li><a href="https://github.com/ZBoylan" target="_blank">Zach Boylan</a></li>
+						<li><a href="https://github.com/afig" target="_blank">Andrew Figueroa</a></li>
+						<li><a href="https://github.com/griffine" target="_blank">Elly Griffin</a></li>
+						<li><a href="https://github.com/srrollo" target="_blank">Steven Rollo</a></li>
+						<li><a href="https://github.com/hunterSchloss" target="_blank">Hunter Schloss</a></li>
+					</ul>
+					<h5>Legal Stuff</h5>
+						<p>© 2017- DASSL. ALL RIGHTS RESERVED.</p>
+						<p>Gradebook is distributed under
+						 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">
+						 Creative Commons License BY-NC-SA 4.0</a>.</p>
+						<p>PROVIDED AS IS. NO WARRANTIES EXPRESSED OR IMPLIED. USE AT YOUR OWN
+						 RISK.</p>
+				</div><!--End About Tab-->
 
-			<!--Generic alert used by showAlert() in index.js-->
-			<div id="msg-genericAlert" class="modal">
-				<div id="genericAlertBody" class="modal-content"></div>
-				<div class="modal-footer">
-					<a href="#!" class="modal-action modal-close waves-effect waves-gray btn-flat">OK</a>
-				</div>
-			</div><!--End alert box div-->
+				<!--Generic alert used by showAlert() in index.js-->
+				<div id="msg-genericAlert" class="modal">
+					<div id="genericAlertBody" class="modal-content"></div>
+					<div class="modal-footer">
+						<a href="#!" class="modal-action modal-close waves-effect waves-gray btn-flat">OK</a>
+					</div>
+				</div><!--End alert box div-->
 
-		</div><!--End Section div-->
-	</div><!--End Container div-->
+			</div><!--End Section div-->
+		</div><!--End Container div-->
 
 	</body>
 
