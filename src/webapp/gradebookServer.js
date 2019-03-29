@@ -486,7 +486,7 @@ app.get('getCourses', function(request, response){
 												var jsonReturn = {
 												    "courses": courses
 												} //Send the json to the client
-       response.send(JSON.stringify({}));
+       response.send(JSON.stringify({courses}));
    });
 });
 
