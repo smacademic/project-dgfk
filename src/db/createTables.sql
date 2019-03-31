@@ -101,7 +101,6 @@ CREATE TABLE Gradebook.Section
    Instructor2 INT REFERENCES Gradebook.Instructor, --optional 2nd instructor
    Instructor3 INT REFERENCES Gradebook.Instructor, --optional 3rd instructor
    UNIQUE(Term, Course, SectionNumber),
-   FOREIGN KEY (Course) REFERENCES Gradebook.Course (NUMBER),
    --make sure instructors are distinct
    CONSTRAINT DistinctSectionInstructors
         CHECK (Instructor1 <> Instructor2
