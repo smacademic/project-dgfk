@@ -502,6 +502,23 @@ function addCourse(connInfo, num, title, credits) {
         });
 };
 
+// Calls gradebookServer.js API to add a section
+function addSection(connInfo, term, course, capacity, num, CRN, schedule, location, start_date, end_date, midterm_date, instructor1, instructor2 = null, instructor3 = null) {
+	var urlParams = $.extend({}, connInfo, {term:term, course:course, capacity:capacity, num:num, CRN:CRN, schedule:schedule, location:location, 
+																					start_date:start_date, end_date:end_date, midterm_date:midterm_date, 
+																					instructor1, instructor2, instructor3});
+	$.ajax('addSection', {
+		data: urlParams,
+		success: function(result) {
+			console.log(result);
+	},
+	error: function(result) {
+			showAlert('<p>Error while adding section: This section is already represented.</p>');
+				console.log(result);
+		}
+	});
+}
+	
 //Calls gradebookServer.js API to remove a course.
 function removeCourse(connInfo, num, title) {
 	var urlParams = $.extend({}, connInfo, {num:num, title:title});
@@ -516,6 +533,21 @@ function removeCourse(connInfo, num, title) {
 	}
 	});
 };
+
+// Calls gradebookServer.js API to remove a section
+function removeSection(connInfo, sectionID) {
+	var urlParams = $.extend({}, connInfo, {sectionID:sectionID});
+	$.ajax('removeSection', {
+		data: urlParams,
+		success: function(result) {
+			console.log(result);
+	},
+	error: function(result) {
+			showAlert('<p>Error while removing section: This section does not exist.</p>');
+				console.log(result);
+		}
+	});
+}
 
 //Calls gradebookServer.js API to modify a course.
 function updateCourses(connInfo, num, title, newnum, newtitle, newcredits){
