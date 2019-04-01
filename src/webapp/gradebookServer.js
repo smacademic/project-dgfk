@@ -526,19 +526,19 @@ app.get('/addSection', function(request, response) {
        passwordText, request.query.host, request.query.port);
 
    //Get the params from the url
-   var term = request.query.term;
-   var course = request.query.course;
-   var capacity = request.query.capacity;
-   var num = request.query.num;
-   var CRN = request.query.CRN;
-   var schedule = request.query.schedule;
-   var location = request.query.location;
-   var start_date = request.query.start_date;
-   var end_date = request.query.end_date;
-   var midterm_date = request.query.midterm_date;
-   var instructor1 = request.query.instructor1;
-   var instructor2 = request.query.instructor2;
-   var instructor3 = request.query.instructor3;
+   var term = request.query.addSectionTerm;
+   var course = request.query.courseNameSelect;
+   var capacity = request.query.addSectionCapacity;
+   var num = request.query.addSectionNumber;
+   var CRN = request.query.addSectionCRN;
+   var schedule = request.query.addSectionSchedule;
+   var location = request.query.addSectionLocation;
+   var start_date = request.query.addSectionStartDate;
+   var end_date = request.query.addSectionEndDate;
+   var midterm_date = request.query.addSectionMidtermDate;
+   var instructor1 = request.query.primaryInstructorSelect;
+   var instructor2 = request.query.secondaryInstructorSelect;
+   var instructor3 = request.query.tertiaryInstructorSelect;
 
    //Set the query text
    var queryText = 'SELECT addSection($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13);';
@@ -560,11 +560,11 @@ app.get('/removeSection', function(request, response) {
       passwordText, request.query.host, request.query.port);
 
   //Get the params from the url
-  var sectionID = request.query.sectionID;
+  var removeSectionNumber = request.query.removeSectionNumber;
 
   //Set the query text
   var queryText = 'SELECT removeSection($1);';
-  var queryParams = [sectionID];
+  var queryParams = [removeSectionNumber];
 
   //Execute the query
   executeQuery(response, config, queryText, queryParams, function(result) {

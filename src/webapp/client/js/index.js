@@ -535,8 +535,8 @@ function removeCourse(connInfo, num, title) {
 };
 
 // Calls gradebookServer.js API to remove a section
-function removeSection(connInfo, sectionID) {
-	var urlParams = $.extend({}, connInfo, {sectionID:sectionID});
+function removeSection(connInfo, removeSectionNumber) {
+	var urlParams = $.extend({}, connInfo, {removeSectionNumber:removeSectionNumber});
 	$.ajax('removeSection', {
 		data: urlParams,
 		success: function(result) {
