@@ -168,6 +168,36 @@ $(document).ready(function() {
 		//defaultCourse(dbInfo, sectionID);})
 	});
 
+	//On click of the AddSection button, execute
+	$('#btnAddSection').click(function(){
+		var course = $('#courseNameSelect').val();
+		var term = $('#TermSelect').val();
+		var num = $('#addSectionNumber').val();
+		var CRN = $('#addSectionCRN').val();
+		var schedule = $('#addSectionSchedule').val();
+		var capacity = $('#addSectionCapacity').val();
+		var location = $('#addSectionLocation').val();
+		var start_date = $('#addSectionStartDate').val();
+		var end_date = $('#addSectionEndDate').val();
+		var midterm_date = $('#addSectionMidtermDate').val();
+		var instructor1 = $('#primaryInstructorSelect').val();
+		var instructor2 = $('#secondaryInstructorSelect').val();
+		var instructor3 = $('#tertiaryInstructorSelect').val();
+
+		addSection(dbInfo, term, course, capacity, num, CRN, schedule, location, start_date, end_date, midterm_date, instructor1, instructor2, instructor3);
+		//sleep(150).then(() => {
+		//defaultCourse(dbInfo, sectionID);})
+	});
+
+	//On click of the RemoveSection button, execute
+	$('#btnRemoveSection').click(function(){
+		var sectionNumber = $('#removeSectionNumber').val();
+
+		removeSection(dbInfo, sectionNumber);
+		//sleep(150).then(() => {
+		//defaultCourse(dbInfo, sectionID);})
+	});
+
 	/* When a user wishes to edit a course,
 	they click the submit button next to the row. */
 	$('#coursesTable').on('click', '.edit', function() {
