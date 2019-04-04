@@ -473,20 +473,20 @@ app.get('getCourses', function(request, response){
 
    //Execute the query
    executeQuery(response, config, queryText, queryParams, function(result) {
-      var courses = []; //Put the rows from the query into json format
-         for (row in result.rows) {
-               courses.push(
-                  {
-                     "Number": result.rows[row].number,
-                     "Title": result.rows[row].title,
-                  "Credits": result.rows[row].credits
-                  }
-               );
-         }
-         var jsonReturn = {
-               "courses": courses
-         } //Send the json to the client
-       response.send(JSON.stringify({}));
+	   		var courses = []; //Put the rows from the query into json format
+												for (row in result.rows) {
+												    courses.push(
+												        {
+												            "Number": result.rows[row].number,
+												            "Title": result.rows[row].title,
+															"Credits": result.rows[row].credits
+												        }
+												    );
+												}
+												var jsonReturn = {
+												    "courses": courses
+												} //Send the json to the client
+       response.send(JSON.stringify({courses}));
    });
 });
 
