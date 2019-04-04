@@ -64,6 +64,7 @@ Currently, only attendance information is served
 				<ul class="tabs tabs-transparent">
 					<li id="loginTab" class="tab"><a href="#login">Login</a></li>
 					<li id="courseTab" class="tab" style="display: none"><a href="#course_mgmt">Course Management</a></li>
+					<li id="sectionTab" class="tab" style="display: none"><a href="#section_mgmt">Section Management</a></li>
 					<li id="rosterTab" class="tab" style="display: none"><a href="#roster">Roster</a></li>
 					<li id="attnTab" class="tab" style="display: none"><a href="#attendance">Attendance</a></li>
 					<li id="gradesTab" class="tab" style="display: none"><a href="#grades">Grades</a></li>
@@ -228,15 +229,15 @@ Currently, only attendance information is served
 							<div class="collapsible-body">
 								<div class="row">
 									<div class="input-field col s12 m6 l3">
-										<input placeholder="CS/MAT165" id="addCourseName">
+										<input placeholder="CS/MAT165" class="validate" type="text" id="addCourseName">
 										<label for="addCourseName">Course Name</label>
 									</div>
 									<div class="input-field col s12 m6 l3">
-										<input placeholder="Discrete Mathmatics" id="addCourseTitle">
+										<input placeholder="Discrete Mathmatics" class="validate" type="text" id="addCourseTitle">
 										<label for="addCouseTitle">Course Title</label>
 									</div>
 									<div class="input-field col s12 m6 l3">
-										<input placeholder="4" id="addCourseCredits">
+										<input placeholder="4" class="validate" type="number" id="addCourseCredits">
 										<label for="addCouseCredits">Number of Credits</label>
 									</div>
 
@@ -254,11 +255,11 @@ Currently, only attendance information is served
 							<div class="collapsible-body">
 								<div class="row">
 									<div class="input-field col s12 m6 l3">
-										<input id="removeCourseName">
+										<input type="text" class="validate" id="removeCourseName">
 										<label for="removeCourseName">Course Name</label>
 									</div>
 									<div class="input-field col s12 m6 l3">
-										<input id="removeCourseTitle">
+										<input class="validate" type="text" id="removeCourseTitle">
 										<label for="removeCouseTitle">Course Title</label>
 									</div>
 
@@ -278,15 +279,15 @@ Currently, only attendance information is served
 						<ul id="searchCourseBox" class="collapsible" data-collapsible="expandable">
 							<li>
 								<div class="collapsible-header">
-									<i id="dbInfoArrow" class="material-icons">keyboard_arrow_down</i>S
-									Sesrch for courses
+									<i id="dbInfoArrow" class="material-icons">keyboard_arrow_down</i>
+									Search for Courses
 								</div>
 								<div class="collapsible-body">
 									<div class="row">
 										<!--Add in searching options later-->
 									</div>
 									<a id="btnPerformSearch" class="waves-effect waves-light btn">
-										Search for courses
+										Perform Search
 									</a>
 
 								</div>
@@ -306,6 +307,138 @@ Currently, only attendance information is served
 					</div><!--End of view/modify courses div-->
 
 				</div><!--End Course Management Tab-->
+
+
+
+				<div id="section_mgmt">
+					<h2><center>Section Management</center></h2>
+					<p class="center-align">This page is currently under development</p>
+
+					<!--
+						This section will contain the same style of drop down menus as the
+						course management tab did that will contain all of the needed
+						drop-down menus needed with all of the input needed to add and
+						remove a section from the DB
+					-->
+					<ul id="addSectionBox" class="collapsible" data-collapsible="expandable">
+						<li>
+							<div class="collapsible-header">
+								<i id="dbInfoArrow" class="material-icons">keyboard_arrow_down</i>Add A Section
+							</div>
+							<div class="collapsible-body">
+								<div class="row">
+									<!--This drop down needs to be dynamically populated with all of the
+									courses that are in the DB so the end user can choose from a list of
+									courses rather than type in the name of every section that needs to be
+									added to the DB-->
+									<div class="input-field col s12 m6 l3">
+										<select id="courseNameSelect">
+											<option value="" disabled="true" selected="true">Choose Course</option>
+										</select>
+										<label>Course Select</label>
+									</div>
+									<div class="input-field col s12 m6 l3">
+										<select id="TermSelect">
+											<option value="" disabled="true" selected="true">Choose Term</option>
+										</select>
+										<label>Term Select</label>
+									</div>
+									<div class="input-field col s12 m6 l3">
+										<input placeholder="01" type="number" class="validate" id="addSectionNumber">
+										<label for="addSectionNumber">Section Number</label>
+									</div>
+									<div class="input-field col s12 m6 l3">
+										<input placeholder="4" type="number" class="validate" id="addSectionCRN">
+										<label for="addSectionCRN">CRN Number</label>
+									</div>
+									<div class="input-field col s12 m6 l3">
+										<input placeholder="MR" type="text" class="validate" id="addSectionSchedule">
+										<label for="addSectionSchedule">Scheduled Days</label>
+									</div>
+									<div class="input-field col s12 m6 l3">
+										<input placeholder="30" type="number" class="validate" id="addSectionCapacity">
+										<label for="addSectionCapacity">Student Capacity</label>
+									</div>
+									<div class="input-field col s12 m6 l3">
+										<input placeholder="WH301" type="text" class="validate" id="addSectionLocation">
+										<label for="addSectionLocation">Class Location</label>
+									</div>
+									<!--The label field does not seem to move with the type DATE
+									may be a materialize issue. Not sure-->
+									<div class="input-field col s12 m6 l3">
+										<input class="validate" type="date" id="addSectionStartDate">
+										<label for="addSectionStartDate">Starting Date</label>
+									</div>
+									<div class="input-field col s12 m6 l3">
+										<input type="date" class="validate" id="addSectionEndDate">
+										<label for="addSectionEndDate">End Date</label>
+									</div>
+									<div class="input-field col s12 m6 l3">
+										<input type="date" class="validate" id="addSectionMidtermDate">
+										<label for="addSectionMidtermDate">Midterm Date</label>
+									</div>
+									<!--
+										The instructor fields will be drop down menus to Choose the
+										instructors name instead of the end user needing to know the id Number
+										of the instructor(s) of the class.
+
+										NOTE:All of the instructors names would need to dynamically populate in this list
+									-->
+									<div class="input-field col s12 m6 l3">
+										<select id="primaryInstructorSelect">
+											<option value="" disabled="true" selected="true">Choose Primary Insturctor</option>
+										</select>
+										<label>Primary Instructor</label>
+									</div>
+									<div class="input-field col s12 m6 l3">
+										<select id="secondaryInstructorSelect">
+											<option value="" disabled="true" selected="true">Choose Secondary Insturctor</option>
+										</select>
+										<label>Secondary Instructor</label>
+									</div>
+									<div class="input-field col s12 m6 l3">
+										<select id="tertiaryInstructorSelect">
+											<option value="" disabled="true" selected="true">Choose Tertiary Insturctor</option>
+										</select>
+										<label>Tertiary Instructor</label>
+									</div>
+
+
+									<a id="btnAddSection" class="waves-effect waves-light btn">Add Section</a>
+								</div><!--End of add course row.-->
+							</div>
+						</li>
+					</ul><!--End of add Section drop down menu-->
+
+					<ul id="removeSectionBox" class="collapsible" data-collapsible="expandable">
+						<li>
+							<div class="collapsible-header">
+								<i id="dbInfoArrow" class="material-icons">keyboard_arrow_down</i>Remove A Section
+							</div>
+							<div class="collapsible-body">
+								<div class="row">
+									<!--This drop down needs to be dynamically populated with all of the
+									courses that are in the DB so the end user can choose from a list of
+									courses rather than type in the name of every section that needs to be
+									added to the DB-->
+									<div class="input-field col s12 m6 l3">
+										<select id="courseNameSelect">
+											<option value="" disabled="true" selected="true">Choose Course</option>
+										</select>
+										<label>Course Select</label>
+									</div>
+									<div class="input-field col s12 m6 l3">
+										<input placeholder="01" type="number" class="validate" id="removeSectionNumber">
+										<label for="removeSectionNumber">Section Number</label>
+
+									<a id="btnRemoveSection" class="waves-effect waves-light btn">Delete Section</a>
+							</div><!--End of Remove A course row-->
+						</li>
+					</ul><!--End of Remove Course Drop Down-->
+
+
+
+				</div><!--End Section Management Tab-->
 
 
 				<div id="about">
