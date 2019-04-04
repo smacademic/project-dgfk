@@ -112,7 +112,7 @@ $(document).ready(function() {
 	  	'by the server.<br> Please try again or contact support if you believe this is an error.</p>');
 		}
 	});
-	
+
 	$('#yearSelect').change(function() {
 		var year = $('#yearSelect').val();
 		popSeasons(dbInfo, year);
@@ -153,7 +153,7 @@ $(document).ready(function() {
 
 		//show Login tab, hide Roster, Attendance, Grades, and Reports tabs
 		$('#loginTab').css('display', 'inline');
-		$('#rosterTab, #attnTab, #gradesTab, #reportsTab, #courseTab').css('display', 'none');
+		$('#rosterTab, #attnTab, #gradesTab, #reportsTab, #courseTab, #sectionTab').css('display', 'none');
 		$('ul.tabs').tabs('select_tab', 'login');
 	});
 
@@ -308,7 +308,7 @@ function serverLogin(connInfo, email, callback) {
 
 			//hide Login tab, show Roster, Attendance, Grades, and Reports tabs
 			$('#loginTab').css('display', 'none');
-			$('#rosterTab, #attnTab, #gradesTab, #reportsTab, #courseTab').css('display', 'inline');
+			$('#rosterTab, #attnTab, #gradesTab, #reportsTab, #courseTab, #sectionTab').css('display', 'inline');
 			$('ul.tabs').tabs('select_tab', 'attendance');
 
 			//populate instructor name and display profile (including logout menu)
@@ -631,7 +631,7 @@ function getCourses(connInfo){
 		setCoursesTable(courses);
     console.log(result);
 	},
-    
+
 	error: function(result) {
 		showAlert('<p>Error while retrieving courses.</p>');
 	console.log(result);
@@ -644,4 +644,3 @@ function getCourses(connInfo){
 function setCoursesTable(htmlText){
 	$('#coursesTable').html(htmlText);
 };
-
