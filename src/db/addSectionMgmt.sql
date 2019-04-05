@@ -63,7 +63,7 @@ RETURNS VOID AS
 $$
 BEGIN
 
-    -- check if course exists
+    -- check if section exists
     -- and throw exception if exists already
     IF sectionExists(term, course, num) IS true
     THEN
@@ -113,6 +113,50 @@ ELSE
    RAISE EXCEPTION 'Section does not exist';
 END IF;
 
+END
+$$
+LANGUAGE plpgsql;
+
+
+--Function to update a row in the Section table
+-- parameters: 
+--    ID, Term, Course, and SectionNumber of section to be modified.
+--    Possible new SectionNumber, Schedule, Capacity, Location, MidtermDate.
+--
+-- excludes updates to: ID, term, course, CRN, instructor(s), startDate, endDate,
+
+CREATE OR REPLACE FUNCTION modifySection(secID INT, term INT, 
+                                         course VARCHAR(11), 
+                                         currSecNum VARCHAR(3),
+                                         modSecNum VARCHAR(3),
+                                         modSchedule VARCHAR(7),
+                                         modCapacity INT,
+                                         modLocation VARCHAR(25),
+                                         modMidtermDate DATE)
+RETURNS VOID AS
+$$
+BEGIN
+
+   -- check if section attempting to modify exists
+    IF sectionExists(term, course, currSecNum) IS false
+    THEN
+       RAISE EXCEPTION 'Section does not exist';
+    END IF;
+
+   -- test if requested modifications conflict with an existing section
+   IF sectionExists(term, course, modSecNum) IS true
+    THEN
+       RAISE EXCEPTION 'Modifications conflict with an already existing Section';
+    END IF;
+
+   -- update
+   UPDATE Gradebook.Section
+      SET SectionNumber = modSecNum,
+          Schedule = modSchedule,
+          Capacity = modCapacity,
+          Location = modLocation,
+          MidtermDate = modMidtermDate
+      WHERE Section.ID = secID;
 END
 $$
 LANGUAGE plpgsql;
