@@ -13,9 +13,109 @@
 -- the script should be run as part of application installation
 
 
+-----------------------------------------------------------------------------------
+-- Changes were made to the original script by Team GEEKS, CS298 Spring 2019
+-- The following functions were added or edited from their original
+--    sectionExists, addSection, removeSection
+
+
 --Suppress messages below WARNING level for the duration of this script
 SET LOCAL client_min_messages TO WARNING;
 
+
+-- function to check if a course exists
+-- parameters: Term, Course, and SectionNumber
+
+CREATE OR REPLACE FUNCTION sectionExists(sTerm INT, sCourse VARCHAR(11),
+                                         num VARCHAR (3))
+RETURNS BOOL AS
+$$
+BEGIN
+   -- Test if section exists
+   IF EXISTS
+   (
+      SELECT * FROM Gradebook.Section WHERE Section.Term = sTerm AND
+                                            Section.Course = sCourse AND
+                                            Section.SectionNumber = num
+   )
+   THEN  
+      RETURN true;
+   END IF;
+
+   -- Section does not exist
+   RETURN false;
+END
+$$
+LANGUAGE plpgsql;
+
+
+-- function to add a section / add a row to the section table
+-- parameters: all attributes of Section table excluding ID
+
+CREATE OR REPLACE FUNCTION addSection(term INT, course VARCHAR(11),
+                                      capacity INT, num VARCHAR(3),
+                                      CRN VARCHAR(5),schedule VARCHAR(7), 
+                                      Loc VARCHAR(25),sDate DATE, 
+                                      eDate DATE, mDate DATE,
+                                      I1 INT, I2 INT, I3 INT)
+
+RETURNS VOID AS
+$$
+BEGIN
+
+    -- check if course exists
+    -- and throw exception if exists already
+    IF sectionExists(term, course, num) IS true
+    THEN
+       RAISE EXCEPTION 'Section already exists';
+    END IF;
+
+    -- insert course
+    INSERT INTO Gradebook.Section VALUES
+    (
+       DEFAULT, -- ID
+       term,
+       course,
+       num, -- section number
+       CRN,
+       schedule,
+       capacity,
+       Loc, -- location
+       sDate, -- startDate
+       eDate, -- endDate
+       mDate, -- MidtermDate
+       I1, -- Instructor 1
+       I2,
+       I3
+    );
+
+END
+$$
+LANGUAGE plpgsql;
+
+
+-- function to remove a section
+-- parameters: secID
+
+CREATE OR REPLACE FUNCTION removeSection(secID INT)
+
+RETURNS VOID AS
+$$
+BEGIN
+
+IF EXISTS 
+(
+   SELECT * FROM Gradebook.Section WHERE Section.ID = secID
+)
+THEN
+   DELETE FROM Gradebook.Section WHERE Section.ID = secID;
+ELSE
+   RAISE EXCEPTION 'Section does not exist';
+END IF;
+
+END
+$$
+LANGUAGE plpgsql;
 
 
 
