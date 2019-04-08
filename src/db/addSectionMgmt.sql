@@ -27,7 +27,7 @@ SET LOCAL client_min_messages TO WARNING;
 -- parameters: Term, Course, and SectionNumber
 
 CREATE OR REPLACE FUNCTION sectionExists(sTerm INT, sCourse VARCHAR(11),
-                                         num VARCHAR (3))
+                                         num VARCHAR (3), sCRN VARCHAR(5))
 RETURNS BOOL AS
 $$
 BEGIN
@@ -36,7 +36,8 @@ BEGIN
    (
       SELECT * FROM Gradebook.Section WHERE Section.Term = sTerm AND
                                             Section.Course = sCourse AND
-                                            Section.SectionNumber = num
+                                            Section.SectionNumber = num AND
+                                            Section.CRN = sCRN
    )
    THEN  
       RETURN true;
@@ -65,7 +66,7 @@ BEGIN
 
     -- check if section exists
     -- and throw exception if exists already
-    IF sectionExists(term, course, num) IS true
+    IF sectionExists(term, course, num, CRN) IS true
     THEN
        RAISE EXCEPTION 'Section already exists';
     END IF;
@@ -120,15 +121,17 @@ LANGUAGE plpgsql;
 
 --Function to update a row in the Section table
 -- parameters: 
---    ID, Term, Course, and SectionNumber of section to be modified.
---    Possible new SectionNumber, Schedule, Capacity, Location, MidtermDate.
+--  Term, Course, CRN, and SectionNumber of section to be modified.
+--  Possible new SectionNumber, CRN, Schedule, Capacity, Location, MidtermDate.
 --
--- excludes updates to: ID, term, course, CRN, instructor(s), startDate, endDate,
+-- excludes updates to: ID, term, course, instructor(s), startDate, endDate,
 
 CREATE OR REPLACE FUNCTION modifySection(secID INT, term INT, 
                                          course VARCHAR(11), 
                                          currSecNum VARCHAR(3),
+                                         currCRN VARCHAR(5),
                                          modSecNum VARCHAR(3),
+                                         modCRN VARCHAR(5),
                                          modSchedule VARCHAR(7),
                                          modCapacity INT,
                                          modLocation VARCHAR(25),
@@ -138,13 +141,13 @@ $$
 BEGIN
 
    -- check if section attempting to modify exists
-    IF sectionExists(term, course, currSecNum) IS false
+    IF sectionExists(term, course, currSecNum, currCRN ) IS false
     THEN
        RAISE EXCEPTION 'Section does not exist';
     END IF;
 
    -- test if requested modifications conflict with an existing section
-   IF sectionExists(term, course, modSecNum) IS true
+   IF sectionExists(term, course, modSecNum, modCRN) IS true
     THEN
        RAISE EXCEPTION 'Modifications conflict with an already existing Section';
     END IF;
@@ -152,6 +155,7 @@ BEGIN
    -- update
    UPDATE Gradebook.Section
       SET SectionNumber = modSecNum,
+          CRN = modCRN,
           Schedule = modSchedule,
           Capacity = modCapacity,
           Location = modLocation,
