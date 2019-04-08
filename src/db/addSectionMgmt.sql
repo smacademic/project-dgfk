@@ -15,8 +15,6 @@
 
 -----------------------------------------------------------------------------------
 -- Changes were made to the original script by Team GEEKS, CS298 Spring 2019
--- The following functions were added or edited from their original
---    sectionExists, addSection, removeSection
 
 
 --Suppress messages below WARNING level for the duration of this script
@@ -173,9 +171,9 @@ DROP FUNCTION IF EXISTS Gradebook.getSectionID(NUMERIC(4,0), VARCHAR(20),
                                                VARCHAR(8), VARCHAR(3)
                                               );
 
-CREATE FUNCTION Gradebook.getSectionID(year NUMERIC(4,0),
+CREATE OR REPLACE FUNCTION Gradebook.getSectionID(year NUMERIC(4,0),
                                        seasonIdentification VARCHAR(20),
-                                       course VARCHAR(8),
+                                       course VARCHAR(11),
                                        sectionNumber VARCHAR(3)
                                       )
 RETURNS INT
@@ -202,9 +200,9 @@ DROP FUNCTION IF EXISTS Gradebook.getSectionID(NUMERIC(4,0), NUMERIC(1,0),
                                                VARCHAR(8), VARCHAR(3)
                                               );
 
-CREATE FUNCTION Gradebook.getSectionID(year NUMERIC(4,0),
+CREATE OR REPLACE FUNCTION Gradebook.getSectionID(year NUMERIC(4,0),
                                        seasonOrder NUMERIC(1,0),
-                                       course VARCHAR(8),
+                                       course VARCHAR(11),
                                        sectionNumber VARCHAR(3)
                                       )
 RETURNS INT
@@ -226,18 +224,19 @@ DROP FUNCTION IF EXISTS Gradebook.getSection(NUMERIC(4,0), VARCHAR(20),
                                              VARCHAR(8), VARCHAR(3)
                                             );
 
-CREATE FUNCTION Gradebook.getSection(year NUMERIC(4,0),
+CREATE OR REPLACE FUNCTION Gradebook.getSection(year NUMERIC(4,0),
                                      seasonIdentification VARCHAR(20),
-                                     course VARCHAR(8), sectionNumber VARCHAR(3)
+                                     course VARCHAR(11), sectionNumber VARCHAR(3)
                                     )
 RETURNS TABLE
 (
    ID INT,
    Term INT,
-   Course VARCHAR(8),
+   Course VARCHAR(11),
    SectionNumber VARCHAR(3),
    CRN VARCHAR(5),
    Schedule VARCHAR(7),
+   Capacity INT,
    Location VARCHAR(25),
    StartDate DATE,
    EndDate DATE,
@@ -249,7 +248,8 @@ RETURNS TABLE
 AS
 $$
 
-   SELECT N.ID, N.Term, N.Course, N.SectionNumber, N.CRN, N.Schedule, N.Location,
+   SELECT N.ID, N.Term, N.Course, N.SectionNumber, N.CRN, 
+          N.Schedule, N.Capacity, N.Location,
           COALESCE(N.StartDate, T.StartDate), COALESCE(N.EndDate, T.EndDate),
           N.MidtermDate, N.Instructor1, N.Instructor2, N.Instructor3
    FROM Gradebook.Section N JOIN Gradebook.Term T ON N.Term  = T.ID
@@ -272,17 +272,20 @@ DROP FUNCTION IF EXISTS Gradebook.getSection(NUMERIC(4,0), NUMERIC(1,0),
                                              VARCHAR(8), VARCHAR(3)
                                             );
 
-CREATE FUNCTION Gradebook.getSection(year NUMERIC(4,0), seasonOrder NUMERIC(1,0),
-                                    course VARCHAR(8), sectionNumber VARCHAR(3)
-                                   )
+CREATE OR REPLACE FUNCTION Gradebook.getSection(year NUMERIC(4,0),
+                                                seasonOrder NUMERIC(1,0),
+                                                course VARCHAR(11), 
+                                                sectionNumber VARCHAR(3)
+                                               )
 RETURNS TABLE
 (
   ID INT,
   Term INT,
-  Course VARCHAR(8),
+  Course VARCHAR(11),
   SectionNumber VARCHAR(3),
   CRN VARCHAR(5),
   Schedule VARCHAR(7),
+  Capacity INT,
   Location VARCHAR(25),
   StartDate DATE,
   EndDate DATE,
@@ -294,7 +297,7 @@ RETURNS TABLE
 AS
 $$
 
-   SELECT ID, Term, Course, SectionNumber, CRN, Schedule, Location,
+   SELECT ID, Term, Course, SectionNumber, CRN, Schedule, Capacity, Location,
           StartDate, EndDate,
           MidtermDate, Instructor1, Instructor2, Instructor3
    FROM Gradebook.getSection($1, $2::VARCHAR, $3, $4);
