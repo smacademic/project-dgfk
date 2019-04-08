@@ -92,7 +92,7 @@ CREATE TABLE Gradebook.Section
    SectionNumber VARCHAR(3) NOT NULL, --'01', '72', etc.
    CRN VARCHAR(5) NOT NULL, --store this info for the registrar's benefit?
    Schedule VARCHAR(7),  --days the class meets: 'MW', 'TR', 'MWF', etc.
-   Capactiy INT, -- capacity of the class
+   Capacity INT, -- capacity of the class
    Location VARCHAR(25), --likely a classroom
    StartDate DATE, --first date the section meets
    EndDate DATE, --last date the section meets
