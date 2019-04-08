@@ -33,4 +33,19 @@ This document will also serve the purpose of guiding the person or team that is 
 
 ***
 ### <u>Needed Extra Setup for Gradebook to Function as Intended</u>
-<!--Add This section in later-->
+<!--This section will need more work done to it.-->
+1. **User Accounts** need to be created.
+    - At the current vesion of **Gradebook** *(0.4.0)*, there is no automatic way to add user accounts to the Database where an Administrator adds new instructors or other staff to the database.
+    - All new users created need to be members of `GB_Webapp` so that they have the ability to log into the system.
+    - ***NOTE***: All **User Accounts need** to *at the current version* have an instructor in the table `Gradebook.Instructor` so that they will be able to use the system.
+2. PostgreSQL Database name
+    - The PostgreSQL Database name created for the installation of **Gradebook v0.4.0** needs to be called `gradebook`.
+        - As of this version, all of the tables in the product are called to using schema qualification so the database would need to be specific
+3. To have a *DBMS* that is located on a different system other than the one that is running `GradebookServer.js`
+    - Within the file `index.js` the following modification(s) would need to be made.
+        - On line 25 of the file, the portion of code that has `"host":null` would need to be changed so that `null` has either the *IP Address* or *DNS Hostname* of the server where PostgreSQL is running
+        - If a different port other than `5432` is being used, then `"port":null,` would need to be changed to have the correct port that the DBMS is running on
+    - Within the file `index.html` on lines 111-123 the following changes would need to be made:
+        - on line 113, the value would need to be changed from `localhost` to either the same IP Address of DNS Name of the Server running the DBMS
+        - If there is a different port being used other than `5432` then that number should be on the value section of line 117.
+***
