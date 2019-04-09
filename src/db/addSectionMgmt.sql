@@ -124,10 +124,12 @@ LANGUAGE plpgsql;
 --
 -- excludes updates to: ID, term, course, instructor(s), startDate, endDate,
 
-CREATE OR REPLACE FUNCTION modifySection(secID INT, term INT, 
-                                         course VARCHAR(11), 
+CREATE OR REPLACE FUNCTION modifySection(secID INT, currTerm INT, 
+                                         currCourse VARCHAR(11), 
                                          currSecNum VARCHAR(3),
                                          currCRN VARCHAR(5),
+                                         modTerm INT,
+                                         modCourse VARCHAR(11),
                                          modSecNum VARCHAR(3),
                                          modCRN VARCHAR(5),
                                          modSchedule VARCHAR(7),
@@ -139,20 +141,22 @@ $$
 BEGIN
 
    -- check if section attempting to modify exists
-    IF sectionExists(term, course, currSecNum, currCRN ) IS false
+    IF sectionExists(currTerm, currCourse, currSecNum, currCRN ) IS false
     THEN
        RAISE EXCEPTION 'Section does not exist';
     END IF;
 
    -- test if requested modifications conflict with an existing section
-   IF sectionExists(term, course, modSecNum, modCRN) IS true
+   IF sectionExists(modTerm, modCourse, modSecNum, modCRN) IS true
     THEN
        RAISE EXCEPTION 'Modifications conflict with an already existing Section';
     END IF;
 
    -- update
    UPDATE Gradebook.Section
-      SET SectionNumber = modSecNum,
+      SET Term = modTerm,
+          Course = modCourse,
+          SectionNumber = modSecNum,
           CRN = modCRN,
           Schedule = modSchedule,
           Capacity = modCapacity,
