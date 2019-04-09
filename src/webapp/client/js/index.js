@@ -94,9 +94,10 @@ $(document).ready(function() {
 					$('#passwordBox').val('');
 					$('#dbInfoBox').collapsible('close', 0);
 					$('#dbInfoArrow').html('keyboard_arrow_down');
-
+					getCourses(dbInfo);
+					$('#coursesTable').show();
 					popYears(dbInfo);
-					getCourses(connInfo);
+
 				});
 			}
 			 else //else for if username and password are filled in
@@ -562,6 +563,7 @@ function getCourses(connInfo){
 			courses += '<label class="active" for=\"newcredits' + result.courses[i].Number + "-" + result.courses[i].Title + '\"></label>' + '<span class="helper-text" data-error="wrong" data-success="right"> </span> </td>';
 			courses += '</tr>';
 		}
+		console.log(courses);
 		setCoursesTable(courses);
     console.log(result);
 	},
