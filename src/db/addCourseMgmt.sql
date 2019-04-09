@@ -151,15 +151,13 @@ LANGUAGE plpgsql;
 -- function to return a list of all current courses
 -- parameters: currently none, but if a search functionality is to be implemented, can be added
 
-CREATE OR REPLACE FUNCTION getCourses()
+CREATE OR REPLACE FUNCTION getCourses(OUT Number VARCHAR(11), OUT Title VARCHAR(100), OUT Credits INT) --OUT outNumber VARCHAR(11),OUT outTitle VARCHAR(100), OUT outCredits INT
 RETURNS SETOF RECORD AS
 $$
-BEGIN
-	SELECT Number,Title,Credits
-	FROM Gradebook.Course;
-END
 
+	SELECT Gradebook.course.Number,Gradebook.course.Title,Gradebook.course.Credits
+	FROM Gradebook.Course;
 $$
-LANGUAGE plpgsql;
+LANGUAGE sql;
 
 
