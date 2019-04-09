@@ -436,7 +436,40 @@ Currently, only attendance information is served
 						</li>
 					</ul><!--End of Remove Course Drop Down-->
 
+					<!--
+						The following section of code will contain the inputs necessary to assign instructors to
+						the section, enroll students into the section and assign term grades to the students in
+						the course.
+						These will continue with the Drop down menu style of hiding the elements of the UI to
+						keep the code, and the physical display of the UI to the end user looking neat and clean.
+					-->
+					<ul id=assignInstructorsBox class="collapsible" data-collapsible="expandable">
+						<li>
+							<div class="collapsible-header">
+								<i id="dbInfoArrow" class="material-icons">keyboard_arrow_down</i>Assign Instructors
+							</div>
+							<div class="collapsible-body">
+								<div class="row">
+									<select id="assignInstructorOne">
+										<option value="" disabled="true" selected="true">Choose Primary Instructor</option>
+										<label for="assignInstructorOne">Primary Instructor</label>
+									</select>
+									<select id="assignInstructorTwo">
+										<option value="" disabled="true" selected="true">Choose Secondary Instructor</option>
+										<label for="assignInstructorTwo">Secondary Instructor</label>
+									</select>
+								</div>
+								<div class="row">
+									<select id="assignInstructorThree">
+										<option value="" disabled="true" selected="true">Choose Tertiary Instructor</option>
+										<label for="assignInstructorThree">Tertiary Instructor</label>
+									</select>
 
+									<a id="btnAssignInstructors" class="waves-effect waves-light btn">Assign Instructors</a>
+								</div>
+							</div>
+						</li>
+					</ul><!--End Assign Instructors Drop Down-->
 
 				</div><!--End Section Management Tab-->
 
