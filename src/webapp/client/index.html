@@ -471,6 +471,39 @@ Currently, only attendance information is served
 						</li>
 					</ul><!--End Assign Instructors Drop Down-->
 
+					<ul id="enrollStudentsBox" class="collapsible" data-collapsible="expandable">
+						<li>
+							<div class="collapsible-header">
+								<i id="dbInfoArrow" class="material-icons">keyboard_arrow_down</i>Enroll Students
+							</div>
+							<div class="collapsible-body">
+								<div class="row">
+									<select id="enrollChooseCourse">
+										<option value="" disabled="true" selected="true">Choose Course</option>
+										<label for="enrollChooseCourse">Course</label>
+									</select>
+									<select id="enrollChooseSection">
+										<option value="" disabled="true" selected="true">Choose Section</option>
+										<label for="enrollChooseSection">Section</label>
+									</select>
+								</div>
+								<div class="row">
+									<select id="enrollStudent">
+										<option value="" disabled="true" selected="true">Choose Student</option>
+										<label for="enrollStudent">Student Name</label>
+									</select>
+
+									<a id="btnEnrollStudent" class="waves-effect waves-light btn">Enroll Student in Class</a>
+									<!--
+										A good enhancement idea would be to add a way to select a csv
+										file and be able to upload and process the file to enroll students
+										into a Class
+									-->
+								</div>
+							</div>
+						</li>
+					</ul><!--End Enroll Students Drop Down-->
+
 				</div><!--End Section Management Tab-->
 
 
