@@ -513,8 +513,64 @@ app.get('modCourses', function(request, response){
    
    //execute the query
    executeQuery(response, config, queryText, queryParams, function(result) {
-   response.send(JSON.stringify({}));
+      response.send(JSON.stringify({}));
+   });
 });
+
+app.get('/addSection', function(request, response) {
+   //Decrypt the password received from the client.
+   //NOTE: We need to substitute superSecret with what we're actually implementing
+   var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
+
+   //Connection parameters for the Postgres client received in the request
+   var config = createConnectionParams(request.query.user, request.query.database,
+       passwordText, request.query.host, request.query.port);
+
+   //Get the params from the url
+   var term = request.query.addSectionTerm;
+   var course = request.query.courseNameSelect;
+   var capacity = request.query.addSectionCapacity;
+   var num = request.query.addSectionNumber;
+   var CRN = request.query.addSectionCRN;
+   var schedule = request.query.addSectionSchedule;
+   var location = request.query.addSectionLocation;
+   var start_date = request.query.addSectionStartDate;
+   var end_date = request.query.addSectionEndDate;
+   var midterm_date = request.query.addSectionMidtermDate;
+   var instructor1 = request.query.primaryInstructorSelect;
+   var instructor2 = request.query.secondaryInstructorSelect;
+   var instructor3 = request.query.tertiaryInstructorSelect;
+
+   //Set the query text
+   var queryText = 'SELECT addSection($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13);';
+   var queryParams = [term, course, capacity, num, CRN, schedule, location, start_date, end_date, midterm_date, instructor1, instructor2, instructor3];
+
+   //Execute the query
+   executeQuery(response, config, queryText, queryParams, function(result) {
+       response.send(JSON.stringify({}));
+   });
+});
+
+app.get('/removeSection', function(request, response) {
+  //Decrypt the password received from the client.
+  //NOTE: We need to substitute superSecret with what we're actually implementing
+  var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
+
+  //Connection parameters for the Postgres client received in the request
+  var config = createConnectionParams(request.query.user, request.query.database,
+      passwordText, request.query.host, request.query.port);
+
+  //Get the params from the url
+  var removeSectionNumber = request.query.removeSectionNumber;
+
+  //Set the query text
+  var queryText = 'SELECT removeSection($1);';
+  var queryParams = [removeSectionNumber];
+
+  //Execute the query
+  executeQuery(response, config, queryText, queryParams, function(result) {
+      response.send(JSON.stringify({}));
+  });
 });
 
 app.use(function(err, req, res, next){

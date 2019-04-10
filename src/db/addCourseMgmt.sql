@@ -10,14 +10,19 @@
 --             newTitle (VARCHAR) -- i.e "Discrete Math"
 --             Credits (INT) -- i.e "4"
 
+
 CREATE OR REPLACE FUNCTION insertCourse(Num VARCHAR, newTitle VARCHAR, Credits INT)
+
+
 RETURNS VOID AS
 $$
-BEGIN 
+BEGIN
 
     -- check if course exists
     -- and throw exception if exists already
+
     IF courseExists(Num,newTitle,NULL) IS true
+
     THEN
         RAISE EXCEPTION 'Course already exists';
     END IF;
@@ -26,7 +31,7 @@ BEGIN
     INSERT INTO Gradebook.Course VALUES (Num, newTitle, Credits);
 
 END
-$$ 
+$$
 LANGUAGE plpgsql;
 
 
@@ -34,10 +39,12 @@ LANGUAGE plpgsql;
 -- parameters: Num (VARCHAR) -- i.e "CS/MAT165"
 --             oldTitle (VARCHAR) -- i.e "Discrete Math"
 
+
 CREATE OR REPLACE FUNCTION removeCourse(Num VARCHAR, oldTitle VARCHAR)
 RETURNS VOID AS
+
 $$
-BEGIN 
+BEGIN
 
    -- Make sure course exists
    -- throw exception otherwise
@@ -45,14 +52,16 @@ BEGIN
    THEN 
       RAISE EXCEPTION 'Course does not exist';
    END IF;
-   
+
    -- remove course
    DELETE FROM Gradebook.Course WHERE Course.Number = Num 
                                 AND Course.Title = oldTitle;
 
+
 END
 $$
 LANGUAGE plpgsql;
+
 
 
 -- function to modify a course / update a row in the course table
