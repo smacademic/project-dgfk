@@ -469,10 +469,11 @@ app.get('/getCourses', function(request, response){
        passwordText, request.query.host, request.query.port);
 
    //Set the query text
-   var queryText = 'SELECT gradebook.getCourses();';
+   var queryText = 'SELECT * FROM gradebook.getCourses();';
+   var queryParams;
    
    //Execute the query
-   executeQuery(response, config, queryText, function(result) {
+   executeQuery(response, config, queryText, queryParams, function(result) {
 	   		var courses = []; //Put the rows from the query into json format
 												for (row in result.rows) {
 												    courses.push(
