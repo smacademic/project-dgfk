@@ -436,6 +436,114 @@ Currently, only attendance information is served
 						</li>
 					</ul><!--End of Remove Course Drop Down-->
 
+					<!--
+						The following section of code will contain the inputs necessary to assign instructors to
+						the section, enroll students into the section and assign term grades to the students in
+						the course.
+						These will continue with the Drop down menu style of hiding the elements of the UI to
+						keep the code, and the physical display of the UI to the end user looking neat and clean.
+					-->
+					<ul id=assignInstructorsBox class="collapsible" data-collapsible="expandable">
+						<li>
+							<div class="collapsible-header">
+								<i id="dbInfoArrow" class="material-icons">keyboard_arrow_down</i>Assign Instructors
+							</div>
+							<div class="collapsible-body">
+								<div class="row">
+									<select id="assignInstructorOne">
+										<option value="" disabled="true" selected="true">Choose Primary Instructor</option>
+										<label for="assignInstructorOne">Primary Instructor</label>
+									</select>
+									<select id="assignInstructorTwo">
+										<option value="" disabled="true" selected="true">Choose Secondary Instructor</option>
+										<label for="assignInstructorTwo">Secondary Instructor</label>
+									</select>
+								</div>
+								<div class="row">
+									<select id="assignInstructorThree">
+										<option value="" disabled="true" selected="true">Choose Tertiary Instructor</option>
+										<label for="assignInstructorThree">Tertiary Instructor</label>
+									</select>
+
+									<a id="btnAssignInstructors" class="waves-effect waves-light btn">Assign Instructors</a>
+								</div>
+							</div>
+						</li>
+					</ul><!--End Assign Instructors Drop Down-->
+
+					<ul id="enrollStudentsBox" class="collapsible" data-collapsible="expandable">
+						<li>
+							<div class="collapsible-header">
+								<i id="dbInfoArrow" class="material-icons">keyboard_arrow_down</i>Enroll Students
+							</div>
+							<div class="collapsible-body">
+								<div class="row">
+									<select id="enrollChooseCourse">
+										<option value="" disabled="true" selected="true">Choose Course</option>
+										<label for="enrollChooseCourse">Course</label>
+									</select>
+									<select id="enrollChooseSection">
+										<option value="" disabled="true" selected="true">Choose Section</option>
+										<label for="enrollChooseSection">Section</label>
+									</select>
+								</div>
+								<div class="row">
+									<select id="enrollStudent">
+										<option value="" disabled="true" selected="true">Choose Student</option>
+										<label for="enrollStudent">Student Name</label>
+									</select>
+
+									<a id="btnEnrollStudent" class="waves-effect waves-light btn">Enroll Student in Class</a>
+									<!--
+										A good enhancement idea would be to add a way to select a csv
+										file and be able to upload and process the file to enroll students
+										into a Class
+									-->
+								</div>
+							</div>
+						</li>
+					</ul><!--End Enroll Students Drop Down-->
+
+					<ul id="assignTermGradeBox" class="collapsible" data-collapsible="expandable">
+						<li>
+							<div class="collapsible-header">
+								<i id="dbInfoArrow" class="material-icons">keyboard_arrow_down</i>Assign Term Grade
+							</div>
+							<div class="collapsible-body">
+								<div class="row">
+									<select id="assignTermGradeChooseCourse">
+										<option value="" disabled="true" selected="true">Choose Course</option>
+										<label for="assignTermGradeChooseCourse">Course</label>
+									</select>
+									<select id="assignTermGradeChooseSection">
+										<option value="" disabled="true" selected="true">Choose Section</option>
+										<label for="assignTermGradeChooseSection">Section</label>
+									</select>
+									<select id="assignTermGradeChooseStudent">
+										<option value="" disabled="true" selected="true">Choose Student</option>
+										<label for="assignTermGradeChooseStudent">Student Name</label>
+									</select>
+								</div>
+								<div class="row">
+									<select id="selectTermGrade">
+										<option value="" disabled="true" selected="true">Select Term Grade</option>
+										<label for="selectTermGrade">Term Grade</label>
+									</select>
+									<!--
+										There are a few different ways that i could see how this could be completed:
+										1. Using numeric Grade Percentages which would equate to the appropriate
+										letter grade
+										2. Hard code all of the different letter Grade options to choose from (could
+										be easy, but could be too specific).
+											a. This would make it easier because the Section Table should have
+											the letter grades set as the expected input.
+										3. Dynamically populate the letter grade choices using Javascript
+									-->
+										<a id="btnEnrollStudent" class="waves-effect waves-light btn">Assign Term Grade</a>
+								</div>
+							</div>
+						</li>
+					</ul>
 
 
 				</div><!--End Section Management Tab-->
