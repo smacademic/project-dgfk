@@ -310,3 +310,42 @@ $$ LANGUAGE sql
   STABLE
   RETURNS NULL ON NULL INPUT
   ROWS 1;
+
+
+--Function to add an instructor to a section
+-- parameters: Section ID and Instructor ID(s)
+
+CREATE OR REPLACE FUNCTION addInstructor(secID INT, I1 INT, I2 INT, I3 INT)
+
+RETURNS VOID AS
+$$
+BEGIN
+   -- test if Section wanting to add instructor to exists
+   IF NOT EXISTS 
+   (
+      SELECT * FROM Gradebook.Section WHERE Section.ID = secID
+   )
+   THEN
+      RAISE EXCEPTION 'Section does not exist';
+   END IF;
+
+      -- test if I1 is NULL
+   IF(I1 IS NULL)
+   THEN
+      RAISE EXCEPTION 'Instructor 1 cannot be NULL';
+   END IF;
+
+   -- test if I1 equals I2 or I3 or if I2=I3 if not null
+   IF (I1 = I2 OR I1 = I3 OR (I2 IS NOT NULL && I2 = I3))
+   THEN 
+       RAISE EXCEPTION 'Section cannot have repeat instructor';
+   END IF;
+
+   UPDATE Gradebook.Section
+      SET Instructor1 = I1,
+          Instructor2 = I2,
+          Instructor3 = I3
+      WHERE Section.ID = secID;
+   END
+   $$
+LANGUAGE plpgsql;
