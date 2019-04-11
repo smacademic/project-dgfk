@@ -98,6 +98,7 @@ $(document).ready(function() {
 					getCourses(dbInfo);
 					$('#coursesTable').show();
 					popYears(dbInfo);
+					popInstructors(dbInfo);
 
 				});
 			}
@@ -147,6 +148,7 @@ $(document).ready(function() {
 		dbInfo = null;
 		instInfo = null;
 		setYears(null); //reset Attendance dropdowns
+		setInstructors(null);
 
 		//hide and reset profile
 		$('#profile').css('display', 'none');
@@ -330,6 +332,26 @@ function serverLogin(connInfo, email, callback) {
 	});
 };
 
+function popInstructors(connInfo) {
+	$.ajax('instructors', {
+		dataType: 'json',
+		data: connInfo,
+		success: function(result) {
+			var instructors = '';
+			for (var i = 0; i < result.instructors.length; i++) {
+				instructors += '<option value="' + result.instructors[i] + '">' +
+				 result.instructors[i] + '</option>';
+			}
+			console.log(result);
+			setInstructors(instructors);
+		},
+		error: function(result) {
+			showAlert('<p>Error while retrieving instructors</p>');
+			console.log(result);
+		}
+	});
+};
+
 function popYears(connInfo) {
 	$.ajax('years', {
 		dataType: 'json',
@@ -434,6 +456,24 @@ function popAttendance(connInfo, sectionid) {
 			console.log(result);
 		}
 	});
+};
+
+function setInstructors(htmlText) {
+	var content = '<option value="" disabled="true" selected="true">' +
+	 'Choose instructor</option>' + htmlText;
+
+	$('#assignInstructorOne').html(content);
+	$('#assignInstructorTwo').html(content);
+	$('#assignInstructorThree').html(content);
+
+	$('#assignInstructorOne').prop('disabled', htmlText == null);
+	$('#assignInstructorTwo').prop('disabled', htmlText == null);
+	$('#assignInstructorThree').prop('disabled', htmlText == null);
+
+	$('#assignInstructorOne').material_select(); //reload dropdown
+	$('#assignInstructorTwo').material_select(); //reload dropdown
+	$('#assignInstructorThree').material_select(); //reload dropdown
+
 };
 
 function setYears(htmlText) {
