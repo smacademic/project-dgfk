@@ -237,7 +237,7 @@ $(document).ready(function() {
 		var idParts = rowId.split("-");
 		var number = idParts[0];
 		var title = idParts[1];
-		removeCourse(dbInfo, num, title);
+		removeCourse(dbInfo, number, title);
 		//sleep(150).then(() => {
 		//defaultCourse(dbInfo);})
 		}
@@ -246,17 +246,18 @@ $(document).ready(function() {
 	/* When a user wishes to cancel a course edit,
 	they click the cancel button next to the row. */
 	$('#coursesTable').on('click', '.cancel', function() {
-		$('#' + this.id).show();
-		$('#remove' + this.id).show();
-		$('#submit' + this.id).hide();
-		$('#cancel' + this.id).hide();
-		$('#number' + this.id).show();
-		$('#newnumber' + this.id).hide();
-		$('#title' + this.id).show();
-		$('#newtitle' + this.id).hide();
-		$('#credits' + this.id).show();
-		$('#newcredits' + this.id).hide();
-
+		var rowId = this.id.replace('cancel','');
+		$('#' + rowId).show();
+		$('#remove' + rowId).show();
+		$('#submit' + rowId).hide();
+		$('#cancel' + rowId).hide();
+		$('#number' + rowId).show();
+		
+		$('#newnumber' + rowId).hide();
+		$('#title' + rowId).show();
+		$('#newtitle' + rowId).hide();
+		$('#credits' + rowId).show();
+		$('#newcredits' + rowId).hide();
 	});
 
 	//On click of the RemoveCourse button, execute
@@ -606,15 +607,15 @@ function getCourses(connInfo){
 		var courses = '<tr style=\"font-weight:bold\">';
 		courses += '<th></th>';
 		courses += '<th style=\"border: 1px solid black\">' + 'Number' + '</th>';
-		courses += '<th style=\"border: 1px solid black\">' + 'Title' + '<th>';
-		courses += '<th style=\"border: 1px solid black\">' + 'Credits' + '<th>';
+		courses += '<th style=\"border: 1px solid black\">' + 'Title' + '</th>';
+		courses += '<th style=\"border: 1px solid black\">' + 'Credits' + '</th>';
 		courses += '</tr>';
 		for ( var i =0; i < result.courses.length; i++){
 			courses += '<tr>';
 			courses += '<td> <a id=\"' + result.courses[i].Number + "-" + result.courses[i].Title + '\" class=\"waves-effect waves-light btn edit\">Edit</a>';
-			courses += '<td> <a id=\"remove' + result.courses[i].Number + "-" + result.courses[i].Title + '\" class=\"waves-effect waves-light btn remove\">Remove</a>';
-			courses += '<td> <a id=\"cancel' + result.courses[i].Number + "-" + result.courses[i].Title + '\" class=\"waves-effect waves-light btn cancel\" style=\"display:none\">Cancel</a>';
-			courses += '<td> <a id=\"submit' + result.courses[i].Number + "-" + result.courses[i].Title + '\" type=\"submit\" class=\"waves-effect waves-light btn submit\" style=\"display:none\">Submit</a></td>';
+			courses += '<a id=\"remove' + result.courses[i].Number + "-" + result.courses[i].Title + '\" class=\"waves-effect waves-light btn remove\">Remove</a>';
+			courses += '<a id=\"cancel' + result.courses[i].Number + "-" + result.courses[i].Title + '\" class=\"waves-effect waves-light btn cancel\" style=\"display:none\">Cancel</a>';
+			courses += '<a id=\"submit' + result.courses[i].Number + "-" + result.courses[i].Title + '\" type=\"submit\" class=\"waves-effect waves-light btn submit\" style=\"display:none\">Submit</a></td>';
 
 			courses += '<td style=\"border: 1px solid black\"><span id=\"number' + result.courses[i].Number + "-" + result.courses[i].Title + '\">' + result.courses[i].Number + '</span>';
 			courses += '<input id=\"newnumber' + result.courses[i].Number + "-" + result.courses[i].Title + '\" class = \"validate\" type=\"text\" maxlength=\"11\" style=\"display:none\" value=\"' + result.courses[i].Number + '\">';
@@ -629,7 +630,6 @@ function getCourses(connInfo){
 			courses += '<label class="active" for=\"newcredits' + result.courses[i].Number + "-" + result.courses[i].Title + '\"></label>' + '<span class="helper-text" data-error="wrong" data-success="right"> </span> </td>';
 			courses += '</tr>';
 		}
-		console.log(courses);
 		setCoursesTable(courses);
     console.log(result);
 	},
