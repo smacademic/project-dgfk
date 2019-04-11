@@ -82,11 +82,12 @@ $(document).ready(function() {
 		*/
 		if(email.endsWith('@example.edu') || email.endsWith('@connect.example.edu'))
 		{
+			var tmpEmail = $('#email').val();
+			var username = tmpEmail.substring(0,tmpEmail.indexOf('@'));
+			dbInfo.user = username;
 	    if (dbInfo != null && email != '')
 	    {
-        var tmpEmail = $('#email').val();
-				var username = tmpEmail.substring(0,tmpEmail.indexOf('@'));
-				dbInfo.user = username;
+
 				serverLogin(dbInfo, email, function()
 				{
 					//clear login fields and close DB Info box
@@ -112,7 +113,7 @@ $(document).ready(function() {
 	  	'by the server.<br> Please try again or contact support if you believe this is an error.</p>');
 		}
 	});
-	
+
 	$('#yearSelect').change(function() {
 		var year = $('#yearSelect').val();
 		popSeasons(dbInfo, year);
@@ -153,10 +154,10 @@ $(document).ready(function() {
 
 		//show Login tab, hide Roster, Attendance, Grades, and Reports tabs
 		$('#loginTab').css('display', 'inline');
-		$('#rosterTab, #attnTab, #gradesTab, #reportsTab, #course_mgmt').css('display', 'none');
+		$('#rosterTab, #attnTab, #gradesTab, #reportsTab, #courseTab, #sectionTab').css('display', 'none');
 		$('ul.tabs').tabs('select_tab', 'login');
 	});
-	
+
 	//On click of the AddCourse button, execute
 	$('#btnAddCourse').click(function(){
 		var num = $('#addCourseName').val();
@@ -164,6 +165,36 @@ $(document).ready(function() {
 		var credits = $('#addCourseCredits').val();
 
 		addCourse(dbInfo, num, title, credits);
+		//sleep(150).then(() => {
+		//defaultCourse(dbInfo, sectionID);})
+	});
+
+	//On click of the AddSection button, execute
+	$('#btnAddSection').click(function(){
+		var course = $('#courseNameSelect').val();
+		var term = $('#TermSelect').val();
+		var num = $('#addSectionNumber').val();
+		var CRN = $('#addSectionCRN').val();
+		var schedule = $('#addSectionSchedule').val();
+		var capacity = $('#addSectionCapacity').val();
+		var location = $('#addSectionLocation').val();
+		var start_date = $('#addSectionStartDate').val();
+		var end_date = $('#addSectionEndDate').val();
+		var midterm_date = $('#addSectionMidtermDate').val();
+		var instructor1 = $('#primaryInstructorSelect').val();
+		var instructor2 = $('#secondaryInstructorSelect').val();
+		var instructor3 = $('#tertiaryInstructorSelect').val();
+
+		addSection(dbInfo, term, course, capacity, num, CRN, schedule, location, start_date, end_date, midterm_date, instructor1, instructor2, instructor3);
+		//sleep(150).then(() => {
+		//defaultCourse(dbInfo, sectionID);})
+	});
+
+	//On click of the RemoveSection button, execute
+	$('#btnRemoveSection').click(function(){
+		var sectionNumber = $('#removeSectionNumber').val();
+
+		removeSection(dbInfo, sectionNumber);
 		//sleep(150).then(() => {
 		//defaultCourse(dbInfo, sectionID);})
 	});
@@ -237,6 +268,7 @@ $(document).ready(function() {
 		removeCourse(dbInfo, num, title);
 		//sleep(150).then(() => {
 		//defaultCourse(dbInfo);})
+
 	});
 });
 
@@ -278,7 +310,7 @@ function serverLogin(connInfo, email, callback) {
 
 			//hide Login tab, show Roster, Attendance, Grades, and Reports tabs
 			$('#loginTab').css('display', 'none');
-			$('#rosterTab, #attnTab, #gradesTab, #reportsTab').css('display', 'inline');
+			$('#rosterTab, #attnTab, #gradesTab, #reportsTab, #courseTab, #sectionTab').css('display', 'inline');
 			$('ul.tabs').tabs('select_tab', 'attendance');
 
 			//populate instructor name and display profile (including logout menu)
@@ -484,6 +516,7 @@ function setAttendance(htmlText) {
 function defaultCourse_mgmt(connInfo){
 
 	getCourses(connInfo);
+
 };
 
 //Calls gradebookServer.js API to add a course.
@@ -501,6 +534,23 @@ function addCourse(connInfo, num, title, credits) {
         });
 };
 
+// Calls gradebookServer.js API to add a section
+function addSection(connInfo, term, course, capacity, num, CRN, schedule, location, start_date, end_date, midterm_date, instructor1, instructor2 = null, instructor3 = null) {
+	var urlParams = $.extend({}, connInfo, {term:term, course:course, capacity:capacity, num:num, CRN:CRN, schedule:schedule, location:location, 
+																					start_date:start_date, end_date:end_date, midterm_date:midterm_date, 
+																					instructor1, instructor2, instructor3});
+	$.ajax('addSection', {
+		data: urlParams,
+		success: function(result) {
+			console.log(result);
+	},
+	error: function(result) {
+			showAlert('<p>Error while adding section: This section is already represented.</p>');
+				console.log(result);
+		}
+	});
+}
+	
 //Calls gradebookServer.js API to remove a course.
 function removeCourse(connInfo, num, title) {
 	var urlParams = $.extend({}, connInfo, {num:num, title:title});
@@ -515,6 +565,21 @@ function removeCourse(connInfo, num, title) {
 	}
 	});
 };
+
+// Calls gradebookServer.js API to remove a section
+function removeSection(connInfo, removeSectionNumber) {
+	var urlParams = $.extend({}, connInfo, {removeSectionNumber:removeSectionNumber});
+	$.ajax('removeSection', {
+		data: urlParams,
+		success: function(result) {
+			console.log(result);
+	},
+	error: function(result) {
+			showAlert('<p>Error while removing section: This section does not exist.</p>');
+				console.log(result);
+		}
+	});
+}
 
 //Calls gradebookServer.js API to modify a course.
 function updateCourses(connInfo, num, title, newnum, newtitle, newcredits){
@@ -568,7 +633,7 @@ function getCourses(connInfo){
 		setCoursesTable(courses);
     console.log(result);
 	},
-    
+
 	error: function(result) {
 		showAlert('<p>Error while retrieving courses.</p>');
 	console.log(result);
