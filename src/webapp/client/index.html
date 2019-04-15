@@ -310,7 +310,7 @@ Currently, only attendance information is served
 
 
 
-				<div id="section_mgmt">
+				<div id="sectio_mgmt">
 					<h2><center>Section Management</center></h2>
 					<p class="center-align">This page is currently under development</p>
 
@@ -363,20 +363,30 @@ Currently, only attendance information is served
 										<input placeholder="WH301" type="text" class="validate" id="addSectionLocation">
 										<label for="addSectionLocation">Class Location</label>
 									</div>
-									<!--The label field does not seem to move with the type DATE
-									may be a materialize issue. Not sure-->
+								</div>
+								<div class="row">
+									<!--
+										The Labels for the date input fields for starting date, ending date, and Midterm
+										date are just plain text because there seems to be an issue with the materialize
+										CSS for creating labels on date input fields that does not let the label hover
+										above the input field at all.
+									-->
 									<div class="input-field col s12 m6 l3">
+										Starting Date
 										<input class="validate" type="date" id="addSectionStartDate">
-										<label for="addSectionStartDate">Starting Date</label>
+
 									</div>
 									<div class="input-field col s12 m6 l3">
+										Ending Date
 										<input type="date" class="validate" id="addSectionEndDate">
-										<label for="addSectionEndDate">End Date</label>
 									</div>
 									<div class="input-field col s12 m6 l3">
+										Midterm Date
 										<input type="date" class="validate" id="addSectionMidtermDate">
-										<label for="addSectionMidtermDate">Midterm Date</label>
+
 									</div>
+								</div>
+								<div class="row">
 									<!--
 										The instructor fields will be drop down menus to Choose the
 										instructors name instead of the end user needing to know the id Number
@@ -450,19 +460,32 @@ Currently, only attendance information is served
 							</div>
 							<div class="collapsible-body">
 								<div class="row">
-									<select id="assignInstructorOne">
+									<div class="input-field col s12 m6 l3">
+										<select id="courseNameSelect">
+											<option value="" disabled="true" selected="true">Choose Course</option>
+										</select>
+										<label>Course Select</label>
+									</div>
+									<div class="input-field col s12 m6 l3">
+										<input placeholder="01" type="number" class="validate" id="removeSectionNumber">
+										<label for="removeSectionNumber">Section Number</label>
+									</div>
+								</div>
+								<div class="row">
+									<select class="input-field col s12 m6 l3" id="assignInstructorOne">
 										<option value="" disabled="true" selected="true">Choose Primary Instructor</option>
 										<label for="assignInstructorOne">Primary Instructor</label>
 									</select>
-									<select id="assignInstructorTwo">
+									<select class="input-field col s12 m6 l3" id="assignInstructorTwo">
 										<option value="" disabled="true" selected="true">Choose Secondary Instructor</option>
 										<label for="assignInstructorTwo">Secondary Instructor</label>
 									</select>
-								</div>
-								<div class="row">
-									<select id="assignInstructorThree">
+									<select class="input-field col s12 m6 l3" id="assignInstructorThree">
 										<option value="" disabled="true" selected="true">Choose Tertiary Instructor</option>
 										<label for="assignInstructorThree">Tertiary Instructor</label>
+								</div>
+								<div class="row">
+
 									</select>
 
 									<a id="btnAssignInstructors" class="waves-effect waves-light btn">Assign Instructors</a>
