@@ -505,9 +505,9 @@ app.get('/getCourses', function(request, response){
          for (row in result.rows) {
                courses.push(
                   {
-                     "Number": result.rows[row].number,
-                     "Title": result.rows[row].title,
-                     "Credits": result.rows[row].credits
+                     "Number": result.rows[row].outNumber,
+                     "Title": result.rows[row].outTitle,
+                     "Credits": result.rows[row].outCredits
                   }
                );
          }
@@ -518,7 +518,7 @@ app.get('/getCourses', function(request, response){
    });
 });
 
-app.get('modCourses', function(request, response){
+app.get('/modCourses', function(request, response){
    //Decrypt the password received from the client.
    //NOTE: We need to substitute superSecret with what we're actually implementing
    var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));

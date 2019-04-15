@@ -189,7 +189,7 @@ $(document).ready(function() {
 
 		addSection(dbInfo, term, course, capacity, num, CRN, schedule, location, start_date, end_date, midterm_date, instructor1, instructor2, instructor3);
 		//sleep(150).then(() => {
-		//defaultCourse(dbInfo, sectionID);})
+		//defaultCourse_mgmt(dbInfo);})
 	});
 
 	//On click of the RemoveSection button, execute
@@ -227,8 +227,8 @@ $(document).ready(function() {
 		var newtitle = $('#newtitle' + rowId).val();
 		var newcredits = $('#newcredits' + rowId).val();
 		updateCourses(dbInfo,number,title,newnumber,newtitle,newcredits);
-		//sleep(150).then(() => {
-		//defaultCourse(dbInfo);})
+		sleep(150).then(() => {
+		defaultCourse_mgmt(dbInfo);})
 	});
 
 	/* When a user wishes to remove a course,
@@ -240,8 +240,8 @@ $(document).ready(function() {
 		var number = idParts[0];
 		var title = idParts[1];
 		removeCourse(dbInfo, number, title);
-		//sleep(150).then(() => {
-		//defaultCourse(dbInfo);})
+		sleep(150).then(() => {
+		defaultCourse_mgmt(dbInfo);})
 		}
 	});
 
@@ -268,8 +268,8 @@ $(document).ready(function() {
 		var title = $('#removeCourseTitle').val();
 
 		removeCourse(dbInfo, num, title);
-		//sleep(150).then(() => {
-		//defaultCourse(dbInfo);})
+		sleep(150).then(() => {
+		defaultCourse_mgmt(dbInfo);})
 
 	});
 });
