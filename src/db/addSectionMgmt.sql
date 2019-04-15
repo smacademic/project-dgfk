@@ -312,15 +312,15 @@ $$ LANGUAGE sql
   ROWS 1;
 
 
---Function to add an instructor to a section
+--Function to assign (add/remove) an instructor to a section
 -- parameters: Section ID and Instructor ID(s)
 
-CREATE OR REPLACE FUNCTION addInstructor(secID INT, I1 INT, I2 INT, I3 INT)
+CREATE OR REPLACE FUNCTION assignInstructor(secID INT, I1 INT, I2 INT, I3 INT)
 
 RETURNS VOID AS
 $$
 BEGIN
-   -- test if Section wanting to add instructor to exists
+   -- test if Section wanting to add/remove instructor to exists
    IF NOT EXISTS 
    (
       SELECT * FROM Gradebook.Section WHERE Section.ID = secID
@@ -341,6 +341,8 @@ BEGIN
        RAISE EXCEPTION 'Section cannot have repeat instructor';
    END IF;
 
+
+
    UPDATE Gradebook.Section
       SET Instructor1 = I1,
           Instructor2 = I2,
@@ -349,3 +351,4 @@ BEGIN
    END
    $$
 LANGUAGE plpgsql;
+
