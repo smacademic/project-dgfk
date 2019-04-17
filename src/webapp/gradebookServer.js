@@ -199,7 +199,7 @@ app.get('/instructors', function(request, response) {
    executeQuery(response, config, queryText, queryParams, function(result) {
       var instructors = []; //Put the rows from the query into json format
       for(row in result.rows) {
-         instructors.push(result.rows[row].FName);
+         instructors.push(result.rows[row].fname);
       }
       var jsonReturn = {
          "instructors": instructors
@@ -511,6 +511,9 @@ app.get('/getCourses', function(request, response){
                   }
                );
          }
+
+         console.log(result.rows[0].title);
+
          var jsonReturn = {
                "courses": courses
          } //Send the json to the client
