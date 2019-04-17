@@ -167,8 +167,8 @@ $(document).ready(function() {
 		var credits = $('#addCourseCredits').val();
 
 		addCourse(dbInfo, num, title, credits);
-		//sleep(150).then(() => {
-		//defaultCourse(dbInfo, sectionID);})
+		sleep(150).then(() => {
+		defaultCourse_mgmt(dbInfo);})
 	});
 
 	//On click of the AddSection button, execute
@@ -198,7 +198,7 @@ $(document).ready(function() {
 
 		removeSection(dbInfo, sectionNumber);
 		//sleep(150).then(() => {
-		//defaultCourse(dbInfo, sectionID);})
+		//defaultCourse_mgmt(dbInfo, sectionID);})
 	});
 
 	/* When a user wishes to edit a course,
@@ -220,9 +220,8 @@ $(document).ready(function() {
 	they click the submit button next to the row. */
 	$('#coursesTable').on('click', '.submit', function() {
 		var rowId = this.id.replace('submit','');
-		var idParts = rowId.split("-");
-		var number = idParts[0];
-		var title = idParts[1];
+		var number = rowId.substring(0,rowId.indexOf("-"));//May have the - character in the title, this prevents the title from being split.
+		var title = rowId.substring(rowId.indexOf("-")+1).replace(/_/g," "); //Reintroduces spaces into the title
 		var newnumber = $('#newnumber' + rowId).val();
 		var newtitle = $('#newtitle' + rowId).val();
 		var newcredits = $('#newcredits' + rowId).val();
@@ -236,9 +235,8 @@ $(document).ready(function() {
 	$('#coursesTable').on('click', '.remove', function() {
 		if(confirm("Are you sure?")){
 		var rowId = this.id.replace('remove','');
-		var idParts = rowId.split("-");
-		var number = idParts[0];
-		var title = idParts[1];
+		var number = rowId.substring(0,rowId.indexOf("-"));//May have the - character in the title, this prevents the title from being split.
+		var title = rowId.substring(rowId.indexOf("-")+1).replace(/_/g," "); //Reintroduces spaces into the title
 		removeCourse(dbInfo, number, title);
 		sleep(150).then(() => {
 		defaultCourse_mgmt(dbInfo);})
@@ -651,23 +649,24 @@ function getCourses(connInfo){
 		courses += '<th style=\"border: 1px solid black\">' + 'Credits' + '</th>';
 		courses += '</tr>';
 		for ( var i =0; i < result.courses.length; i++){
+			var id = result.courses[i].Number+"-"+ (result.courses[i].Title.replace(/ /g,"_")); //Replaces spaces withing the title with underscores
 			courses += '<tr>';
-			courses += '<td> <a id=\"' + result.courses[i].Number + "-" + result.courses[i].Title + '\" class=\"waves-effect waves-light btn edit\">Edit</a>';
-			courses += '<a id=\"remove' + result.courses[i].Number + "-" + result.courses[i].Title + '\" class=\"waves-effect waves-light btn remove\">Remove</a>';
-			courses += '<a id=\"cancel' + result.courses[i].Number + "-" + result.courses[i].Title + '\" class=\"waves-effect waves-light btn cancel\" style=\"display:none\">Cancel</a>';
-			courses += '<a id=\"submit' + result.courses[i].Number + "-" + result.courses[i].Title + '\" type=\"submit\" class=\"waves-effect waves-light btn submit\" style=\"display:none\">Submit</a></td>';
+			courses += '<td> <a id=\"' + id + '\" class=\"waves-effect waves-light btn edit\">Edit</a>';
+			courses += '<a id=\"remove' + id + '\" class=\"waves-effect waves-light btn remove\">Remove</a>';
+			courses += '<a id=\"cancel' + id + '\" class=\"waves-effect waves-light btn cancel\" style=\"display:none\">Cancel</a>';
+			courses += '<a id=\"submit' + id + '\" type=\"submit\" class=\"waves-effect waves-light btn submit\" style=\"display:none\">Submit</a></td>';
 
-			courses += '<td style=\"border: 1px solid black\"><span id=\"number' + result.courses[i].Number + "-" + result.courses[i].Title + '\">' + result.courses[i].Number + '</span>';
-			courses += '<input id=\"newnumber' + result.courses[i].Number + "-" + result.courses[i].Title + '\" class = \"validate\" type=\"text\" maxlength=\"11\" style=\"display:none\" value=\"' + result.courses[i].Number + '\">';
-			courses += '<label class="active" for=\"newnumber' + result.courses[i].Number + "-" + result.courses[i].Title + '\"></label>' + '<span class="helper-text" data-error="wrong" data-success="right"> </span> </td>';
+			courses += '<td style=\"border: 1px solid black\"><span id=\"number' + id + '\">' + result.courses[i].Number + '</span>';
+			courses += '<input id=\"newnumber' + id + '\" class = \"validate\" type=\"text\" maxlength=\"11\" style=\"display:none\" value=\"' + result.courses[i].Number + '\">';
+			courses += '<label class="active" for=\"newnumber' + id + '\"></label>' + '<span class="helper-text" data-error="wrong" data-success="right"> </span> </td>';
 
-			courses += '<td style=\"border: 1px solid black\"><span id=\"title' + result.courses[i].Number + "-" + result.courses[i].Title + '\">' + result.courses[i].Title + '</span>';
-			courses += '<input id=\"newtitle' + result.courses[i].Number + "-" + result.courses[i].Title + '\" class = \"validate\" type=\"text\" maxlength=\"100\" style=\"display:none\" value=\"' + result.courses[i].Title + '\">';
-			courses += '<label class="active" for=\"newtitle' + result.courses[i].Number + "-" + result.courses[i].Title + '\"></label>' + '<span class="helper-text" data-error="wrong" data-success="right"> </span> </td>';
+			courses += '<td style=\"border: 1px solid black\"><span id=\"title' + id + '\">' + result.courses[i].Title + '</span>';
+			courses += '<input id=\"newtitle' + id + '\" class = \"validate\" type=\"text\" maxlength=\"100\" style=\"display:none\" value=\"' + result.courses[i].Title + '\">';
+			courses += '<label class="active" for=\"newtitle' + id + '\"></label>' + '<span class="helper-text" data-error="wrong" data-success="right"> </span> </td>';
 
-			courses += '<td style=\"border: 1px solid black\"><span id=\"credits' + result.courses[i].Number + "-" + result.courses[i].Title + '\">' + result.courses[i].Credits + '</span>';
-			courses += '<input id=\"newcredits' + result.courses[i].Number + "-" + result.courses[i].Title + '\" class = \"validate\" type=\"number\" style=\"display:none\" value=\"' + result.courses[i].Credits + '\">';
-			courses += '<label class="active" for=\"newcredits' + result.courses[i].Number + "-" + result.courses[i].Title + '\"></label>' + '<span class="helper-text" data-error="wrong" data-success="right"> </span> </td>';
+			courses += '<td style=\"border: 1px solid black\"><span id=\"credits' + id + '\">' + result.courses[i].Credits + '</span>';
+			courses += '<input id=\"newcredits' + id + '\" class = \"validate\" type=\"number\" style=\"display:none\" value=\"' + result.courses[i].Credits + '\">';
+			courses += '<label class="active" for=\"newcredits' + id + '\"></label>' + '<span class="helper-text" data-error="wrong" data-success="right"> </span> </td>';
 			courses += '</tr>';
 		}
 		setCoursesTable(courses);
