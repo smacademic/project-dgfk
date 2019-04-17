@@ -312,15 +312,15 @@ $$ LANGUAGE sql
   ROWS 1;
 
 
---Function to add an instructor to a section
+--Function to assign (add/remove) an instructor to a section
 -- parameters: Section ID and Instructor ID(s)
 
-CREATE OR REPLACE FUNCTION addInstructor(secID INT, I1 INT, I2 INT, I3 INT)
+CREATE OR REPLACE FUNCTION assignInstructor(secID INT, I1 INT, I2 INT, I3 INT)
 
 RETURNS VOID AS
 $$
 BEGIN
-   -- test if Section wanting to add instructor to exists
+   -- test if Section wanting to add/remove instructor to exists
    IF NOT EXISTS 
    (
       SELECT * FROM Gradebook.Section WHERE Section.ID = secID
@@ -336,11 +336,35 @@ BEGIN
    END IF;
 
    -- test if I1 equals I2 or I3 or if I2=I3 if not null
-   IF (I1 = I2 OR I1 = I3 OR (I2 IS NOT NULL && I2 = I3))
+   IF (I1 = I2 OR I1 = I3 OR (I2 IS NOT NULL AND I2 = I3))
    THEN 
        RAISE EXCEPTION 'Section cannot have repeat instructor';
    END IF;
 
+   
+   -- test if ID values exist in instructor table
+   IF (SELECT instructorExists(I1)) is false
+      THEN
+         RAISE EXCEPTION 'ID for Instructor 1 does not exist';
+   END IF;
+
+   IF(I2 IS NOT NULL)
+   THEN
+      IF (SELECT instructorExists(I2)) is false
+      THEN
+         RAISE EXCEPTION 'ID for Instructor 2 does not exist';
+      END IF;
+   END IF;
+
+   IF(I3 IS NOT NULL)
+   THEN
+      IF(SELECT instructorExists(I3)) IS false
+      THEN
+         RAISE EXCEPTION 'ID for Instructor 3 does not exist';
+      END IF;
+   END IF;
+
+   -- update if all parameters are valid
    UPDATE Gradebook.Section
       SET Instructor1 = I1,
           Instructor2 = I2,
@@ -349,3 +373,4 @@ BEGIN
    END
    $$
 LANGUAGE plpgsql;
+
