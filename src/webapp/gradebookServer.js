@@ -511,9 +511,6 @@ app.get('/getCourses', function(request, response){
                   }
                );
          }
-
-         console.log(result.rows[0].title);
-
          var jsonReturn = {
                "courses": courses
          } //Send the json to the client
