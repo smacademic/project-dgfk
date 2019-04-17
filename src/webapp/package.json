@@ -14,11 +14,11 @@
     "node": ">=6.11.2"
   },
   "files": [
-    "README.md",
-    "package.json",
-    "gradebookServer.js",
-    "client"
-  ],
+   "README.md",
+   "package.json",
+   "gradebookServer.js",
+   "client"
+ ],
   "repository": {
     "type": "git",
     "url": "git@github.com:DASSL/Gradebook.git"
