@@ -319,6 +319,8 @@ Currently, only attendance information is served
 						course management tab did that will contain all of the needed
 						drop-down menus needed with all of the input needed to add and
 						remove a section from the DB
+
+						Start of add section drop down
 					-->
 					<ul id="addSectionBox" class="collapsible" data-collapsible="expandable">
 						<li>
@@ -363,20 +365,30 @@ Currently, only attendance information is served
 										<input placeholder="WH301" type="text" class="validate" id="addSectionLocation">
 										<label for="addSectionLocation">Class Location</label>
 									</div>
-									<!--The label field does not seem to move with the type DATE
-									may be a materialize issue. Not sure-->
+								</div>
+								<div class="row">
+									<!--
+										The Labels for the date input fields for starting date, ending date, and Midterm
+										date are just plain text because there seems to be an issue with the materialize
+										CSS for creating labels on date input fields that does not let the label hover
+										above the input field at all.
+									-->
 									<div class="input-field col s12 m6 l3">
+										Starting Date
 										<input class="validate" type="date" id="addSectionStartDate">
-										<label for="addSectionStartDate">Starting Date</label>
+
 									</div>
 									<div class="input-field col s12 m6 l3">
+										Ending Date
 										<input type="date" class="validate" id="addSectionEndDate">
-										<label for="addSectionEndDate">End Date</label>
 									</div>
 									<div class="input-field col s12 m6 l3">
+										Midterm Date
 										<input type="date" class="validate" id="addSectionMidtermDate">
-										<label for="addSectionMidtermDate">Midterm Date</label>
+
 									</div>
+								</div>
+								<div class="row">
 									<!--
 										The instructor fields will be drop down menus to Choose the
 										instructors name instead of the end user needing to know the id Number
@@ -410,6 +422,7 @@ Currently, only attendance information is served
 						</li>
 					</ul><!--End of add Section drop down menu-->
 
+					<!--Start of remove section drop down-->
 					<ul id="removeSectionBox" class="collapsible" data-collapsible="expandable">
 						<li>
 							<div class="collapsible-header">
@@ -442,6 +455,8 @@ Currently, only attendance information is served
 						the course.
 						These will continue with the Drop down menu style of hiding the elements of the UI to
 						keep the code, and the physical display of the UI to the end user looking neat and clean.
+
+						Start of assign instructors drop down
 					-->
 					<ul id=assignInstructorsBox class="collapsible" data-collapsible="expandable">
 						<li>
@@ -450,15 +465,27 @@ Currently, only attendance information is served
 							</div>
 							<div class="collapsible-body">
 								<div class="row">
-									<select id="assignInstructorOne">
+									<div class="input-field col s12 m6 l3">
+										<select id="courseNameSelect">
+											<option value="" disabled="true" selected="true">Choose Course</option>
+										</select>
+										<label>Course Select</label>
+									</div>
+									<div class="input-field col s12 m6 l3">
+										<input placeholder="01" type="number" class="validate" id="removeSectionNumber">
+										<label for="removeSectionNumber">Section Number</label>
+									</div>
+								</div>
+								<div class="row">
+									<select class="input-field col s12 m6 l3" id="assignInstructorOne">
 										<option value="" disabled="true" selected="true">Choose Primary Instructor</option>
 										<label for="assignInstructorOne">Primary Instructor</label>
 									</select>
-									<select id="assignInstructorTwo">
+									<select class="input-field col s12 m6 l3" id="assignInstructorTwo">
 										<option value="" disabled="true" selected="true">Choose Secondary Instructor</option>
 										<label for="assignInstructorTwo">Secondary Instructor</label>
 									</select>
-									<select id="assignInstructorThree">
+									<select class="input-field col s12 m6 l3" id="assignInstructorThree">
 										<option value="" disabled="true" selected="true">Choose Tertiary Instructor</option>
 										<label for="assignInstructorThree">Tertiary Instructor</label>
 									</select>
@@ -470,6 +497,45 @@ Currently, only attendance information is served
 						</li>
 					</ul><!--End Assign Instructors Drop Down-->
 
+					<!--Start of Remove Instructors drop down-->
+					<ul id="removeInstructorsBox" class="collapsible" data-collapsible="expandable">
+						<li>
+							<div class="collapsible-header">
+								<i id="dbInfoArrow" class="material-icons">keyboard_arrow_down</i>Remove Instructors
+							</div>
+							<div class="collapsible-body">
+								<div class="row">
+									<div class="input-field col s12 m6 l3">
+										<select id="courseNameSelect">
+											<option value="" disabled="true" selected="true">Choose Course</option>
+										</select>
+										<label>Course Select</label>
+									</div>
+									<div class="input-field col s12 m6 l3">
+										<input placeholder="01" type="number" class="validate" id="removeSectionNumber">
+										<label for="removeSectionNumber">Section Number</label>
+									</div>
+								</div>
+								<div class="row">
+									<table id="removeInstructorTable">
+										<!--
+											This table will be dynamically populated with the instructors for a
+											specific section of a course so that the end user of the site can go
+											in and remove an instructor as long as they are not the primary
+											instructor in the section.
+											This will have the same functionality as the Courses Table and the
+											Sections table where the information will be dynamically populated
+											but there will probably not be an edit button (NOTE:could be a possible
+											extension to the program) only a delete button so that the instructor
+											will be removed from the section.
+										-->
+									</table>
+								</div>
+							</div>
+						</li>
+					</ul><!--End of remove instructors Drop Down-->
+
+					<!--Start of enroll students drop down-->
 					<ul id="enrollStudentsBox" class="collapsible" data-collapsible="expandable">
 						<li>
 							<div class="collapsible-header">
@@ -503,6 +569,7 @@ Currently, only attendance information is served
 						</li>
 					</ul><!--End Enroll Students Drop Down-->
 
+				<!-- temp commented out because it will not be functional in 0.5.0 release
 					<ul id="assignTermGradeBox" class="collapsible" data-collapsible="expandable">
 						<li>
 							<div class="collapsible-header">
@@ -537,13 +604,21 @@ Currently, only attendance information is served
 											a. This would make it easier because the Section Table should have
 											the letter grades set as the expected input.
 										3. Dynamically populate the letter grade choices using Javascript
-									-->
+									--
 										<a id="btnEnrollStudent" class="waves-effect waves-light btn">Assign Term Grade</a>
 								</div>
 							</div>
 						</li>
-					</ul>
+					</ul> -->
 
+					<!--Start of display area for Sections on the page.-->
+					<table id="sectionTable">
+						<!--
+							Dynamically Populated from webserver.
+							This portion of code will contain a list of all of the sections that are in the DB
+							and display them on the screen along with the options to remove and edit the section.
+						-->
+					</table>
 
 				</div><!--End Section Management Tab-->
 
