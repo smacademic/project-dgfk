@@ -181,6 +181,33 @@ app.get('/years', function(request, response) {
    });
 });
 
+//Return a list of instructors
+app.get('/instructors', function(request, response) {
+   //Decrypt the password recieved from the client.  This is a temporary development
+   //feature, since we don't have ssl set up yet
+   var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
+
+   //Connnection parameters for the Postgres client recieved in the request
+   var config = createConnectionParams(request.query.user, request.query.database,
+      passwordText, request.query.host, request.query.port);
+
+   //Set the query text
+   var queryText = 'SELECT FName FROM gradebook.getInstructors();';
+   var queryParams = [];
+
+   //Execute the query
+   executeQuery(response, config, queryText, queryParams, function(result) {
+      var instructors = []; //Put the rows from the query into json format
+      for(row in result.rows) {
+         instructors.push(result.rows[row].fname);
+      }
+      var jsonReturn = {
+         "instructors": instructors
+      } //Send the json to the client
+      response.send(JSON.stringify(jsonReturn));
+   });
+});
+
 //Return a list of seasons an instructor taught in during a certain year
 app.get('/seasons', function(request, response) {
    //Decrypt the password recieved from the client.  This is a temporary development
@@ -459,7 +486,7 @@ app.get('/removeCourse', function(request, response) {
    });
 });
 
-app.get('getCourses', function(request, response){
+app.get('/getCourses', function(request, response){
    //Decrypt the password received from the client.
    //NOTE: We need to substitute superSecret with what we're actually implementing
    var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
@@ -469,28 +496,29 @@ app.get('getCourses', function(request, response){
        passwordText, request.query.host, request.query.port);
 
    //Set the query text
-   var queryText = 'SELECT * from getCourses();';
-
+   var queryText = 'SELECT * FROM gradebook.getCourses();';
+   var queryParams;
+   
    //Execute the query
    executeQuery(response, config, queryText, queryParams, function(result) {
-	   		var courses = []; //Put the rows from the query into json format
-												for (row in result.rows) {
-												    courses.push(
-												        {
-												            "Number": result.rows[row].number,
-												            "Title": result.rows[row].title,
-															"Credits": result.rows[row].credits
-												        }
-												    );
-												}
-												var jsonReturn = {
-												    "courses": courses
-												} //Send the json to the client
+      var courses = []; //Put the rows from the query into json format
+         for (row in result.rows) {
+               courses.push(
+                  {
+                     "Number": result.rows[row].outNumber,
+                     "Title": result.rows[row].outTitle,
+                     "Credits": result.rows[row].outCredits
+                  }
+               );
+         }
+         var jsonReturn = {
+               "courses": courses
+         } //Send the json to the client
        response.send(JSON.stringify({courses}));
    });
 });
 
-app.get('modCourses', function(request, response){
+app.get('/modCourses', function(request, response){
    //Decrypt the password received from the client.
    //NOTE: We need to substitute superSecret with what we're actually implementing
    var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));

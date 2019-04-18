@@ -95,9 +95,11 @@ $(document).ready(function() {
 					$('#passwordBox').val('');
 					$('#dbInfoBox').collapsible('close', 0);
 					$('#dbInfoArrow').html('keyboard_arrow_down');
-
+					getCourses(dbInfo);
+					$('#coursesTable').show();
 					popYears(dbInfo);
-					getCourses(connInfo);
+					popInstructors(dbInfo);
+
 				});
 			}
 			 else //else for if username and password are filled in
@@ -146,6 +148,7 @@ $(document).ready(function() {
 		dbInfo = null;
 		instInfo = null;
 		setYears(null); //reset Attendance dropdowns
+		setInstructors(null);
 
 		//hide and reset profile
 		$('#profile').css('display', 'none');
@@ -164,8 +167,8 @@ $(document).ready(function() {
 		var credits = $('#addCourseCredits').val();
 
 		addCourse(dbInfo, num, title, credits);
-		//sleep(150).then(() => {
-		//defaultCourse(dbInfo, sectionID);})
+		sleep(150).then(() => {
+		defaultCourse_mgmt(dbInfo);})
 	});
 
 	//On click of the AddSection button, execute
@@ -186,7 +189,7 @@ $(document).ready(function() {
 
 		addSection(dbInfo, term, course, capacity, num, CRN, schedule, location, start_date, end_date, midterm_date, instructor1, instructor2, instructor3);
 		//sleep(150).then(() => {
-		//defaultCourse(dbInfo, sectionID);})
+		//defaultCourse_mgmt(dbInfo);})
 	});
 
 	//On click of the RemoveSection button, execute
@@ -195,7 +198,7 @@ $(document).ready(function() {
 
 		removeSection(dbInfo, sectionNumber);
 		//sleep(150).then(() => {
-		//defaultCourse(dbInfo, sectionID);})
+		//defaultCourse_mgmt(dbInfo, sectionID);})
 	});
 
 	/* When a user wishes to edit a course,
@@ -217,15 +220,14 @@ $(document).ready(function() {
 	they click the submit button next to the row. */
 	$('#coursesTable').on('click', '.submit', function() {
 		var rowId = this.id.replace('submit','');
-		var idParts = rowId.split("-");
-		var number = idParts[0];
-		var title = idParts[1];
+		var number = rowId.substring(0,rowId.indexOf("-"));//May have the - character in the title, this prevents the title from being split.
+		var title = rowId.substring(rowId.indexOf("-")+1).replace(/_/g," "); //Reintroduces spaces into the title
 		var newnumber = $('#newnumber' + rowId).val();
 		var newtitle = $('#newtitle' + rowId).val();
 		var newcredits = $('#newcredits' + rowId).val();
 		updateCourses(dbInfo,number,title,newnumber,newtitle,newcredits);
-		//sleep(150).then(() => {
-		//defaultCourse(dbInfo);})
+		sleep(150).then(() => {
+		defaultCourse_mgmt(dbInfo);})
 	});
 
 	/* When a user wishes to remove a course,
@@ -233,29 +235,29 @@ $(document).ready(function() {
 	$('#coursesTable').on('click', '.remove', function() {
 		if(confirm("Are you sure?")){
 		var rowId = this.id.replace('remove','');
-		var idParts = rowId.split("-");
-		var number = idParts[0];
-		var title = idParts[1];
-		removeCourse(dbInfo, num, title);
-		//sleep(150).then(() => {
-		//defaultCourse(dbInfo);})
+		var number = rowId.substring(0,rowId.indexOf("-"));//May have the - character in the title, this prevents the title from being split.
+		var title = rowId.substring(rowId.indexOf("-")+1).replace(/_/g," "); //Reintroduces spaces into the title
+		removeCourse(dbInfo, number, title);
+		sleep(150).then(() => {
+		defaultCourse_mgmt(dbInfo);})
 		}
 	});
 
 	/* When a user wishes to cancel a course edit,
 	they click the cancel button next to the row. */
 	$('#coursesTable').on('click', '.cancel', function() {
-		$('#' + this.id).show();
-		$('#remove' + this.id).show();
-		$('#submit' + this.id).hide();
-		$('#cancel' + this.id).hide();
-		$('#number' + this.id).show();
-		$('#newnumber' + this.id).hide();
-		$('#title' + this.id).show();
-		$('#newtitle' + this.id).hide();
-		$('#credits' + this.id).show();
-		$('#newcredits' + this.id).hide();
-
+		var rowId = this.id.replace('cancel','');
+		$('#' + rowId).show();
+		$('#remove' + rowId).show();
+		$('#submit' + rowId).hide();
+		$('#cancel' + rowId).hide();
+		$('#number' + rowId).show();
+		
+		$('#newnumber' + rowId).hide();
+		$('#title' + rowId).show();
+		$('#newtitle' + rowId).hide();
+		$('#credits' + rowId).show();
+		$('#newcredits' + rowId).hide();
 	});
 
 	//On click of the RemoveCourse button, execute
@@ -264,8 +266,8 @@ $(document).ready(function() {
 		var title = $('#removeCourseTitle').val();
 
 		removeCourse(dbInfo, num, title);
-		//sleep(150).then(() => {
-		//defaultCourse(dbInfo);})
+		sleep(150).then(() => {
+		defaultCourse_mgmt(dbInfo);})
 
 	});
 });
@@ -323,6 +325,26 @@ function serverLogin(connInfo, email, callback) {
 			//currently does not distinguish between credential and connection errors
 			showAlert('<h5>Could not login</h5><p>Login failed - ensure ' +
 			 'all fields are correct</p>');
+			console.log(result);
+		}
+	});
+};
+
+function popInstructors(connInfo) {
+	$.ajax('instructors', {
+		dataType: 'json',
+		data: connInfo,
+		success: function(result) {
+			var instructors = '';
+			for (var i = 0; i < result.instructors.length; i++) {
+				instructors += '<option value="' + result.instructors[i] + '">' +
+				 result.instructors[i] + '</option>';
+			}
+			console.log(result);
+			setInstructors(instructors);
+		},
+		error: function(result) {
+			showAlert('<p>Error while retrieving instructors</p>');
 			console.log(result);
 		}
 	});
@@ -432,6 +454,49 @@ function popAttendance(connInfo, sectionid) {
 			console.log(result);
 		}
 	});
+};
+
+function setInstructors(htmlText) {
+	var content = '<option value="" disabled="true" selected="true">' +
+	 'Choose instructor</option>' + htmlText;
+
+	$('#assignInstructorOne').html(content);
+	$('#assignInstructorTwo').html(content);
+	$('#assignInstructorThree').html(content);
+	$('#primaryInstructorSelect').html(content);
+	$('#secondaryInstructorSelect').html(content);
+	$('#tertiaryInstructorSelect').html(content);
+
+
+	$('#assignInstructorOne').prop('disabled', htmlText == null);
+	$('#assignInstructorTwo').prop('disabled', htmlText == null);
+	$('#assignInstructorThree').prop('disabled', htmlText == null);
+	$('#primaryInstructorSelect').prop('disabled', htmlText == null);
+	$('#secondaryInstructorSelect').prop('disabled', htmlText == null);
+	$('#tertiaryInstructorSelect').prop('disabled', htmlText == null);
+
+	$('#assignInstructorOne').material_select(); //reload dropdown
+	$('#assignInstructorTwo').material_select(); //reload dropdown
+	$('#assignInstructorThree').material_select(); //reload dropdown
+	$('#primaryInstructorSelect').material_select(); //reload dropdown
+	$('#secondaryInstructorSelect').material_select(); //reload dropdown
+	$('#tertiaryInstructorSelect').material_select(); //reload dropdown
+
+};
+
+function populateCourses(htmlText) {
+	var content = '<option value="" disabled="true" selected="true">' +
+	 'Choose course</option>' + htmlText;
+
+	$('#courseNameSelect').html(content);
+	$('#removeSectionCourseSelect').html(content);
+
+	$('#courseNameSelect').prop('disabled', htmlText == null);
+	$('#removeSectionCourseSelect').prop('disabled', htmlText == null);
+
+	$('#courseNameSelect').material_select(); //reload dropdown
+	$('#removeSectionCourseSelect').material_select(); //reload dropdown
+
 };
 
 function setYears(htmlText) {
@@ -605,30 +670,39 @@ function getCourses(connInfo){
 		var courses = '<tr style=\"font-weight:bold\">';
 		courses += '<th></th>';
 		courses += '<th style=\"border: 1px solid black\">' + 'Number' + '</th>';
-		courses += '<th style=\"border: 1px solid black\">' + 'Title' + '<th>';
-		courses += '<th style=\"border: 1px solid black\">' + 'Credits' + '<th>';
+		courses += '<th style=\"border: 1px solid black\">' + 'Title' + '</th>';
+		courses += '<th style=\"border: 1px solid black\">' + 'Credits' + '</th>';
 		courses += '</tr>';
 		for ( var i =0; i < result.courses.length; i++){
+			var id = result.courses[i].Number+"-"+ (result.courses[i].Title.replace(/ /g,"_")); //Replaces spaces withing the title with underscores
 			courses += '<tr>';
-			courses += '<td> <a id=\"' + result.courses[i].Number + "-" + result.courses[i].Title + '\" class=\"waves-effect waves-light btn edit\">Edit</a>';
-			courses += '<td> <a id=\"remove' + result.courses[i].Number + "-" + result.courses[i].Title + '\" class=\"waves-effect waves-light btn remove\">Remove</a>';
-			courses += '<td> <a id=\"cancel' + result.courses[i].Number + "-" + result.courses[i].Title + '\" class=\"waves-effect waves-light btn cancel\" style=\"display:none\">Cancel</a>';
-			courses += '<td> <a id=\"submit' + result.courses[i].Number + "-" + result.courses[i].Title + '\" type=\"submit\" class=\"waves-effect waves-light btn submit\" style=\"display:none\">Submit</a></td>';
+			courses += '<td> <a id=\"' + id + '\" class=\"waves-effect waves-light btn edit\">Edit</a>';
+			courses += '<a id=\"remove' + id + '\" class=\"waves-effect waves-light btn remove\">Remove</a>';
+			courses += '<a id=\"cancel' + id + '\" class=\"waves-effect waves-light btn cancel\" style=\"display:none\">Cancel</a>';
+			courses += '<a id=\"submit' + id + '\" type=\"submit\" class=\"waves-effect waves-light btn submit\" style=\"display:none\">Submit</a></td>';
 
-			courses += '<td style=\"border: 1px solid black\"><span id=\"number' + result.courses[i].Number + "-" + result.courses[i].Title + '\">' + result.courses[i].Number + '</span>';
-			courses += '<input id=\"newnumber' + result.courses[i].Number + "-" + result.courses[i].Title + '\" class = \"validate\" type=\"text\" maxlength=\"11\" style=\"display:none\" value=\"' + result.courses[i].Number + '\">';
-			courses += '<label class="active" for=\"newnumber' + result.courses[i].Number + "-" + result.courses[i].Title + '\"></label>' + '<span class="helper-text" data-error="wrong" data-success="right"> </span> </td>';
+			courses += '<td style=\"border: 1px solid black\"><span id=\"number' + id + '\">' + result.courses[i].Number + '</span>';
+			courses += '<input id=\"newnumber' + id + '\" class = \"validate\" type=\"text\" maxlength=\"11\" style=\"display:none\" value=\"' + result.courses[i].Number + '\">';
+			courses += '<label class="active" for=\"newnumber' + id + '\"></label>' + '<span class="helper-text" data-error="wrong" data-success="right"> </span> </td>';
 
-			courses += '<td style=\"border: 1px solid black\"><span id=\"title' + result.courses[i].Number + "-" + result.courses[i].Title + '\">' + result.courses[i].Title + '</span>';
-			courses += '<input id=\"newtitle' + result.courses[i].Number + "-" + result.courses[i].Title + '\" class = \"validate\" type=\"text\" maxlength=\"100\" style=\"display:none\" value=\"' + result.courses[i].Title + '\">';
-			courses += '<label class="active" for=\"newtitle' + result.courses[i].Number + "-" + result.courses[i].Title + '\"></label>' + '<span class="helper-text" data-error="wrong" data-success="right"> </span> </td>';
+			courses += '<td style=\"border: 1px solid black\"><span id=\"title' + id + '\">' + result.courses[i].Title + '</span>';
+			courses += '<input id=\"newtitle' + id + '\" class = \"validate\" type=\"text\" maxlength=\"100\" style=\"display:none\" value=\"' + result.courses[i].Title + '\">';
+			courses += '<label class="active" for=\"newtitle' + id + '\"></label>' + '<span class="helper-text" data-error="wrong" data-success="right"> </span> </td>';
 
-			courses += '<td style=\"border: 1px solid black\"><span id=\"credits' + result.courses[i].Number + "-" + result.courses[i].Title + '\">' + result.courses[i].Credits + '</span>';
-			courses += '<input id=\"newcredits' + result.courses[i].Number + "-" + result.courses[i].Title + '\" class = \"validate\" type=\"number\" style=\"display:none\" value=\"' + result.courses[i].Credits + '\">';
-			courses += '<label class="active" for=\"newcredits' + result.courses[i].Number + "-" + result.courses[i].Title + '\"></label>' + '<span class="helper-text" data-error="wrong" data-success="right"> </span> </td>';
+			courses += '<td style=\"border: 1px solid black\"><span id=\"credits' + id + '\">' + result.courses[i].Credits + '</span>';
+			courses += '<input id=\"newcredits' + id + '\" class = \"validate\" type=\"number\" style=\"display:none\" value=\"' + result.courses[i].Credits + '\">';
+			courses += '<label class="active" for=\"newcredits' + id + '\"></label>' + '<span class="helper-text" data-error="wrong" data-success="right"> </span> </td>';
 			courses += '</tr>';
 		}
 		setCoursesTable(courses);
+
+		var popCourses = '';
+		for (var i = 0; i < result.courses.length; i++) {
+			popCourses += '<option value="' + result.courses[i].Title + '">' +
+			 result.courses[i].Title + '</option>';
+		}
+		populateCourses(popCourses);
+
     console.log(result);
 	},
 
