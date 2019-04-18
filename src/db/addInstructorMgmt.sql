@@ -16,6 +16,33 @@
 -- STABLE: result remains the same for a given input within the same statement
 -- RETURNS NULL ON NULL INPUT: returns NULL or no result if any input is NULL
 
+-----------------------------------------------------------------------------------
+-- Changes were made to the original script by Team GEEKS, CS298 Spring 2019
+
+
+--Function to test if instructor exists given ID
+-- parameter: instructor ID
+CREATE OR REPLACE FUNCTION instructorExists(InstID INT)
+RETURNS BOOL AS
+$$
+BEGIN
+
+-- check if instructor id is in the instructor table
+IF EXISTS
+   (
+      SELECT * FROM Gradebook.Instructor
+      WHERE Instructor.ID = InstID
+   )
+   THEN  
+      RETURN true;
+   END IF;
+
+   -- instructor does not exist
+   RETURN false;
+END
+$$
+LANGUAGE plpgsql;
+
 
 --Function to get details of all known instructors
 DROP FUNCTION IF EXISTS Gradebook.getInstructors();
@@ -224,3 +251,4 @@ $$
 $$ LANGUAGE sql
    STABLE
    RETURNS NULL ON NULL INPUT;
+
