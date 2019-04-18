@@ -463,14 +463,39 @@ function setInstructors(htmlText) {
 	$('#assignInstructorOne').html(content);
 	$('#assignInstructorTwo').html(content);
 	$('#assignInstructorThree').html(content);
+	$('#primaryInstructorSelect').html(content);
+	$('#secondaryInstructorSelect').html(content);
+	$('#tertiaryInstructorSelect').html(content);
+
 
 	$('#assignInstructorOne').prop('disabled', htmlText == null);
 	$('#assignInstructorTwo').prop('disabled', htmlText == null);
 	$('#assignInstructorThree').prop('disabled', htmlText == null);
+	$('#primaryInstructorSelect').prop('disabled', htmlText == null);
+	$('#secondaryInstructorSelect').prop('disabled', htmlText == null);
+	$('#tertiaryInstructorSelect').prop('disabled', htmlText == null);
 
 	$('#assignInstructorOne').material_select(); //reload dropdown
 	$('#assignInstructorTwo').material_select(); //reload dropdown
 	$('#assignInstructorThree').material_select(); //reload dropdown
+	$('#primaryInstructorSelect').material_select(); //reload dropdown
+	$('#secondaryInstructorSelect').material_select(); //reload dropdown
+	$('#tertiaryInstructorSelect').material_select(); //reload dropdown
+
+};
+
+function populateCourses(htmlText) {
+	var content = '<option value="" disabled="true" selected="true">' +
+	 'Choose course</option>' + htmlText;
+
+	$('#courseNameSelect').html(content);
+	$('#removeSectionCourseSelect').html(content);
+
+	$('#courseNameSelect').prop('disabled', htmlText == null);
+	$('#removeSectionCourseSelect').prop('disabled', htmlText == null);
+
+	$('#courseNameSelect').material_select(); //reload dropdown
+	$('#removeSectionCourseSelect').material_select(); //reload dropdown
 
 };
 
@@ -670,6 +695,14 @@ function getCourses(connInfo){
 			courses += '</tr>';
 		}
 		setCoursesTable(courses);
+
+		var popCourses = '';
+		for (var i = 0; i < result.courses.length; i++) {
+			popCourses += '<option value="' + result.courses[i].Title + '">' +
+			 result.courses[i].Title + '</option>';
+		}
+		populateCourses(popCourses);
+
     console.log(result);
 	},
 
