@@ -4,7 +4,7 @@
 
 
 -- Function to enroll a student to a section
--- parameters: student school ID, and section ID
+-- parameters: student's school ID, and section ID
 CREATE OR REPLACE FUNCTION enrollStudent(schoolID VARCHAR(50), secID INT)
 RETURNS VOID AS
 $$
@@ -32,7 +32,7 @@ BEGIN
       RAISE EXCEPTION 'Student with that ID does not exist';
    END IF;
 
--- get PK for the student instance
+-- get studentID (PK) for the student instance
    SELECT ID
    INTO studentID
    FROM Gradebook.Student
@@ -74,6 +74,48 @@ BEGIN
       NULL
    );
 
+END
+$$
+LANGUAGE plpgsql;
+
+--Function to remove a student from a section / delete enrollee
+-- parameters: student's school ID, and the section ID
+CREATE OR REPLACE FUNCTION removeEnrollee(schoolID VARCHAR(50), secID INT)
+RETURNS VOID AS
+$$
+DECLARE 
+   studentID INT; -- hold student ID (PK for student)
+BEGIN
+ -- test if Section exists
+    IF NOT EXISTS 
+    (
+        SELECT * FROM Gradebook.Section WHERE Section.ID = secID
+    )
+    THEN
+        RAISE EXCEPTION 'Section does not exist';
+    END IF;
+
+-- get studentID (PK) for the student instance
+   SELECT ID
+   INTO studentID
+   FROM Gradebook.Student
+   WHERE Student.SchoolIssuedID = schoolID;
+
+-- test if Enrollee exists
+   IF NOT EXISTS 
+   (
+      SELECT * FROM Gradebook.Enrollee
+      WHERE Enrollee.Student = studentID AND
+            Enrollee.Section = secID
+   )
+   THEN
+      RAISE EXCEPTION 'Student with that ID does not exist';
+   END IF;
+
+-- remove enrollee from section
+   DELETE FROM Gradebook.Enrollee 
+   WHERE Enrollee.Section = secID AND
+         Enrollee.Student = studentID;
 END
 $$
 LANGUAGE plpgsql;
