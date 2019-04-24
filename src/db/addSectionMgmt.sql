@@ -179,6 +179,7 @@ Table(
    outSecNum VARCHAR)
 AS
 $$
+BEGIN
 RETURN QUERY
 	SELECT S.ID, S.SectionNumber
 	FROM Gradebook.Section S
