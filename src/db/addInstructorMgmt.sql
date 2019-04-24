@@ -46,13 +46,14 @@ LANGUAGE plpgsql;
 
 --Function to get the instructos of a given section
 -- parameters: Section ID
--- return: instructors
+-- return: instructors ID
 CREATE OR REPLACE FUNCTION getSectionInstructors(secID INT)
 RETURNS TABLE(outI1 INT, outI2 INT, outI3 INT) AS 
 $$
+BEGIN
 RETURN QUERY
    SELECT S.Instructor1, S.Instructor2, S.Instructor3
-   FROM Gradebook.Section
+   FROM Gradebook.Section S
    WHERE S.ID = secID;
 END
 $$
