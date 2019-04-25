@@ -600,6 +600,36 @@ app.get('/removeSection', function(request, response) {
   });
 });
 
+app.get('/getTerms', function(request, response){
+   //Decrypt the password received from the client.
+   //NOTE: We need to substitute superSecret with what we're actually implementing
+   var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
+
+   //Connection parameters for the Postgres client received in the request
+   var config = createConnectionParams(request.query.user, request.query.database,
+       passwordText, request.query.host, request.query.port);
+
+   //Set the query text
+   var queryText = 'SELECT * from gradebook.getTerms();';
+   var queryParams;
+
+   //Execute the query
+   executeQuery(response, config, queryText, queryParams, function(result) {
+      var terms = []; //Put the rows from the query into json format
+         for (row in result.rows) {
+               terms.push(
+                  {
+                     "terms": result.rows[row].outSeason
+                  }
+               );
+         }
+         var jsonReturn = {
+               "terms": terms
+         } //Send the json to the client
+       response.send(JSON.stringify({terms}));
+   });
+});
+
 app.use(function(err, req, res, next){
   console.error(err);
   res.status(500).send('Internal Server Error');
