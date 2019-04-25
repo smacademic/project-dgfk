@@ -172,7 +172,7 @@ LANGUAGE plpgsql;
 -- parameters: Course PK (Number, Title)
 -- returns: sections' ID and SecNum
 
-CREATE OR REPLACE FUNCTION getCourseSections(cNum VARCHAR(11), cTitle VARCHAR(100))
+CREATE OR REPLACE FUNCTION getCourseSections(cNum VARCHAR(11))
 RETURNS 
 Table( 
    outID INT,
