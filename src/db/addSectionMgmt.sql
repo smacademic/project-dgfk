@@ -168,6 +168,28 @@ $$
 LANGUAGE plpgsql;
 
 
+--Function to get a course's sections
+-- parameters: Course PK (Number, Title)
+-- returns: sections' ID and SecNum
+
+CREATE OR REPLACE FUNCTION getCourseSections(cTitle VARCHAR(100))
+RETURNS 
+Table( 
+   outID INT,
+   outSecNum VARCHAR)
+AS
+$$
+BEGIN
+RETURN QUERY
+	SELECT S.ID, S.SectionNumber
+	FROM Gradebook.Section S INNER JOIN Gradebook.Course C
+   ON C.Title = cTitle AND C.Number = S.Course;
+END
+$$
+LANGUAGE plpgsql;
+
+
+
 
 --Function to get ID of section matching a year-season-course-section# combo
 -- season is "season identification"
