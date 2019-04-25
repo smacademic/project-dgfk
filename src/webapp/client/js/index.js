@@ -736,8 +736,9 @@ function getTerms(connInfo) {
 		success: function(result) {
 			var terms = '';
 			for (var i = 0; i < result.terms.length; i++) {
-				terms += '<option value="' + result.terms[i] + '">' +
-				result.terms[i] + '</option>';
+				console.log("terms: " + result.terms[i].terms);
+				terms += '<option value="' + result.terms[i].terms + '">' +
+				result.terms[i].terms + '</option>';
 			}
 			console.log(result);
 			setTerms(terms);
