@@ -172,7 +172,7 @@ LANGUAGE plpgsql;
 -- parameters: Course PK (Number, Title)
 -- returns: sections' ID and SecNum
 
-CREATE OR REPLACE FUNCTION getCourseSections(cNum VARCHAR(11))
+CREATE OR REPLACE FUNCTION getCourseSections(cTitle VARCHAR(100))
 RETURNS 
 Table( 
    outID INT,
@@ -182,8 +182,8 @@ $$
 BEGIN
 RETURN QUERY
 	SELECT S.ID, S.SectionNumber
-	FROM Gradebook.Section S
-   WHERE S.Course = cNum;
+	FROM Gradebook.Section S INNER JOIN Gradebook.Course C
+   ON C.Title = cTitle AND C.Number = S.Course;
 END
 $$
 LANGUAGE plpgsql;
