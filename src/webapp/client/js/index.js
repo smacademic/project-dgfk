@@ -96,6 +96,7 @@ $(document).ready(function() {
 					$('#dbInfoBox').collapsible('close', 0);
 					$('#dbInfoArrow').html('keyboard_arrow_down');
 					getCourses(dbInfo);
+					getTerms(dbInfo);
 					$('#coursesTable').show();
 					popYears(dbInfo);
 					popInstructors(dbInfo);
@@ -149,6 +150,7 @@ $(document).ready(function() {
 		instInfo = null;
 		setYears(null); //reset Attendance dropdowns
 		setInstructors(null);
+		setTerms(null);
 
 		//hide and reset profile
 		$('#profile').css('display', 'none');
@@ -484,18 +486,32 @@ function setInstructors(htmlText) {
 
 };
 
+function setTerms(htmlText) {
+	var content = '<option value="" disabled="true" selected="true">' +
+	'Choose term</option>' + htmlText;
+
+	$('#TermSelect').html(content);
+
+	$('#TermSelect').prop('disabled', htmlText == null);
+
+	$('#TermSelect').material_select(); //reload dropdown
+};
+
 function populateCourses(htmlText) {
 	var content = '<option value="" disabled="true" selected="true">' +
 	 'Choose course</option>' + htmlText;
 
 	$('#courseNameSelect').html(content);
 	$('#removeSectionCourseSelect').html(content);
+	$('#enrollChooseCourse').html(content);
 
 	$('#courseNameSelect').prop('disabled', htmlText == null);
 	$('#removeSectionCourseSelect').prop('disabled', htmlText == null);
+	$('#enrollChooseCourse').prop('disabled', htmlText == null);
 
 	$('#courseNameSelect').material_select(); //reload dropdown
 	$('#removeSectionCourseSelect').material_select(); //reload dropdown
+	$('#enrollChooseCourse').material_select(); //reload dropdown
 
 };
 
@@ -713,6 +729,25 @@ function getCourses(connInfo){
 	});
 };
 
+function getTerms(connInfo) {
+	$.ajax('getTerms', {
+		dataType: 'json',
+		data: connInfo,
+		success: function(result) {
+			var terms = '';
+			for (var i = 0; i < result.terms.length; i++) {
+				terms += '<option value="' + result.terms[i] + '">' +
+				result.terms[i] + '</option>';
+			}
+			console.log(result);
+			setTerms(terms);
+		},
+		error: function(result) {
+			showAlert('<p>Error while retrieving terms</p>');
+			console.log(result);
+		}
+	});
+};
 
 //dynamically populates the coursesTable element
 function setCoursesTable(htmlText){
