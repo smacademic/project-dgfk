@@ -619,7 +619,7 @@ app.get('/getTerms', function(request, response){
          for (row in result.rows) {
                terms.push(
                   {
-                     "terms": result.rows[row].outSeason
+                     "terms": result.rows[row].outseason
                   }
                );
          }
