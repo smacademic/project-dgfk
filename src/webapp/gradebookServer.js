@@ -498,16 +498,16 @@ app.get('/getCourses', function(request, response){
    //Set the query text
    var queryText = 'SELECT * FROM gradebook.getCourses();';
    var queryParams;
-   
+
    //Execute the query
    executeQuery(response, config, queryText, queryParams, function(result) {
       var courses = []; //Put the rows from the query into json format
          for (row in result.rows) {
                courses.push(
                   {
-                     "Number": result.rows[row].outNumber,
-                     "Title": result.rows[row].outTitle,
-                     "Credits": result.rows[row].outCredits
+                     "Number": result.rows[row].outnumber,
+                     "Title": result.rows[row].outtitle,
+                     "Credits": result.rows[row].outcredits
                   }
                );
          }
@@ -526,18 +526,18 @@ app.get('/modCourses', function(request, response){
    //Connection parameters for the Postgres client received in the request
    var config = createConnectionParams(request.query.user, request.query.database,
        passwordText, request.query.host, request.query.port);
-	   
+
    //Get the params from the url
    var num = request.query.num;
    var title = request.query.title;
    var newnum = request.query.newnum;
    var newtitle = request.query.newtitle;
    var newcredits = request.query.newcredits;
-   
+
    //Set the query text
    var queryText = 'SELECT modifyCourse($1, $2, $3, $4, $5)';
    var queryParams = [num, title, newnum, newtitle, newcredits];
-   
+
    //execute the query
    executeQuery(response, config, queryText, queryParams, function(result) {
       response.send(JSON.stringify({}));
