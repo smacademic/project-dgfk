@@ -1,3 +1,8 @@
+<a href="https://postgresql.org"><img src="https://img.shields.io/badge/Powered%20by-PostgreSQL-blue.svg"/></a>
+<a href="https://nodejs.org"><img src="https://img.shields.io/badge/Served%20by-Node.js-brightgreen.svg"/></a>
+<a href="https://github.com"><img src="https://img.shields.io/badge/Hosted%20on-GitHub-blue.svg"/></a>
+[![](https://raw.githubusercontent.com/ZenHubIO/support/master/zenhub-badge.png)](https://zenhub.com)
+
 # Project GEEKS (Gradebook Extension of Elements and Key Services)
 
 This project is based on the [DASSL version of Gradebook](https://github.com/DASSL/Gradebook), and will be a continuation of the projects worked on by [Cris Fitzgerald](https://github.com/S4PPH1QU3/CS-305-NERDS) and [Ken Kozlowski](https://github.com/CS305-F18-TeamDOS/Gradebook)  
