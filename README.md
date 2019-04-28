@@ -15,9 +15,10 @@ The extension will also be integrating work previously done on grade tier and sc
 ## File Structure
 
 The files will be separated into three directories:  
-* docs - for documentation  
-* src - for all source code files
-* tests - for all testing documentation used in verifying the functionality of the program
+* <u>docs</u> - for documentation  
+* <u>src</u> - for all source code files
+* <u>tests</u> - for all testing documentation used in verifying the functionality of the program
+    * <u>SystemTesting</u> - This directory will be split into sub-directories for every release of Gradebook so that for any release that an end user decides to install, there would be documentation on verifying that the version of Gradebook is running as it is intended to be running.
 
 The src directory will be split into two sub-directories:  
 * DB (database)  
