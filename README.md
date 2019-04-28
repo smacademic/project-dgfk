@@ -1,7 +1,8 @@
 <a href="https://postgresql.org"><img src="https://img.shields.io/badge/Powered%20by-PostgreSQL-blue.svg"/></a>
 <a href="https://nodejs.org"><img src="https://img.shields.io/badge/Served%20by-Node.js-brightgreen.svg"/></a>
 <a href="https://github.com"><img src="https://img.shields.io/badge/Hosted%20on-GitHub-blue.svg"/></a>
-[![](https://raw.githubusercontent.com/ZenHubIO/support/master/zenhub-badge.png)](https://zenhub.com)
+<a href="https://zenhub.com"><img src="https://raw.githubusercontent.com/ZenHubIO/support/master/zenhub-badge.png"></a>
+
 
 # Project GEEKS (Gradebook Extension of Elements and Key Services)
 
