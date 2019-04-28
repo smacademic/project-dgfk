@@ -163,3 +163,30 @@ $$
 LANGUAGE plpgsql;
 
 
+--Function to return a list of courses 
+-- given course level 
+-- parameters: number for level (i.e. 1 for 100 level, 0 for all courses)
+
+CREATE OR REPLACE FUNCTION getCourses(cLevel INT) 
+RETURNS Table(outNumber VARCHAR,outTitle VARCHAR, outCredits INT) AS--SETOF RECORD AS
+$$
+BEGIN
+
+-- if 0, give all courses
+IF (cLevel = 0)
+THEN
+   RETURN QUERY 
+      SELECT Number,Title,Credits
+      FROM Gradebook.Course;
+ELSE
+   -- give all courses with clevel
+   RETURN QUERY 
+      SELECT Number,Title,Credits
+      FROM Gradebook.Course
+      WHERE Number LIKE CONCAT('%',cLevel,'__','%');
+
+END IF;
+
+END
+$$
+LANGUAGE plpgsql;
