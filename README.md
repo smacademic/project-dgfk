@@ -1,7 +1,8 @@
 <a href="https://postgresql.org"><img src="https://img.shields.io/badge/Powered%20by-PostgreSQL-blue.svg"/></a>
 <a href="https://nodejs.org"><img src="https://img.shields.io/badge/Served%20by-Node.js-brightgreen.svg"/></a>
 <a href="https://github.com"><img src="https://img.shields.io/badge/Hosted%20on-GitHub-blue.svg"/></a>
-<a href="https://zenhub.com"><img src="https://raw.githubusercontent.com/ZenHubIO/support/master/zenhub-badge.png"></a>
+<a href="https://zenhub.com"><img src="https://dxssrr2j0sq4w.cloudfront.net/3.2.0/img/style-guide/zenhub-white.svg" width="75px"></a>
+<!--Using the ZenHub logo as advised by a Member of ZenHub Customer Service since the issue with the badge is being reported to the devs of ZenHub to fix the issue with badge not loading properly.-->
 
 
 # Project GEEKS (Gradebook Extension of Elements and Key Services)
