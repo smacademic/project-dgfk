@@ -3,7 +3,7 @@ name: Server Bug Report
 about: This template should be used when there is an issue with either the Database
   or the Web Server. Please fill in all of the information below.
 title: "[Server Bug] title_goes_here"
-labels: Type - Bug, Location - Server
+labels: Location - Server, Type - Bug
 assignees: ''
 
 ---
