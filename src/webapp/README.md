@@ -7,21 +7,21 @@ Data Science & Systems Lab (DASSL), Western Connecticut State University (WCSU)
 Licensed to others under CC 4.0 BY-SA-NC:   
 https://creativecommons.org/licenses/by-nc-sa/4.0/
 
-PROVIDED AS IS. NO WARRANTIES EXPRESSED OR IMPLIED. USE AT YOUR OWN RISK.
+PROVIDED AS IS. NO WARRANTIES EXPRESSED OR IMPLIED. USE AT YOUR OWN RISK.  
 
+Modified by **Team GEEKS** (*CS298-01 Spring 2019 @ WCSU*)  
+Bruno DaSilva, Elly Griffen, Chris Fitzgerald and Kenneth Kozlowski
 
 ## Overview
-This document outlines how to setup the Gradebook web application. There are
-two parts to the web application: a client and server. The web server is an
-intermediate layer between the DBMS and client. It serves the static client web page
-to clients, and implements a REST API that the client web page uses to request Data
-from the DBMS.  
+This document outlines how to setup the Gradebook web application. There are two parts to the web application: a client and server. The web server is an intermediate layer between the DBMS and client. It serves the static client web page to clients, and implements a REST API that the client web page uses to request Data from the DBMS.  
 
 The Gradebook web server is written in JavaScript using [node.js](https://nodejs.org/en/).
 The Gradebook web client is written in HTML, CSS, and JavaScript using
 [Materialize](http://materializecss.com/) and [jQuery](https://jquery.com/).
-The current version of the web server has been tested with node.js 6.11.2 on Ubuntu 16.04.
-The current version of the web client has been tested with Chrome, Edge, and Internet Explorer.
+The current version of the web server has been tested with node.js 6.11.2 on Ubuntu 16.04.  
+The web server has also been tested on *Windows 10* and *Windows Server 2019*.  
+The current version of the web client has been tested with *Google Chrome*, *Microsoft Edge*, *Safari* and *Mozilla FireFox*.  
+<!--Currently does not work with Internet Explorer on Windows 10--> 
 
 ## Server Setup
 In order for the web server to function, you must first install node.js and some
