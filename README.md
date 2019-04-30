@@ -7,7 +7,7 @@
 
 # Project GEEKS (Gradebook Extension of Elements and Key Services)
 
-This project is based on the [DASSL version of Gradebook](https://github.com/DASSL/Gradebook), and will be a continuation of the projects worked on by [Cris Fitzgerald](https://github.com/S4PPH1QU3/CS-305-NERDS) and [Ken Kozlowski](https://github.com/CS305-F18-TeamDOS/Gradebook)  
+This project is based on the [DASSL version of Gradebook](https://github.com/DASSL/Gradebook), and will be a continuation of the projects worked on by [Cris Fitzgerald](https://github.com/S4PPH1QU3/CS-305-NERDS) and [Kenneth Kozlowski](https://github.com/CS305-F18-TeamDOS/Gradebook)  
 <!--NOTE: The links to Cris and Ken's projects can now be accessed by clicking on the persons name. Also, by clicking on DASSL would bring the user to the version of Gradebook that DASSL has created.-->
 ---
 
@@ -40,6 +40,6 @@ The src directory will be split into two sub-directories:
 
 [Cris Fitzgerald](https://github.com/fitz-cris)  
 
-[Eliot Griffin](https://github.com/griffine)  
+[Elly Griffin](https://github.com/griffine)  
 
 [Kenneth Kozlowski](https://github.com/kozlowskik)  
