@@ -10,7 +10,7 @@ https://creativecommons.org/licenses/by-nc-sa/4.0/
 PROVIDED AS IS. NO WARRANTIES EXPRESSED OR IMPLIED. USE AT YOUR OWN RISK.
 
 Modified by **Team GEEKS** (*CS298-01 Spring 2019 @ WCSU*)  
-Bruno DaSilva, Elly Griffen, Chris Fitzgerald and Kenneth Kozlowski
+Bruno DaSilva, Elly Griffin, Cris Fitzgerald and Kenneth Kozlowski
 
 ---
 

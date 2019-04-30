@@ -36,7 +36,7 @@ The src directory will be split into two sub-directories:
 ---  
 
 ## Members
-[Bruno Desilva](https://github.com/DasilvaB)  
+[Bruno DaSilva](https://github.com/DasilvaB)  
 
 [Cris Fitzgerald](https://github.com/fitz-cris)  
 
