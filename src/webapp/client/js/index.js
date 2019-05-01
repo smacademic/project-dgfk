@@ -116,6 +116,16 @@ $(document).ready(function() {
 		}
 	});
 
+	$('#removeSectionCourseSelect').change(function() {
+		var courseTitle = $('#removeSectionCourseSelect').val();
+		populateSections(dbInfo, courseTitle);
+	});
+
+	$('#enrollChooseCourse').change(function() {
+		var courseTitle = $('#enrollChooseCourse').val();
+		populateSections(dbInfo, courseTitle);
+	});
+
 	$('#yearSelect').change(function() {
 		var year = $('#yearSelect').val();
 		popSeasons(dbInfo, year);
@@ -171,6 +181,14 @@ $(document).ready(function() {
 		addCourse(dbInfo, num, title, credits);
 		sleep(150).then(() => {
 		defaultCourse_mgmt(dbInfo);})
+	});
+
+	$('#btnEnrollStudent').click(function() {
+		var course = $('#enrollChooseCourse').val();
+		var sectionNum = $('#enrollChooseSection').val();
+		var studentid = $('enrollStudentByIDNumber').val();
+
+		enrollStudent(dbInfo, course, sectionNum, studentid);
 	});
 
 	//On click of the AddSection button, execute
@@ -414,6 +432,29 @@ function popCourses(connInfo, year, seasonorder) {
 	});
 };
 
+function populateSections(connInfo, coursetitle) {
+	var urlParams = $.extend({}, connInfo, {coursetitle:coursetitle});
+	$.ajax('populateSections', {
+		dataType: 'json',
+		data: urlParams,
+		success: function(result) {
+
+			var sections = '';
+			for (var i = 0; i < result.sections.length; i++) {
+				console.log("sections: " + result.sections[i].sections);
+				sections += '<option value="' + result.sections[i].sections + '">' +
+				result.sections[i].sections + '</option>';
+			}
+
+			popRemoveSectionSections(sections);
+		},
+		error: function(result) {
+			showAlert('<p>Error while retrieving sections_2</p>');
+			console.log(result);
+		}
+	});
+};
+
 function popSections(connInfo, year, seasonorder, coursenumber) {
 	var urlParams = $.extend({}, connInfo, {year:year, seasonorder:seasonorder,
 	 coursenumber:coursenumber});
@@ -514,6 +555,22 @@ function populateCourses(htmlText) {
 	$('#enrollChooseCourse').material_select(); //reload dropdown
 
 };
+
+function popRemoveSectionSections(htmlText) {
+	var content = '<option value="" disabled="true" selected="true">' +
+	 'Choose Section</option>' + htmlText;
+
+	$('#removeSectionNumber').html(content);
+	$('#enrollChooseSection').html(content);
+
+	$('#removeSectionNumber').prop('disabled', htmlText == null);
+	$('#enrollChooseSection').prop('disabled', htmlText == null);
+
+	$('#removeSectionNumber').material_select(); //reload dropdown
+	$('#enrollChooseSection').material_select(); //reload dropdown
+
+};
+
 
 function setYears(htmlText) {
 	var content = '<option value="" disabled="true" selected="true">' +
@@ -624,7 +681,7 @@ function addSection(connInfo, term, course, capacity, num, CRN, schedule, locati
 			console.log(result);
 	},
 	error: function(result) {
-			showAlert('<p>Error while adding section: This section is already represented.</p>');
+			showAlert('<p>Error while adding section</p>');
 				console.log(result);
 		}
 	});
@@ -749,6 +806,20 @@ function getTerms(connInfo) {
 		}
 	});
 };
+
+function enrollStudent(connInfo, course, sectionNum, studentid) {
+	var urlParams = $.extend({}, connInfo, {course:course, sectionNum:sectionNum, studentid:studentid});
+	$.ajax('enrollStudent', {
+		data: urlParams,
+		success: function(result) {
+			console.log(result);
+		},
+		error: function(result) {
+			showAlert('<p>Error adding student</p>');
+			console.log(result);
+		}
+	});
+}
 
 //dynamically populates the coursesTable element
 function setCoursesTable(htmlText){
