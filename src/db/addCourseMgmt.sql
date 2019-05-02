@@ -163,3 +163,53 @@ $$
 LANGUAGE plpgsql;
 
 
+--Function to return a list of courses 
+-- given course level 
+-- parameters: number for level (i.e. 1 for 100 level, 0 for all courses)
+
+CREATE OR REPLACE FUNCTION getCourses(cLevel INT, cCredits INT) 
+RETURNS Table(outNumber VARCHAR,outTitle VARCHAR, outCredits INT) AS--SETOF RECORD AS
+$$
+BEGIN
+
+IF (cLevel < 0 OR cCredits < 0)
+THEN
+   THROW EXCEPTION "Invalid paramaters - cannot be < 0";
+END IF;
+
+IF (cLevel > 0)
+THEN
+   -- level is specified
+   IF (cCredits > 0)
+   THEN
+   -- credits and level are specified
+      RETURN QUERY 
+         SELECT Number,Title,Credits
+         FROM Gradebook.Course
+         WHERE Number LIKE CONCAT('%',cLevel,'__','%')
+               AND Credits = cCredits;
+   ELSE
+   -- only level specified
+      RETURN QUERY
+      SELECT Number,Title,Credits
+         FROM Gradebook.Course
+         WHERE Number LIKE CONCAT('%',cLevel,'__','%');
+   END IF;
+
+ELSIF (cCredits > 0)
+   THEN
+   -- only credits specified
+      RETURN QUERY 
+         SELECT Number,Title,Credits
+         FROM Gradebook.Course
+         WHERE Credits = cCredits;
+ELSE
+-- neither are specified
+   RETURN QUERY 
+      SELECT Number,Title,Credits
+      FROM Gradebook.Course;
+
+END IF;
+END
+$$
+LANGUAGE plpgsql;
