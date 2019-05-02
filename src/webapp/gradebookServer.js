@@ -439,6 +439,28 @@ app.get('/attendance', function(request, response) {
    });
 });
 
+app.get('/getCourseSections', function(request, response) {
+   //Decrypt the password received from the client.
+   //NOTE: We need to substitute superSecret with what we're actually implementing
+   var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
+
+   //Connection parameters for the Postgres client received in the request
+   var config = createConnectionParams(request.query.user, request.query.database,
+       passwordText, request.query.host, request.query.port);
+
+   //Get the params from the url
+   var title = request.query.num;
+
+   //Set the query text
+   var queryText = 'SELECT getCourseSections($1);';
+   var queryParams = [title];
+
+   //Execute the query
+   executeQuery(response, config, queryText, queryParams, function(result) {
+       response.send(JSON.stringify({}));
+   });
+});
+
 app.get('/insertCourse', function(request, response) {
     //Decrypt the password received from the client.
     //NOTE: We need to substitute superSecret with what we're actually implementing
@@ -461,6 +483,31 @@ app.get('/insertCourse', function(request, response) {
     executeQuery(response, config, queryText, queryParams, function(result) {
         response.send(JSON.stringify({}));
     });
+});
+
+app.get('/enrollStudent', function(request, response) {
+   //Decrypt the password received from the client.
+   //NOTE: We need to substitute superSecret with what we're actually implementing
+   var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
+
+   //Connection parameters for the Postgres client received in the request
+   var config = createConnectionParams(request.query.user, request.query.database,
+       passwordText, request.query.host, request.query.port);
+
+   //Get the params from the url
+   var couseTitle = request.query.course;
+   var sectionid = request.query.sectionNum;
+   console.log('sectionid: ' + sectionid);
+   var studentid = request.query.studentid;
+
+   //Set the query text
+   var queryText = 'SELECT enrollStudent($1, $2);';
+   var queryParams = [studentid, sectionid];
+
+   //Execute the query
+   executeQuery(response, config, queryText, queryParams, function(result) {
+       response.send(JSON.stringify({}));
+   });
 });
 
 app.get('/removeCourse', function(request, response) {
@@ -554,19 +601,48 @@ app.get('/addSection', function(request, response) {
        passwordText, request.query.host, request.query.port);
 
    //Get the params from the url
-   var term = request.query.addSectionTerm;
-   var course = request.query.courseNameSelect;
-   var capacity = request.query.addSectionCapacity;
-   var num = request.query.addSectionNumber;
-   var CRN = request.query.addSectionCRN;
-   var schedule = request.query.addSectionSchedule;
-   var location = request.query.addSectionLocation;
-   var start_date = request.query.addSectionStartDate;
-   var end_date = request.query.addSectionEndDate;
-   var midterm_date = request.query.addSectionMidtermDate;
-   var instructor1 = request.query.primaryInstructorSelect;
-   var instructor2 = request.query.secondaryInstructorSelect;
-   var instructor3 = request.query.tertiaryInstructorSelect;
+   var term = request.query.term;
+   console.log("term: " + term);
+
+   if(term == 'Spring') {
+      term = 0;
+   }
+   else if(term == 'Fall') {
+      term = 1;
+   }
+   else if(term == 'Summer') {
+      term = 2;
+   }
+   else {
+      term = 3;
+   }
+
+   var course = request.query.course;
+   var capacity = request.query.capacity;
+   var num = request.query.num;
+   var CRN = request.query.CRN;
+   var schedule = request.query.schedule;
+   var location = request.query.location;
+   var start_date = request.query.start_date;
+   var end_date = request.query.end_date;
+   var midterm_date = request.query.midterm_date;
+   var instructor1 = request.query.instructor1;
+   instructor1 = 2;
+
+
+   var instructor2 = request.query.instructor2;
+   instructor2 = 3;
+
+   if(instructor2 == null) {
+      instructor2 = 0;
+   }
+
+   var instructor3 = request.query.instructor3;
+   instructor3 = 4;
+
+   if(instructor3 == null) {
+      instructor3 = 0;
+   }
 
    //Set the query text
    var queryText = 'SELECT addSection($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13);';
@@ -579,6 +655,28 @@ app.get('/addSection', function(request, response) {
 });
 
 app.get('/removeSection', function(request, response) {
+   //Decrypt the password received from the client.
+   //NOTE: We need to substitute superSecret with what we're actually implementing
+   var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
+ 
+   //Connection parameters for the Postgres client received in the request
+   var config = createConnectionParams(request.query.user, request.query.database,
+       passwordText, request.query.host, request.query.port);
+ 
+   //Get the params from the url
+   var removeSectionNumber = request.query.removeSectionNumber;
+ 
+   //Set the query text
+   var queryText = 'SELECT removeSection($1);';
+   var queryParams = [removeSectionNumber];
+ 
+   //Execute the query
+   executeQuery(response, config, queryText, queryParams, function(result) {
+       response.send(JSON.stringify({}));
+   });
+ });
+
+app.get('/populateSections', function(request, response) {
   //Decrypt the password received from the client.
   //NOTE: We need to substitute superSecret with what we're actually implementing
   var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
@@ -588,15 +686,27 @@ app.get('/removeSection', function(request, response) {
       passwordText, request.query.host, request.query.port);
 
   //Get the params from the url
-  var removeSectionNumber = request.query.removeSectionNumber;
+  var coursetitle = request.query.coursetitle;
 
   //Set the query text
-  var queryText = 'SELECT removeSection($1);';
-  var queryParams = [removeSectionNumber];
+  var queryText = 'SELECT * from getCourseSections($1);';
+  var queryParams = [coursetitle];
 
   //Execute the query
   executeQuery(response, config, queryText, queryParams, function(result) {
-      response.send(JSON.stringify({}));
+      var sections = []; //Put the rows from the query into json format
+
+      for (row in result.rows) {
+            sections.push(
+               {
+                  "sections": result.rows[row].outid
+               }
+            );
+      }
+      var jsonReturn = {
+            "sections": sections
+      } //Send the json to the client
+      response.send(JSON.stringify({sections}));
   });
 });
 
