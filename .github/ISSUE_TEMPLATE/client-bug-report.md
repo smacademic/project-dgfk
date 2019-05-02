@@ -3,7 +3,7 @@ name: Client Bug Report
 about: This template should be used when an issue arises on a client machine. Please
   fill in all of the information below.
 title: "[Client Bug] title_goes_here"
-labels: Type - Bug, Location - Client
+labels: Location - Client, Type - Bug
 assignees: ''
 
 ---

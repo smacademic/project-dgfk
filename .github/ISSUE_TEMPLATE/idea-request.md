@@ -3,7 +3,7 @@ name: Idea Request
 about: Suggest an Idea that you would like  to see be added to our Product. Please
   fill in all of the information below.
 title: "[IDEA] idea_title_goes_here"
-labels: 'Idea/Non_Issue'
+labels: Idea/Non_Issue
 assignees: ''
 
 ---
