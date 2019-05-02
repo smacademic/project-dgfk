@@ -9,6 +9,9 @@ https://creativecommons.org/licenses/by-nc-sa/4.0/
 
 PROVIDED AS IS. NO WARRANTIES EXPRESSED OR IMPLIED. USE AT YOUR OWN RISK.
 
+Modified by **Team GEEKS** (*CS298-01 Spring 2019 @ WCSU*)  
+Bruno DaSilva, Elly Griffin, Cris Fitzgerald and Kenneth Kozlowski
+
 ---
 
 ## Overview
@@ -97,6 +100,10 @@ uses.
 - `addSectionMgmt.sql`
 - `addAttendanceMgmt.sql`
 - `addInstructorMgmt.sql`
+- `addCourseMgmt.sql`
+- `addSectionMgmt.sql`
+- `addTermMgmt.sql`
+- `addEnrolleeMgmt.sql`
 
 The PSQL script and the SQL scripts it invokes should all be in the same
 directory. The PSQL script must be run using `psql` (due to the use of `psql`
