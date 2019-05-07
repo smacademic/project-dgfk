@@ -38,7 +38,7 @@ To *Add* a course:
     2. Enter in the title of the course, `Introduction to Writing`
     3. Enter in the number of credits that the class is, `3`
     4. Click on `Add Course` and the course will be added to the system.  
-    
+
 There is one error that could happen when trying to add a new course to the system:
 - "The course is already represented"
 ***
@@ -55,3 +55,11 @@ To *Remove* a course, there are two different options:
 
 There is one error that can happen when trying to remove a course from the system:
 - "There is no course represented in the Database"  
+***
+To *Edit* A course that is in the Database:
+1. Find the course in the list of courses
+2. Click on the `Edit` button
+![](UserManualImages/EditCourse.png)
+3. Make any changes that are needed to the information that is on that row.
+4. Click on `Submit` to save any changes that you wanted to make or click on `Cancel` anytime to revert the changes back to what they originally were.  
+***
