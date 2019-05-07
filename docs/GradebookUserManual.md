@@ -120,11 +120,16 @@ To *Logout* of Gradebook:
 <!--This section is not written yet. This section will contain all of the troubleshooting information that End Users would need to know to be able to handle some of the issues that could happen when working on Gradebook.-->
 This section will help to resolve some of the more common issues with Gradebook when using the product. If issues still persist after going though this guide, then reach out to your System Administrator for assistance.  
 
-|           **Issue**         |             **Troubleshooting Steps**         |
-|-----------------------------|-----------------------------------------------|
+|           **Issue**         |             **Troubleshooting Steps**       |
+|-----------------------------|---------------------------------------------|
 | Email Domain Not Recognized | 1. Check to make sure that there are no spelling errors in the domain of the email address. <br> 2.Conatact your System Administrator and check to see if the domain has been properly changed from the default value. |
 | Username is not Recognized. | 1. Check and verify that the email address that you are using is the same as the email assigned to you by your institution. <br> 2. Verify with an administrator that you have an account in the system.|
+|Cannot Login by Pressing Enter after typing Password | This is a known issue with the product. As of the current version of this document, the only way to login to Gradebook is by pressing the `Login` button after entering in your username and password.
 |The Course is already Represented | The course that is trying to be added to the system is already in the Database. If you check the list of courses and you do not see the course in the list, then there is a Database issue that can only be resolved by someone who has DB Admin privileges.<br> Please Note: A course being submitted cannot have the same `CourseNumber` and `Course Title` as another course. |
 |The Course is not Represented | The course that you are trying to remove from the DB is not in the DB, this can be verified by attempting to add the course and if no errors arise when trying to add the course, then the course was not present in the list of courses.|
 |500: Internal Server Error | There is something that is not correct with one of the following items: <br><br>1. There is an issue in one of the function scripts where a function call is happening in the wrong DB Schema. <br>2. The call in the WebServer is not communicating correctly with either the DB or the Client JavaScript.|
-|Error While Retrieving Courses | This means that the call to the DB is not happening correctly from the WebServer to the DB. There is most likely an issue with the Schema Qualification of the function call.| 
+|Error While Retrieving Courses | This means that the call to the DB is not happening correctly from the WebServer to the DB. There is most likely an issue with the Schema Qualification of the function call.|
+
+
+
+<!--This is not a complete list of all troubleshooting steps, more items will be added once they become available-->
