@@ -24,6 +24,7 @@ The pages that *Team GEEKS* did work on this semester were:
 - Course Management
 - Section Management  
 ***
+### Course Management
 To navigate to the Course Management, click on the `Course Management` tab at the top of the page and you will be redirected to this page:
 ![](UserManualImages/CourseManagement.png)  
 ***NOTE***: The information below the drop down menus may show different information than the picture above.  
@@ -63,3 +64,57 @@ To *Edit* A course that is in the Database:
 3. Make any changes that are needed to the information that is on that row.
 4. Click on `Submit` to save any changes that you wanted to make or click on `Cancel` anytime to revert the changes back to what they originally were.  
 ***
+### Section Management  
+To navigate to the Section Management portion of the site, click on the `Section Management` tab at the top of the screen and you will be redirected to this page:
+![](UserManualImages/SectionManagement.png)
+From here, you can choose to do any of the following actions that are shown above while on this screen.  
+***
+To *Add* A section to the system:
+1. Click on the `Add A Section` drop down menu to expand it so you can see all of the input fields.
+![](UserManualImages/AddSection.png)
+2. Fill in all of the input fields by either choosing an option from the drop down selection boxes, inputting the required text into a text input or by entering a date into the three fields that require dates.
+    1. ***NOTE***: The dates that are supplied into the fields: `Starting Date`, `Ending Date` and `Midterm Date` all need to be valid dates that are in the `Term` that you choose.
+3. Once all of the fields are filled in and all of the information is correct, click on the `Add Section` button to submit all of the changes to the Database to be added.  
+<!--Information about errors needs to be added here-->
+***
+To *Remove* A section from the system, there are two different ways to remove a section, similar to the ways mentioned in *Course Management*
+1. Option 1
+    1. Click on the `Remove A Section` drop down to expand all of the information that is in the drop down.
+    ![](UserManualImages/RemoveSection.png)
+    2. Choose both the Course and the Section you want to remove from their respective option menus.
+    3. Once both of the fields are filled in, click on the `Delete Section` button to remove the section from the Database.
+2. Option 2
+<!--This option needs to be added once the dynamically populated table is created for Sections. Also, error messages need to be added for both options once they are known.-->
+***
+To *Assign* Instructors to a Section:
+1. Click on the `Assign Instructors` drop down menu to expand all of the information that is inside this section.
+![](UserManualImages/AssignInstructors.png)
+2. Choose the Course and enter in the section number that you want to add instructors to.
+3. From the three drop down selections, choose at least the first instructor for the Section because that field cannot be left empty. For the other 2 fields, the instructor can be left as blank if there is not more than one instructor in a given class.
+4. Once all of the fields that are needed are filled in and the information is correct, click on the `Assign Instructors` button to submit the information to the database.
+***
+To *Remove* Instructors from a Section:
+1. Click on the `Remove Instructors` drop down menu to expand the information in the menu.
+![](UserManualImages/RemoveInstructors.png)
+2. From within the same drop down menu, choose the Course and Section that you want to make the changes to.
+<!--This needs to be added once the table is created. Also error information needs to be added to create troubleshooting guide. NOTE: A new Screenshot should be taken once the table is created here.-->
+***
+To *Enroll* Students into a section:
+1. Click on the `Enroll Students` drop down to expand all of the information that is in the section.
+![](UserManualImages/EnrollStudent.png)
+2. Choose the course and section from the drop down selection menus
+3. Enter in the Student's ID Number in the last field (Example: *50205678*)
+4. Once all of the information is filled in and verified, click on the `Enroll Student In Class` button to submit the information.  
+
+***NOTE***: At the current time, there is no way to enroll multiple students into a section at a time. It is a one student at a time process as of *5/7/2019*  
+<!--Error information and other supporting materials will be added when they are available.-->
+***
+To *Logout* of Gradebook:
+1. At any time, click on the down arrow next to your name at the top right hand corner of the screen.
+![](UserManualImages/Logout.png)
+2. Click on the `Logout` option.
+3. You will be redirected back to the login screen.
+***
+<!--More content will be added once it is added to the program. It will be added here.-->
+## Troubleshooting
+<!--This section is not written yet. This section will contain all of the troubleshooting information that End Users would need to know to be able to handle some of the issues that could happen when working on Gradebook.-->
