@@ -118,3 +118,9 @@ To *Logout* of Gradebook:
 <!--More content will be added once it is added to the program. It will be added here.-->
 ## Troubleshooting
 <!--This section is not written yet. This section will contain all of the troubleshooting information that End Users would need to know to be able to handle some of the issues that could happen when working on Gradebook.-->
+This section will help to resolve some of the more common issues with Gradebook when using the product. If issues still persist after going though this guide, then reach out to your System Administrator for assistance.  
+
+|           **Issue**         |             **Troubleshooting Steps**         |
+|-----------------------------|-----------------------------------------------|
+| Email Domain Not Recognized | 1. Check to make sure that there are no spelling errors in the domain of the email address. <br> 2.Conatact your System Administrator and check to see if the domain has been properly changed from the default value. |
+| Username is not Recognized. | 1. Check and verify that the email address that you are using is the same as the email assigned to you by your institution. <br> 2. Verify with an administrator that you have an account in the system.
