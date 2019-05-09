@@ -192,14 +192,14 @@ app.get('/instructors', function(request, response) {
       passwordText, request.query.host, request.query.port);
 
    //Set the query text
-   var queryText = 'SELECT FName FROM gradebook.getInstructors();';
+   var queryText = 'SELECT * FROM gradebook.getInstructors();';
    var queryParams = [];
 
    //Execute the query
    executeQuery(response, config, queryText, queryParams, function(result) {
       var instructors = []; //Put the rows from the query into json format
       for(row in result.rows) {
-         instructors.push(result.rows[row].fname);
+         instructors.push(result.rows[row]);
       }
       var jsonReturn = {
          "instructors": instructors
@@ -604,10 +604,10 @@ app.get('/addSection', function(request, response) {
    var term = request.query.term;
    console.log("term: " + term);
 
-   if(term == 'Spring') {
+   if(term == 'Fall') {
       term = 0;
    }
-   else if(term == 'Fall') {
+   else if(term == 'Spring') {
       term = 1;
    }
    else if(term == 'Summer') {
@@ -627,21 +627,15 @@ app.get('/addSection', function(request, response) {
    var end_date = request.query.end_date;
    var midterm_date = request.query.midterm_date;
    var instructor1 = request.query.instructor1;
-   instructor1 = 2;
-
 
    var instructor2 = request.query.instructor2;
-   instructor2 = 3;
-
-   if(instructor2 == null) {
-      instructor2 = 0;
+   if(instructor2 == ''){
+      instructor2 = null
    }
 
    var instructor3 = request.query.instructor3;
-   instructor3 = 4;
-
-   if(instructor3 == null) {
-      instructor3 = 0;
+   if(instructor3 == ''){
+      instructor3 = null
    }
 
    //Set the query text
