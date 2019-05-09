@@ -357,10 +357,9 @@ function popInstructors(connInfo) {
 		success: function(result) {
 			var instructors = '';
 			for (var i = 0; i < result.instructors.length; i++) {
-				instructors += '<option value="' + result.instructors[i] + '">' +
-				 result.instructors[i] + '</option>';
+				instructors += '<option value="' + result.instructors[i].id + '">' +
+				 result.instructors[i].fname + '</option>';
 			}
-			console.log(result);
 			setInstructors(instructors);
 		},
 		error: function(result) {
