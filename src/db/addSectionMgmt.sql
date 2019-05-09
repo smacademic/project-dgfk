@@ -168,7 +168,7 @@ $$
 LANGUAGE plpgsql;
 
 
---Function to get a course's sections
+--Function to get a course's sections 
 -- parameters: Course PK (Number, Title)
 -- returns: sections' ID and SecNum
 
@@ -332,6 +332,49 @@ $$ LANGUAGE sql
   STABLE
   RETURNS NULL ON NULL INPUT
   ROWS 1;
+
+
+
+--Function to return all sections 
+-- returns sections ordered by Course
+CREATE OR REPLACE FUNCTION getSections()
+RETURNS Table(outID INT, outTerm INT, outCourse VARCHAR, outSecNum VARCHAR,
+              outCRN VARCHAR, outSchedule VARCHAR, outCap INT, outLoc VARCHAR,
+              outSDate DATE, outEDate DATE, outMDate DATE, 
+              outI1 INT, outI2 INT, outI3 INT) AS
+$$
+BEGIN
+
+RETURN QUERY 
+	SELECT ID, Term, Course, SectionNumber, CRN, Schedule, Capacity, Location,
+          StartDate, EndDate, MidtermDate, Instructor1, Instructor2, Instructor3
+   FROM Gradebook.Section
+   ORDER BY Course;
+
+END
+$$
+LANGUAGE plpgsql;
+
+-- Function to return all sections of a Course given its title
+CREATE OR REPLACE FUNCTION getSections(cTitle VARCHAR)
+RETURNS Table(outID INT, outTerm INT, outCourse VARCHAR, outSecNum VARCHAR,
+              outCRN VARCHAR, outSchedule VARCHAR, outCap INT, outLoc VARCHAR,
+              outSDate DATE, outEDate DATE, outMDate DATE, 
+              outI1 INT, outI2 INT, outI3 INT) AS
+$$
+BEGIN
+
+RETURN QUERY 
+	SELECT S.ID, S.Term, S.Course, S.SectionNumber, S.CRN, S.Schedule, S.Capacity, 
+          S.Location, S.StartDate, S.EndDate, S.MidtermDate, 
+          S.Instructor1, S.Instructor2, S.Instructor3 
+   FROM Gradebook.Section S INNER JOIN Gradebook.Course C
+   ON C.Title = cTitle AND C.Number = S.Course
+   ORDER BY SectionNumber;
+
+END
+$$
+LANGUAGE plpgsql;
 
 
 --Function to assign (add/remove) an instructor to a section
