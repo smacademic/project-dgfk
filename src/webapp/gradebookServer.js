@@ -92,7 +92,7 @@ function executeQuery(response, config, queryText, queryParams, queryCallback) {
 
 //Tell the browser we don't have a favicon
 app.get('/favicon.ico', function (request, response) {
-   response.status(204).send(); //No content
+     response.sendFile('GBFavicon.ico', {root: __dirname});
 });
 
 //Serve our homepage when a user goes to the root
@@ -288,7 +288,6 @@ app.get('/sections', function(request, response) {
    var year = request.query.year;
    var seasonOrder = request.query.seasonorder;
    var courseNumber = request.query.coursenumber;
-
    var queryText = 'SELECT SectionID, SectionNumber FROM gradebook.getInstructorSections($1, $2, $3, $4);';
    var queryParams = [instructorID, year, seasonOrder, courseNumber];
 
@@ -738,6 +737,681 @@ app.get('/getTerms', function(request, response){
          } //Send the json to the client
        response.send(JSON.stringify({terms}));
    });
+});
+
+//Add a grade tier to a section
+app.get('/gradeTiersAdd', function(request, response) {
+    //Decrypt the password received from the client.
+    //NOTE: We need to substitute superSecret with what we're actually implementing
+       var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
+
+    //Connection parameters for the Postgres client received in the request
+    var config = createConnectionParams(request.query.user, request.query.database,
+        passwordText, request.query.host, request.query.port);
+
+    //Get the params from the url
+    var sectionId = request.query.sectionid;
+    var letterGrade = request.query.lettergrade;
+    var lowPercentage = request.query.lowpercentage;
+    var highPercentage = request.query.highpercentage;
+
+    //Set the query text
+    var queryText = 'SELECT Gradebook.addSectionGradeTier($1, $2, $3, $4);';
+    var queryParams = [sectionId, letterGrade, lowPercentage, highPercentage];
+
+    //Execute the query
+    executeQuery(response, config, queryText, queryParams, function(result) {
+        response.send(JSON.stringify({}));
+    });
+});
+
+
+//Delete a grade tier from a section
+app.get('/gradeTiersDelete', function(request, response) {
+    //Decrypt the password received from the client.
+    //NOTE: We need to substitute superSecret with what we're actually implementing
+       var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
+
+    //Connection parameters for the Postgres client received in the request
+    var config = createConnectionParams(request.query.user, request.query.database,
+        passwordText, request.query.host, request.query.port);
+
+    //Get the params from the url
+    var sectionId = request.query.sectionid;
+    var letterGrade = request.query.lettergrade;
+
+    //Set the query text
+    var queryText = 'SELECT Gradebook.dropSectionGradeTier($1, $2);';
+    var queryParams = [sectionId, letterGrade];
+
+    //Execute the query
+    executeQuery(response, config, queryText, queryParams, function(result) {
+        response.send(JSON.stringify({}));
+    });
+});
+
+//Return the list of grade tiers for a section
+app.get('/gradeTiersGet', function(request, response) {
+    //Decrypt the password received from the client.
+    //NOTE: We need to substitute superSecret with what we're actually implementing
+       var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
+
+    //Connection parameters for the Postgres client received in the request
+    var config = createConnectionParams(request.query.user, request.query.database,
+        passwordText, request.query.host, request.query.port);
+
+    //Get the params from the url
+    var sectionId = request.query.sectionid;
+
+    //Set the query text
+    var queryText = 'SELECT * FROM Gradebook.getSectionGradeTiers($1);';
+    var queryParams = [sectionId];
+
+    //Execute the query
+    executeQuery(response, config, queryText, queryParams, function(result) {
+        var gradeTiers = []; //Put the rows from the query into json format
+        for (row in result.rows) {
+            gradeTiers.push(
+                {
+                    "letter": result.rows[row].letter,
+                    "lowpercentage": result.rows[row].lowpercentage,
+                    "highpercentage": result.rows[row].highpercentage
+                }
+            );
+        }
+        var jsonReturn = {
+            "gradeTiers": gradeTiers
+        } //Send the json to the client
+        response.send(JSON.stringify(jsonReturn));
+    });
+});
+
+//Modify a grade tier in a section
+app.get('/gradeTiersMod', function(request, response) {
+    //Decrypt the password received from the client.
+    //NOTE: We need to substitute superSecret with what we're actually implementing
+       var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
+
+    //Connection parameters for the Postgres client received in the request
+    var config = createConnectionParams(request.query.user, request.query.database,
+        passwordText, request.query.host, request.query.port);
+
+    //Get the query params from the url
+    var sectionId = request.query.sectionid;
+    var letterGrade = request.query.letter;
+    var lowPercentage = request.query.lowpercentage;
+    var highPercentage = request.query.highpercentage;
+    var modifiedLetterGrade = request.query.modifiedlettergrade;
+
+    //Set the query text
+    var queryText = 'SELECT Gradebook.modifySectionGradeTier($1, $2, $3, $4, $5);';
+    var queryParams = [sectionId, letterGrade, lowPercentage, highPercentage, modifiedLetterGrade];
+
+    //Execute the query
+    executeQuery(response, config, queryText, queryParams, function(result) {
+        response.send(JSON.stringify({}));
+    });
+});
+
+//Copy a grade tier from one section to another
+app.get('/gradeTiersCopy', function(request, response) {
+    //Decrypt the password received from the client.
+    //NOTE: We need to substitute superSecret with what we're actually implementing
+       var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
+
+    //Connection parameters for the Postgres client received in the request
+    var config = createConnectionParams(request.query.user, request.query.database,
+        passwordText, request.query.host, request.query.port);
+
+    //Get the query params from the url
+    var sectionId = request.query.sectionid;
+    var letterGrade = request.query.lettergrade;
+    var newSection = request.query.newsection;
+
+    //Set the query text
+    var queryText = 'SELECT Gradebook.copySectionGradeTier($1, $2, $3);';
+    var queryParams = [sectionId, letterGrade, newSection];
+
+    //Execute the query
+    executeQuery(response, config, queryText, queryParams, function(result) {
+        response.send(JSON.stringify({}));
+    });
+});
+
+//assessmentKindMgmt.SQL function calls
+
+//Add an assessment kind to a section
+app.get('/assessmentKindsAdd', function(request, response) {
+	//Decrypt the password received from the client.
+	//NOTE: We need to substitute superSecret with what we're actually implementing
+	   var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
+	//Connection parameters for the Postgres client received in the request
+	var config = createConnectionParams(request.query.user, request.query.database,
+        passwordText, request.query.host, request.query.port);
+
+    //Get the query params from the url
+    var sectionId = request.query.sectionid;
+    var name = request.query.kindname;
+    var description = request.query.kinddescription;
+    var weightage = request.query.weightage;
+
+    //Set the query text
+    var queryText = 'SELECT Gradebook.addSectionAssessmentKind($1, $2, $3, $4);';
+    var queryParams = [sectionId, name, description, weightage];
+
+    //Execute the query
+    executeQuery(response, config, queryText, queryParams, function(result) {
+	    response.send(JSON.stringify({}));
+	});
+});
+
+//Drop an assessment kind from a section
+app.get('/assessmentKindsDelete', function(request, response) {
+	//Decrypt the password received from the client.
+    //NOTE: We need to substitute superSecret with what we're actually implementing
+	//var passwordText=request.query.password;
+       var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
+	//Connection parameters for the Postgres client received in the request
+	var config = createConnectionParams(request.query.user, request.query.database,
+        passwordText, request.query.host, request.query.port);
+
+    //Get the query params from the url
+    var sectionId = request.query.sectionid;
+    var name = request.query.kindname;
+
+    //Set the query text
+    var queryText = 'SELECT Gradebook.dropSectionAssessmentKind($1, $2);';
+    var queryParams = [sectionId, name];
+
+    //Execute the query
+    executeQuery(response, config, queryText, queryParams, function(result) {
+		response.send(JSON.stringify({}));
+});
+});
+
+//Return all assessmentKinds in a section
+app.get('/assessmentKindsGet', function(request, response) {
+	//Decrypt the password received from the client.
+	//NOTE: We need to substitute superSecret with what we're actually implementing
+	//var passwordText=request.query.password;
+	   var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
+	//Connection parameters for the Postgres client received in the request
+	var config = createConnectionParams(request.query.user, request.query.database,
+        passwordText, request.query.host, request.query.port);
+
+    //Get the query params from the url
+    var sectionId = request.query.sectionid;
+
+    //Set the query text
+    var queryText = 'SELECT * FROM Gradebook.getSectionAssessmentKinds($1);';
+    var queryParams = [sectionId];
+
+    //Execute the query
+    executeQuery(response, config, queryText, queryParams, function(result) {
+		var assessmentKinds = []; //Put the rows from the query into json format
+		        for (row in result.rows) {
+		            assessmentKinds.push(
+		                {
+		                    "name": result.rows[row].name,
+		                    "description": result.rows[row].description,
+		                    "weightage": result.rows[row].weightage
+		                }
+		            );
+		        }
+		        var jsonReturn = {
+		            "assessmentKinds": assessmentKinds
+		        } //Send the json to the client
+        response.send(JSON.stringify(jsonReturn));
+});
+});
+
+//modify an assessment kind in a section
+app.get('/assessmentKindsMod', function(request, response) {
+	//Decrypt the password received from the client.
+    //NOTE: We need to substitute superSecret with what we're actually implementing
+	   var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
+
+	//Connection parameters for the Postgres client received in the request
+	var config = createConnectionParams(request.query.user, request.query.database,
+        passwordText, request.query.host, request.query.port);
+
+    //Get the query params from the url
+    var sectionId = request.query.sectionid;
+    var name = request.query.kindname;
+    var description = request.query.kinddescription;
+    var weightage = request.query.weightage;
+    var newName = request.query.newkindname;
+
+    //Set the query text
+    var queryText = 'SELECT Gradebook.modifySectionAssessmentKind($1, $2, $3, $4, $5);';
+    var queryParams = [sectionId, name, description, weightage, newName];
+
+    //Execute the query
+    executeQuery(response, config, queryText, queryParams, function(result) {
+		response.send(JSON.stringify({}));
+});
+});
+
+//copy an assessment kind from one section to another
+app.get('/assessmentKindsCopy', function(request, response) {
+	//Decrypt the password received from the client.
+	//NOTE: We need to substitute superSecret with what we're actually implementing
+       var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
+
+	//Connection parameters for the Postgres client received in the request
+	var config = createConnectionParams(request.query.user, request.query.database,
+        passwordText, request.query.host, request.query.port);
+
+    //Get the query params from the url
+    var sectionId = request.query.sectionid;
+    var name = request.query.kindname;
+    var newSection = request.query.newsection;
+
+    //Set the query text
+    var queryText = 'SELECT Gradebook.copySectionAssessmentKind($1, $2, $3);';
+    var queryParams = [sectionId, name, newSection];
+
+    //Execute the query
+    executeQuery(response, config, queryText, queryParams, function(result) {
+		response.send(JSON.stringify({}));
+});
+});
+
+//assessmentItemMgmt.SQL function calls
+
+//add an assessment item to a section
+app.get('/assessmentItemsAdd', function(request, response) {
+	//Decrypt the password received from the client.
+	//NOTE: We need to substitute superSecret with what we're actually implementing
+	//var passwordText=request.query.password;
+	   var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
+	//Connection parameters for the Postgres client received in the request
+	var config = createConnectionParams(request.query.user, request.query.database,
+        passwordText, request.query.host, request.query.port);
+
+    //Get the query params from the url
+    var sectionId = request.query.sectionid;
+    var kind = request.query.kind;
+    var number = request.query.itemnumber;
+    var description = request.query.itemdescription;
+    var basePoints = request.query.basepointspossible;
+    var assignedDate = request.query.assigneddate;
+    var dueDate = request.query.duedate;
+    var revealDate = request.query.revealdate;
+    var curve = request.query.curve;
+
+    //Set the query text
+    var queryText = 'SELECT Gradebook.addSectionAssessmentItem($1, $2, $3, $4, $5, $6, $7, $8, $9);';
+    var queryParams = [sectionId, kind, number, description, basePoints, assignedDate, dueDate, revealDate, curve];
+
+    //Execute the query
+    executeQuery(response, config, queryText, queryParams, function(result) {
+		response.send(JSON.stringify({}));
+});
+});
+
+//delete an assessment item from a section
+app.get('/assessmentItemsDelete', function(request, response) {
+	//Decrypt the password received from the client.
+	//NOTE: We need to substitute superSecret with what we're actually implementing
+	   var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
+
+	//Connection parameters for the Postgres client received in the request
+	var config = createConnectionParams(request.query.user, request.query.database,
+        passwordText, request.query.host, request.query.port);
+
+    //Get the query params from the url
+    var sectionId = request.query.sectionid;
+    var kind = request.query.kind;
+    var number = request.query.itemnumber;
+
+    //Set the query text
+    var queryText = 'SELECT Gradebook.dropSectionAssessmentItem($1, $2, $3);';
+    var queryParams = [sectionId, kind, number];
+
+    //Execute the query
+    executeQuery(response, config, queryText, queryParams, function(result) {
+		response.send(JSON.stringify({}));
+});
+});
+
+//get all assessment items of a kind in a section
+app.get('/assessmentItemsGet', function(request, response) {
+	//Decrypt the password received from the client.
+	//NOTE: We need to substitute superSecret with what we're actually implementing
+	//var passwordText=request.query.password;
+	   var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
+
+	//Connection parameters for the Postgres client received in the request
+	var config = createConnectionParams(request.query.user, request.query.database,
+        passwordText, request.query.host, request.query.port);
+
+    //Get the query params from the url
+    var sectionId = request.query.sectionid;
+    var kind = request.query.kind;
+
+    //Set the query text
+    var queryText = 'SELECT * FROM Gradebook.getSectionAssessmentItems($1, $2);';
+    var queryParams = [sectionId, kind];
+
+    //Execute the query
+    executeQuery(response, config, queryText, queryParams, function(result) {
+		var assessmentItems = []; //Put the rows from the query into json format
+				        for (row in result.rows) {
+							//console.log(result.rows);
+				            assessmentItems.push(
+				                {
+				                    //"Name": result.rows[row].name,
+									"Kind": result.rows[row].kind,
+									"Number": result.rows[row].assessmentnumber,
+				                    "Description": result.rows[row].description,
+				                    "BasePointsPossible": result.rows[row].basepointspossible,
+				                    "AssignedDate": result.rows[row].assigneddate,
+				                    "DueDate": result.rows[row].duedate,
+				                    "RevealDate": result.rows[row].revealdate,
+				                    "Curve": result.rows[row].curve
+				                }
+				            );
+				        }
+				        var jsonReturn = {
+				            "assessmentItems": assessmentItems
+				        } //Send the json to the client
+						//console.log(jsonReturn);
+        response.send(JSON.stringify(jsonReturn));
+});
+});
+
+//modify an assessment item in a section
+app.get('/assessmentItemsMod', function(request, response) {
+	//Decrypt the password received from the client.
+	//NOTE: We need to substitute superSecret with what we're actually implementing
+	   var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
+
+	//Connection parameters for the Postgres client received in the request
+	var config = createConnectionParams(request.query.user, request.query.database,
+        passwordText, request.query.host, request.query.port);
+
+    //Get the query params from the url
+    var sectionId = request.query.sectionid;
+    var kind = request.query.kind;
+    var number = request.query.itemnumber;
+    var description = request.query.itemdescription;
+    var basePoints = request.query.basepointspossible;
+    var assignedDate = request.query.assigneddate;
+    var dueDate = request.query.duedate;
+    var revealDate = request.query.revealdate;
+    var curve = request.query.curve;
+    var newNumber = request.query.newnumber;
+
+    //Set the query text
+    var queryText = 'SELECT Gradebook.modifySectionAssessmentItem($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);';
+    var queryParams = [sectionId, kind, number, description, basePoints, assignedDate, dueDate, revealDate, curve, newNumber];
+
+    //Execute the query
+    executeQuery(response, config, queryText, queryParams, function(result) {
+		response.send(JSON.stringify({}));
+});
+});
+
+//submissionMgmt.SQL function calls
+
+//add a submission to a section
+app.get('/submissionsAdd', function(request, response) {
+	//Decrypt the password received from the client.
+	//NOTE: We need to substitute superSecret with what we're actually implementing
+	   var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
+
+	//Connection parameters for the Postgres client received in the request
+	var config = createConnectionParams(request.query.user, request.query.database,
+        passwordText, request.query.host, request.query.port);
+
+    //Get the query params from the url
+    var studentId = request.query.studentid;
+    var sectionId = request.query.sectionid;
+    var kind = request.query.kind;
+    var number = request.query.itemnumber;
+    var basePoints = request.query.basepointsearned;
+    var extraCredit = request.query.extracreditearned;
+    var penalty = request.query.penalty;
+    var submissionDate = request.query.submissiondate;
+    var notes = request.query.notes;
+
+    //Set the query text
+    var queryText = 'SELECT Gradebook.addSubmission($1, $2, $3, $4, $5, $6, $7, $8, $9);';
+    var queryParams = [studentId, sectionId, kind, number, basePoints, extraCredit, penalty, submissionDate, notes];
+
+    //Execute the query
+    executeQuery(response, config, queryText, queryParams, function(result) {
+		response.send(JSON.stringify({}));
+});
+});
+
+//get an enrollee's assessment item scores for a kind in a section
+app.get('/submissionsItemsEnrollee', function(request, response) {
+	//Decrypt the password received from the client.
+	//NOTE: We need to substitute superSecret with what we're actually implementing
+	   var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
+
+	//Connection parameters for the Postgres client received in the request
+	var config = createConnectionParams(request.query.user, request.query.database,
+        passwordText, request.query.host, request.query.port);
+
+    //Get the query params from the url
+    var studentId = request.query.userid;
+    var sectionId = request.query.sectionid;
+    var kind = request.query.kind;
+
+    //Set the query text
+    var queryText = 'SELECT * FROM Gradebook.getAssessmentItemScoresEnrollee($1, $2, $3);';
+    var queryParams = [studentId, sectionId, kind];
+
+    //Execute the query
+    executeQuery(response, config, queryText, queryParams, function(result) {
+		var submissions = []; //Put the rows from the query into json format
+						        for (row in result.rows) {
+						            submissions.push(
+						                {
+						                    "Name": result.rows[row].name,
+						                    //"Description": result.rows[row].description,
+											"BasePointsEarned": result.rows[row].basepointsearned,
+											"ExtraCreditEarned": result.rows[row].extracreditearned,
+											"Penalty": result.rows[row].penalty,
+						                    "CurvedGradePercent": result.rows[row].curvedgradepercent,
+						                    "CurvedGradeLetter": result.rows[row].curvedgradeletter,
+											"SubmissionDate": result.rows[row].submissiondate,
+											"Notes": result.rows[row].notes
+						                }
+						            );
+						        }
+						        var jsonReturn = {
+						            "submissions": submissions
+						        } //Send the json to the client
+        response.send(JSON.stringify(jsonReturn));
+});
+});
+
+//get all enrollees' scores for a particular assessment item in a section
+app.get('/submissionsItemsInstructor', function(request, response) {
+	//Decrypt the password received from the client.
+	//NOTE: We need to substitute superSecret with what we're actually implementing
+	//var passwordText=request.query.password;
+	   var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
+	//Connection parameters for the Postgres client received in the request
+	var config = createConnectionParams(request.query.user, request.query.database,
+        passwordText, request.query.host, request.query.port);
+
+    //Get the query params from the url
+    var sectionId = request.query.sectionid;
+    var kind = request.query.kind;
+    var number = request.query.itemnumber;
+
+    //Set the query text
+    var queryText = 'SELECT * FROM Gradebook.getAssessmentItemScoresInstructor($1, $2, $3);';
+    var queryParams = [sectionId, kind, number];
+
+    //Execute the query
+    executeQuery(response, config, queryText, queryParams, function(result) {
+		var submissions = []; //Put the rows from the query into json format
+								        for (row in result.rows) {
+								            submissions.push(
+								                {
+								                    "Enrollee": result.rows[row].enrollee,
+													"Student": result.rows[row].student,
+													"Kind": result.rows[row].kind,
+													"Number": result.rows[row].assessmentnumber,
+													"BasePointsEarned": result.rows[row].basepointsearned,
+													"ExtraCreditEarned": result.rows[row].extracreditearned,
+													"Penalty": result.rows[row].penalty,
+													"Grade": result.rows[row].grade,
+													"SubmissionDate": result.rows[row].submissiondate,
+								                    "Notes": result.rows[row].notes
+								                }
+								            );
+								        }
+								        var jsonReturn = {
+								            "submissions": submissions
+								        } //Send the json to the client
+        response.send(JSON.stringify(jsonReturn));
+});
+});
+
+//get an enrollee's average score for all items of a kind
+app.get('/submissionsKindsEnrollee', function(request, response) {
+	//Decrypt the password received from the client.
+	//NOTE: We need to substitute superSecret with what we're actually implementing
+	//var passwordText=request.query.password;
+	   var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
+	//Connection parameters for the Postgres client received in the request
+	var config = createConnectionParams(request.query.user, request.query.database,
+        passwordText, request.query.host, request.query.port);
+
+    //Get the query params from the url
+    var studentId = request.query.userid;
+    var sectionId = request.query.sectionid;
+    var kind = request.query.kind;
+
+    //Set the query text
+    var queryText = 'SELECT * FROM Gradebook.getAssessmentKindAvgEnrollee($1, $2, $3);';
+    var queryParams = [studentId, sectionId, kind];
+
+    //Execute the query
+    executeQuery(response, config, queryText, queryParams, function(result) {
+		var submissions = []; //Put the rows from the query into json format
+										        for (row in result.rows) {
+										            submissions.push(
+										                {
+										                    "Kind": result.rows[row].kind,
+										                    "Grade": result.rows[row].grade
+										                }
+										            );
+										        }
+										        var jsonReturn = {
+										            "submissions": submissions
+										        } //Send the json to the client
+        response.send(JSON.stringify(jsonReturn));
+});
+});
+
+//get all enrollees' averages for a specific kind
+app.get('/submissionsKindsInstructor', function(request, response) {
+	//Decrypt the password received from the client.
+	//NOTE: We need to substitute superSecret with what we're actually implementing
+	//var passwordText=request.query.password;
+	   var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
+	//Connection parameters for the Postgres client received in the request
+	var config = createConnectionParams(request.query.user, request.query.database,
+        passwordText, request.query.host, request.query.port);
+
+    //Get the query params from the url
+    var sectionId = request.query.sectionid;
+    var kind = request.query.kind;
+
+    //Set the query text
+    var queryText = 'SELECT * FROM Gradebook.getAssessmentKindAvgInstructor($1, $2);';
+    var queryParams = [sectionId, kind];
+
+    //Execute the query
+    executeQuery(response, config, queryText, queryParams, function(result) {
+		var submissions = []; //Put the rows from the query into json format
+												for (row in result.rows) {
+												    submissions.push(
+												        {
+												            "Enrollee": result.rows[row].enrollee,
+												            "Grade": result.rows[row].grade
+												        }
+												    );
+												}
+												var jsonReturn = {
+												    "submissions": submissions
+												} //Send the json to the client
+        response.send(JSON.stringify(jsonReturn));
+});
+});
+
+//modify an enrollee's submission
+app.get('/submissionsMod', function(request, response) {
+	//Decrypt the password received from the client.
+	//NOTE: We need to substitute superSecret with what we're actually implementing
+	   var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
+
+	//Connection parameters for the Postgres client received in the request
+	var config = createConnectionParams(request.query.user, request.query.database,
+        passwordText, request.query.host, request.query.port);
+
+    //Get the query params from the url
+    var studentId = request.query.userid;
+    var sectionId = request.query.sectionid;
+    var kind = request.query.kind;
+    var number = request.query.itemnumber;
+    var basePoints = request.query.basepointsearned;
+    var extraCredit = request.query.extracreditearned;
+    var penalty = request.query.penalty;
+    var submissionDate = request.query.submissiondate;
+    var notes = request.query.notes;
+
+    //Set the query text
+    var queryText = 'SELECT * FROM Gradebook.modifySubmission($1, $2, $3, $4, $5, $6, $7, $8, $9);';
+    var queryParams = [studentId, sectionId, kind, number, basePoints, extraCredit, penalty, submissionDate, notes];
+
+    //Execute the query
+    executeQuery(response, config, queryText, queryParams, function(result) {
+		response.send(JSON.stringify({}));
+});
+});
+
+//get a list of enrollees in a section
+app.get('/getEnrollees', function(request, response) {
+	//Decrypt the password received from the client.
+	//NOTE: We need to substitute superSecret with what we're actually implementing
+	   var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
+
+	//Connection parameters for the Postgres client received in the request
+	var config = createConnectionParams(request.query.user, request.query.database,
+        passwordText, request.query.host, request.query.port);
+
+    //Get the query params from the url
+    var sectionId = request.query.sectionid;
+
+    //Set the query text
+    var queryText = 'SELECT * FROM Gradebook.getEnrollees($1);';
+    var queryParams = [sectionId];
+
+    //Execute the query
+    executeQuery(response, config, queryText, queryParams, function(result) {
+		var enrollees = []; //Put the rows from the query into json format
+			for (row in result.rows) {
+				enrollees.push(
+				{
+					"Id": result.rows[row].id,
+					"Enrollee": result.rows[row].enrollee,
+				}
+				);
+			}
+				var jsonReturn = {
+				"enrollees": enrollees
+				} //Send the json to the client
+        response.send(JSON.stringify(jsonReturn));
+});
 });
 
 app.use(function(err, req, res, next){

@@ -115,13 +115,14 @@ CREATE TABLE Gradebook.Section
 CREATE TABLE Gradebook.Grade
 (
    Letter VARCHAR(2) NOT NULL PRIMARY KEY,
-   GPA NUMERIC(4,3) NOT NULL,
+   GPA NUMERIC(4,3) UNIQUE,
    CONSTRAINT LetterChoices
       CHECK (Letter IN ('A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+',
-                        'C', 'C-', 'D+', 'D', 'D-', 'F', 'W', 'SA')
+                        'C', 'C-', 'D+', 'D', 'D-', 'F', 'W')
             ),
    CONSTRAINT GPAChoices
-      CHECK (GPA IN (4.333, 4, 3.667, 3.333, 3, 2.667, 2.333, 2, 1.667, 1.333, 1, 0.667, 0))
+      CHECK (GPA IN (4.333, 4, 3.667, 3.333, 3, 2.667, 2.333, 2, 1.667, 1.333, 1, 0.667, 0)),
+   UNIQUE(Letter,GPA) --Combinations of letter grade and GPA must be unique
 );
 
 
@@ -130,8 +131,8 @@ CREATE TABLE Gradebook.Section_GradeTier
 (
    Section INT REFERENCES Gradebook.Section,
    LetterGrade VARCHAR(2) NOT NULL REFERENCES Gradebook.Grade,
-   LowPercentage NUMERIC(4,2) NOT NULL CHECK (LowPercentage > 0),
-   HighPercentage NUMERIC(5,2) NOT NULL CHECK (HighPercentage > 0),
+   LowPercentage NUMERIC(5,2) NOT NULL CHECK (LowPercentage >= 0),
+   HighPercentage NUMERIC(5,2) NOT NULL CHECK (HighPercentage >= 0),
    PRIMARY KEY(Section, LetterGrade),
    UNIQUE(Section, LowPercentage, HighPercentage)
 );
@@ -193,41 +194,46 @@ CREATE TABLE Gradebook.AttendanceRecord
 );
 
 
-CREATE TABLE Gradebook.Section_AssessmentComponent
+CREATE TABLE Gradebook.Section_AssessmentKind
 (
    Section INT NOT NULL REFERENCES Gradebook.Section,
-   Type VARCHAR(20) NOT NULL, --"Assignment", "Quiz", "Exam",...
-   Weight NUMERIC(3,2) NOT NULL CHECK (Weight >= 0), --a percentage value: 0.25, 0.5,...
-   NumItems INT NOT NULL DEFAULT 1,
-   PRIMARY KEY (Section, Type)
+   Name VARCHAR(20) NOT NULL CHECK(TRIM(Name) <> ''), --"Assignment", "Quiz", "Exam",...
+   Description VARCHAR(100),
+   Weightage NUMERIC(3,2) NOT NULL CHECK (Weightage >= 0), --a percentage value: 0.25, 0.5,...
+   PRIMARY KEY (Section, Name)
 );
 
 
 CREATE TABLE Gradebook.Section_AssessmentItem
 (
-   Section INT NOT NULL,
-   Component VARCHAR(20) NOT NULL,
-   SequenceInComponent INT NOT NULL  NOT NULL CHECK (SequenceInComponent > 0),
-   BasePoints NUMERIC(5,2) NOT NULL CHECK (BasePoints >= 0),
-   ExtraCreditPoints NUMERIC(5,2) NOT NULL DEFAULT 0 CHECK (ExtraCreditPoints >= 0),
-   AssignedDate Date,
-   DueDate Date,
-   PRIMARY KEY(Section, Component, SequenceInComponent),
-   FOREIGN KEY (Section, Component) REFERENCES Gradebook.Section_AssessmentComponent
+   Section INT NOT NULL REFERENCES Gradebook.Section,
+   Kind VARCHAR(20) NOT NULL,
+   AssessmentNumber INT NOT NULL CHECK (AssessmentNumber > 0),
+   Description VARCHAR(100),
+   BasePointsPossible NUMERIC(5,2) NOT NULL CHECK (BasePointsPossible >= 0),
+   AssignedDate DATE NOT NULL,
+   DueDate DATE NOT NULL,
+   RevealDate DATE,
+   Curve NUMERIC(3,2) DEFAULT 1.00, --A curve for the item
+   PRIMARY KEY(Section, Kind, AssessmentNumber),
+   FOREIGN KEY (Section, Kind) REFERENCES Gradebook.Section_AssessmentKind
 );
 
 
-CREATE TABLE Gradebook.Enrollee_AssessmentItem
+CREATE TABLE Gradebook.Submission
 (
    Student INT NOT NULL,
    Section INT NOT NULL,
-   Component VARCHAR(20) NOT NULL,
-   SequenceInComponent INT NOT NULL,
+   Kind VARCHAR(20) NOT NULL,
+   AssessmentNumber INT NOT NULL,
    BasePointsEarned NUMERIC(5,2) CHECK (BasePointsEarned >= 0),
-   ExtraCreditPointsEarned NUMERIC(5,2) CHECK (ExtraCreditPointsEarned >= 0),
-   SubmissionDate DATE,
-   Penalty NUMERIC(5,2) CHECK (Penalty >= 0),
-   PRIMARY KEY(Student, Section, Component, SequenceInComponent),
+   ExtraCreditEarned NUMERIC(5,2) DEFAULT 1.00 CHECK (ExtraCreditEarned >= 0),
+   Penalty NUMERIC(5,2) DEFAULT 1.00 CHECK (Penalty >= 0),
+   CurvedGradeLetter VARCHAR(2),-- NUMERIC(5,2) NOT NULL,
+   CurvedGradePercent NUMERIC(5,2),
+   SubmissionDate DATE,   
+   Notes VARCHAR(50), --Optional notes about the submission
+   PRIMARY KEY(Student, Section, Kind, AssessmentNumber),
    FOREIGN KEY (Student, Section) REFERENCES Gradebook.Enrollee,
-   FOREIGN KEY (Section, Component, SequenceInComponent) REFERENCES Gradebook.Section_AssessmentItem
+   FOREIGN KEY (Section, Kind, AssessmentNumber) REFERENCES Gradebook.Section_AssessmentItem
 );
