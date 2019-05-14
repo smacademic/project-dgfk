@@ -203,7 +203,7 @@ $(document).ready(function() {
 		var instructor2 = $('#assignInstructorTwo').val();
 		var instructor3 = $('#assignInstructorThree').val();
 
-		if(instructor1 != "") {
+		if(instructor1 != null) {
 			assignInstructors(dbInfo, sectionNum, instructor1, instructor2, instructor3);
 		}
 		else {
@@ -523,10 +523,14 @@ function popAttendance(connInfo, sectionid) {
 function setInstructors(htmlText) {
 	var content = '<option value="" disabled="true" selected="true">' +
 	 'Choose instructor</option>' + htmlText;
+	var assignInstructors_content = '<option value="" disabled="true" selected="true">' +
+	'Choose instructor</option>' +
+	 '<option value="-1">Remove instructor</option>' 
+	 + htmlText;
 
 	$('#assignInstructorOne').html(content);
-	$('#assignInstructorTwo').html(content);
-	$('#assignInstructorThree').html(content);
+	$('#assignInstructorTwo').html(assignInstructors_content);
+	$('#assignInstructorThree').html(assignInstructors_content);
 	$('#primaryInstructorSelect').html(content);
 	$('#secondaryInstructorSelect').html(content);
 	$('#tertiaryInstructorSelect').html(content);
