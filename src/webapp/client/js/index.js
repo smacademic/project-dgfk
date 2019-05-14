@@ -136,14 +136,7 @@ $(document).ready(function() {
 		var season = $('#seasonSelect').val();
 		popCourses(dbInfo, year, season);
 	});
-
-	$('#courseSelect').change(function() {
-		var year = $('#yearSelect').val();
-		var season = $('#seasonSelect').val();
-		var course = $('#courseSelect').val();
-		popSections(dbInfo, year, season, course);
-	});
-
+	
 	$('#sectionSelect').change(function() {
 		var sectionID = $('#sectionSelect').val();
 		popAttendance(dbInfo, sectionID);
@@ -299,6 +292,24 @@ $(document).ready(function() {
 	$('#sectionSelectGrades').change(function() {
 		var sectionID = $('#sectionSelectGrades').val();
 		defaultSection(dbInfo,sectionID);
+	});
+	
+	$('#yearSelectGrades').change(function() {
+		var year = $('#yearSelectGrades').val();
+		popSeasons(dbInfo, year);
+	});
+	
+	$('#seasonSelectGrades').change(function() {
+		var year = $('#yearSelectGrades').val();
+		var season = $('#seasonSelectGrades').val();
+		popCourses(dbInfo, year, season);
+	});
+	
+	$('#courseSelectGrades').change(function() {
+		var year = $('#yearSelectGrades').val();
+		var season = $('#seasonSelectGrades').val();
+		var course = $('#courseSelectGrades').val();
+		popSections(dbInfo, year, season, course);
 	});
 
 	/*An instructor selects which section they want to
@@ -806,10 +817,14 @@ function defaultGrades(dbInfo,sectionID) {
 	var season = $('#seasonSelect').val();
 	var course = $('#courseSelect').val();
 	popSections(dbInfo, year, season, course);
+	//$('.sectionBtn').hide();
+	$('.studentView').hide();
+	$('#assessmentKindSelect').hide();
 	$('.sectionOptions').hide();
     $('#gradeTier').hide();
 	$('#scores').hide();
 	$('.gradeTierOptions').hide();
+	$('.gradeTierBtn').hide
 	$('.kindOptions').hide();
 	$('.sectionBtn').hide();
 	$('.field').val('');
@@ -1160,6 +1175,9 @@ function setYears(htmlText) {
 	$('#yearSelect').html(content);
 	$('#yearSelect').prop('disabled', htmlText == null);
 	$('#yearSelect').material_select(); //reload dropdown
+	$('#yearSelectGrades').html(content);
+	$('#yearSelectGrades').prop('disabled', htmlText == null);
+	$('#yearSelectGrades').material_select(); //reload dropdown
 
 	setSeasons(null); //reset dependent fields
 };
@@ -1170,6 +1188,9 @@ function setSeasons(htmlText) {
 	$('#seasonSelect').html(content);
 	$('#seasonSelect').prop('disabled', htmlText == null);
 	$('#seasonSelect').material_select(); //reload dropdown
+	$('#seasonSelectGrades').html(content);
+	$('#seasonSelectGrades').prop('disabled', htmlText == null);
+	$('#seasonSelectGrades').material_select(); //reload dropdown
 
 	setCourses(null); //reset dependent fields
 };
@@ -1180,7 +1201,10 @@ function setCourses(htmlText) {
 	$('#courseSelect').html(content);
 	$('#courseSelect').prop('disabled', htmlText == null);
 	$('#courseSelect').material_select(); //reload dropdown
-
+	$('#courseSelectGrades').html(content);
+	$('#courseSelectGrades').prop('disabled', htmlText == null);
+	$('#courseSelectGrades').material_select(); //reload dropdown
+	
 	setSections(null); //reset dependent fields
 };
 
@@ -1190,7 +1214,11 @@ function setSections(htmlText) {
 	$('#sectionSelect').html(content);
 	$('#sectionSelect').prop('disabled', htmlText == null);
 	$('#sectionSelect').material_select(); //reload dropdown
-
+	$('#sectionSelectGrades').html(content);
+	$('#sectionSelectGrades').prop('disabled', htmlText == null);
+	$('#sectionSelectGrades').material_select(); //reload dropdown	
+	setSectionOverview(null); //reset dependent fields
+	setAssessmentKinds(null); //reset dependent fields
 	setAttendance(null);
 };
 
@@ -1588,7 +1616,7 @@ function popGradeTiers(connInfo, sectionid){
 			var gradeTiers = '<h3 align=\"center\"> Grade Tiers </h3><br\>';
 			gradeTiers += '<table style=\"font-family: Georgia, serif\">';
 			gradeTiers += '<tr style=\"font-weight:bold\">';
-			gradeTiers += '<th style=\"border: 1px solid black\"> </th>';
+			gradeTiers += '<th> </th>';
 			gradeTiers += '<th style=\"border: 1px solid black\">' + 'Letter Grade' + '</th>';
 			gradeTiers += '<th style=\"border: 1px solid black\">' + 'Range' + '</th>';
 			gradeTiers += '</tr>';
@@ -1681,7 +1709,7 @@ function popYears(connInfo) {
 
 //Already present from Gradebook https://github.com/DASSL/Gradebook
 //Not included in our scope
-function popSeasons(connInfo, year) {
+function popSeasonsGrades(connInfo, year) {
 	var urlParams = $.extend({}, connInfo, {year:year});
 	$.ajax('seasons', {
 		dataType: 'json',
@@ -1692,7 +1720,7 @@ function popSeasons(connInfo, year) {
 				seasons += '<option value="' + result.seasons[i].seasonorder +
 				 '">' + result.seasons[i].seasonname + '</option>';
 			}
-			setSeasons(seasons);
+			setSeasonsGrades(seasons);
 		},
 		error: function(result) {
 			showAlert('<p>Error while retrieving seasons</p>');
@@ -1722,28 +1750,7 @@ function popCourses(connInfo, year, seasonorder) {
 		}
 	});
 };
-/*
-//Populates sections dropdown
-function popSections(connInfo, year, seasonorder){//, coursenumber) {
-	var urlParams = $.extend({}, connInfo, {year:year, seasonorder:seasonorder});//, coursenumber:coursenumber}); //Our implementation scope does not include courses, but we have left these here for integration into the full Gradebook app.
-	$.ajax('sections', {
-		dataType: 'json',
-		data: urlParams,
-		success: function(result) {
-			var sections = '';
-			for (var i = 0; i < result.sections.length; i++) {
-				sections += '<option value="' + result.sections[i].sectionid +
-				 '">' + result.sections[i].sectionnumber + '</option>';
-			}
-			setSections(sections);
-		},
-		error: function(result) {
-			showAlert('<p>Error while retrieving sections</p>');
-			console.log(result);
-		}
-	});
-};
-*/
+
 //Populates sections dropdown for copying assessment kinds
 function popSectionsForCopy(connInfo, year, seasonorder){//, coursenumber) {
 	var urlParams = $.extend({}, connInfo, {year:year, seasonorder:seasonorder});//, coursenumber:coursenumber}); //Our implementation scope does not include courses, but we have left these here for integration into the full Gradebook app.
@@ -2064,18 +2071,6 @@ function popSubmissions(connInfo, sectionid, assessmentKind, assessmentItem) {
 			    console.log(result);
 			}
 		});
-};
-
-//Sets sections dropdown
-function setSections(htmlText) {
-	var content = '<option value="" disabled="true" selected="true">' +
-	 'Choose section</option>' + htmlText;
-	$('#sectionSelectGrades').html(content);
-	$('#sectionSelectGrades').prop('disabled', htmlText == null);
-	$('#sectionSelectGrades').material_select(); //reload dropdown
-	//setAttendance(null);												// Our implementation does not include the setting of attendance, but for purposes of reintegration with the Gradebook app this has been left in.
-	setSectionOverview(null); //reset dependent fields
-	setAssessmentKinds(null); //reset dependent fields
 };
 
 //Sets section select dropdowns for the copy functions

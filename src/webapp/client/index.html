@@ -204,9 +204,27 @@ Currently, only attendance information is served
 					<a id="btnAddKind" href="#addAssessmentKind" class="waves-effect waves-light btn sectionBtn instructorView" style="display:none">Add an Assessment Kind</a>
 					<a id="btnCopyKind" href="#copyAssessmentKind" class="waves-effect waves-light btn sectionBtn instructorView" style="display:none">Copy an Assessment Kind</a>
 					<a id="btnViewGradeTiers" href="#gradeTier" class="waves-effect waves-light btn sectionBtn" style="display:none">View Grade Tiers</a>
-					<a id="btnViewScores" href="#scores" class="waves-effect waves-light btn studentView sectionBtn" style="display:none">View My Scores</a>
+					<!--<a id="btnViewScores" href="#scores" class="waves-effect waves-light btn studentView sectionBtn" style="display:none">View My Scores</a>-->
 					<div id="sectionheading">
 					<!-- Populated dynamically -->
+					</div>
+					<div class="input-field col s12 m6 l3">
+							<select id="yearSelectGrades" disabled="true">
+								<option value="" disabled="true" selected="true">Choose year</option>
+							</select>
+							<label>Year</label>
+						</div>
+					<div class="input-field col s12 m6 l3">
+							<select id="seasonSelectGrades" disabled="true">
+								<option value="" disabled="true" selected="true">Choose season</option>
+							</select>
+							<label>Season</label>
+						</div>
+					<div class="input-field col s12 m6 l3">
+							<select id="courseSelectGrades" disabled="true">
+								<option value="" disabled="true" selected="true">Choose course</option>
+							</select>
+							<label>Course</label>
 					</div>
 					<div class="input-field col s12 m6 l3">
 						<select id="sectionSelectGrades" disabled="true">
@@ -262,7 +280,7 @@ Currently, only attendance information is served
 				<div class="divider"></div>
 
 				<!-- Grade tier view -->
-				<div id="gradeTier">
+				<div id="gradeTier" style="display:none">
 					<a id="btnBackFromGradeTiers" href="#" class="waves-effect waves-light btn gradeTierBtn">Back</a>
 					<a id="btnAddGradeTier" href="#addGradeTier" class="waves-effect waves-light btn instructorView gradeTierBtn">Add Grade Tier</a>
 					<a id="btnCopyGradeTier" href="#copyGradeTier" class="waves-effect waves-light btn instructorView gradeTierBtn">Copy Grade Tier</a>
@@ -277,7 +295,7 @@ Currently, only attendance information is served
 				</div>
 
 				<!-- Scores view -->
-				<div id="scores" class="studentView">
+				<div id="scores" class="studentView" style="display:none">
 					<a id="btnBackFromScores" href="#" class="waves-effect waves-light btn scoreBtn">Back</a>
 					<div class="input-field col s12 m6 l3">
 						<select id="assessmentKindSelectScores" disabled="true">
