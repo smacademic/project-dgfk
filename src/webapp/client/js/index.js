@@ -121,6 +121,11 @@ $(document).ready(function() {
 		populateSections(dbInfo, courseTitle);
 	});
 
+	$('#instructorCourseNameSelect').change(function() {
+		var courseTitle = $('#instructorCourseNameSelect').val();
+		populateSections(dbInfo, courseTitle);
+	});
+
 	$('#enrollChooseCourse').change(function() {
 		var courseTitle = $('#enrollChooseCourse').val();
 		populateSections(dbInfo, courseTitle);
@@ -190,6 +195,23 @@ $(document).ready(function() {
 
 		enrollStudent(dbInfo, course, sectionNum, studentid);
 	});
+
+	$('#btnAssignInstructors').click(function() {
+		var sectionNum = $('#instructorRemoveSectionNumber').val();
+
+		var instructor1 = $('#assignInstructorOne').val();
+		var instructor2 = $('#assignInstructorTwo').val();
+		var instructor3 = $('#assignInstructorThree').val();
+
+		if(instructor1 != "") {
+			assignInstructors(dbInfo, sectionNum, instructor1, instructor2, instructor3);
+		}
+		else {
+			console.log("Instructor1 must be set.");
+		}
+		
+	});
+	
 
 	//On click of the AddSection button, execute
 	$('#btnAddSection').click(function(){
@@ -358,7 +380,7 @@ function popInstructors(connInfo) {
 			var instructors = '';
 			for (var i = 0; i < result.instructors.length; i++) {
 				instructors += '<option value="' + result.instructors[i].id + '">' +
-				 result.instructors[i].fname + '</option>';
+				 result.instructors[i].fname + ' ' + result.instructors[i].lname + '</option>';
 			}
 			setInstructors(instructors);
 		},
@@ -543,14 +565,17 @@ function populateCourses(htmlText) {
 
 	$('#courseNameSelect').html(content);
 	$('#removeSectionCourseSelect').html(content);
+	$('#instructorCourseNameSelect').html(content);
 	$('#enrollChooseCourse').html(content);
 
 	$('#courseNameSelect').prop('disabled', htmlText == null);
 	$('#removeSectionCourseSelect').prop('disabled', htmlText == null);
+	$('#instructorCourseNameSelect').prop('disabled', htmlText == null);
 	$('#enrollChooseCourse').prop('disabled', htmlText == null);
 
 	$('#courseNameSelect').material_select(); //reload dropdown
 	$('#removeSectionCourseSelect').material_select(); //reload dropdown
+	$('#instructorCourseNameSelect').material_select(); //reload dropdown
 	$('#enrollChooseCourse').material_select(); //reload dropdown
 
 };
@@ -561,12 +586,15 @@ function popRemoveSectionSections(htmlText) {
 
 	$('#removeSectionNumber').html(content);
 	$('#enrollChooseSection').html(content);
+	$('#instructorRemoveSectionNumber').html(content);
 
 	$('#removeSectionNumber').prop('disabled', htmlText == null);
 	$('#enrollChooseSection').prop('disabled', htmlText == null);
+	$('#instructorRemoveSectionNumber').prop('disabled', htmlText == null);
 
 	$('#removeSectionNumber').material_select(); //reload dropdown
 	$('#enrollChooseSection').material_select(); //reload dropdown
+	$('#instructorRemoveSectionNumber').material_select(); //reload dropdown
 
 };
 
@@ -681,6 +709,19 @@ function addSection(connInfo, term, course, capacity, num, CRN, schedule, locati
 	},
 	error: function(result) {
 			showAlert('<p>Error while adding section</p>');
+				console.log(result);
+		}
+	});
+}
+function assignInstructors(connInfo, sectionNum, instructor1, instructor2 = null, instructor3 = null) {
+	var urlParams = $.extend({}, connInfo, {sectionNum, instructor1, instructor2, instructor3});
+	$.ajax('assignInstructors', {
+		data: urlParams,
+		success: function(result) {
+			console.log(result);
+	},
+	error: function(result) {
+			showAlert('<p>Error while assigning instructors to section</p>');
 				console.log(result);
 		}
 	});
