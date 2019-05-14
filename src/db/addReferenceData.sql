@@ -52,23 +52,6 @@ VALUES
    ('C', 'Cancelled'),         ('W', 'Withdrawn');
 
 --NERDS, TO COMMENT
-
-INSERT INTO Gradebook.course(Number,Title,Credits) VALUES
- ('CS170','C++ Programming',3),
- ('CS221','Object-Oriented Programming',4);
- 
-INSERT INTO Gradebook.season("Order",Name,Code) VALUES
- (0,'Fall','F'),
- (1,'Winter','W'),
- (2,'Spring','S');
- 
-INSERT INTO Gradebook.term(Year,Season,StartDate,EndDate) VALUES
- (2018,(SELECT "Order" FROM Gradebook.Season WHERE "Order" = 0),'2018-08-28','2018-12-15'),
- (2019,(SELECT "Order" FROM Gradebook.Season WHERE "Order" = 1),'2019-01-16','2019-05-20');
- 
- INSERT INTO Gradebook.section(Term,Course,SectionNumber,CRN,Schedule,Capacity,Location,StartDate,EndDate,MidtermDate,Instructor1,Instructor2) VALUES
- (1,(SELECT Number FROM Gradebook.Course WHERE Number = 'CS170'),01,4080,'MW',20,'WS103',(SELECT StartDate FROM Gradebook.Term WHERE Year = 2018 AND Season = 0),(SELECT EndDate FROM Gradebook.Term WHERE Year = 2018 AND Season = 0),'2018-10-30',(SELECT ID FROM Gradebook.Instructor WHERE ID = 1),(SELECT ID FROM Gradebook.Instructor WHERE ID = 2)),
- (1,(SELECT Number FROM Gradebook.Course WHERE Number = 'CS221'),72,4089,'TR',25,'WS116',(SELECT StartDate FROM Gradebook.Term WHERE Year = 2018 AND Season = 0),(SELECT EndDate FROM Gradebook.Term WHERE Year = 2018 AND Season = 0),'2019-3-20',(SELECT ID FROM Gradebook.Instructor WHERE ID = 2),(SELECT ID FROM Gradebook.Instructor WHERE ID = 1)); 
  
  INSERT INTO Gradebook.student(ID,FName,MName,LName,SchoolIssuedID,Email,Major,Year) VALUES
  (DEFAULT,'William','Joseph','Blazkowicz',20519436,'blazkowicz001@connect.wcsu.edu','Applied Physics','Sophomore'),
@@ -78,29 +61,3 @@ INSERT INTO Gradebook.term(Year,Season,StartDate,EndDate) VALUES
  ((SELECT ID FROM Gradebook.Student WHERE ID = 1),(SELECT ID FROM Gradebook.section WHERE ID = 1),NULL,'2018-01-01','Applied Physics',NULL,NULL,NULL,NULL),
  ((SELECT ID FROM Gradebook.Student WHERE ID = 2),(SELECT ID FROM Gradebook.section WHERE ID = 1),NULL,'2016-01-10','Waste Management',NULL,NULL,NULL,NULL);
  
- INSERT INTO Gradebook.attendancerecord(Student,Section,Date,Status) VALUES
- ((SELECT Student FROM Gradebook.Enrollee WHERE Student = 1),(SELECT DISTINCT Section FROM Gradebook.Enrollee WHERE Section = 1),CURRENT_DATE,(SELECT Status FROM Gradebook.AttendanceStatus WHERE Status = 'P')),
- ((SELECT Student FROM Gradebook.Enrollee WHERE Student = 2),(SELECT DISTINCT Section FROM Gradebook.Enrollee WHERE Section = 1),CURRENT_DATE,(SELECT Status FROM Gradebook.AttendanceStatus WHERE Status = 'P'));
-
-
-SELECT Gradebook.addSectionGradeTier(1, 'A+', 100.01, 999.99);
-SELECT Gradebook.addSectionGradeTier(1, 'A', 89.50, 100.00);
-SELECT Gradebook.addSectionGradeTier(1, 'B', 79.50, 89.49);
-SELECT Gradebook.addSectionGradeTier(1, 'C', 69.50, 79.49);
-SELECT Gradebook.addSectionGradeTier(1, 'D', 59.50, 69.49);
-SELECT Gradebook.addSectionGradeTier(1, 'F', 0.00, 59.49);
-
-SELECT Gradebook.addSectionAssessmentKind(1, 'Exam', 'Tests and Quizzes', 1.00);
-SELECT Gradebook.addSectionAssessmentKind(1, 'Homework', 'Work done outside of class', 0.5);
-SELECT Gradebook.addSectionAssessmentKind(1, 'Presentation', 'Student presentation of concepts to the class', 0.66);
-
-SELECT Gradebook.addSectionAssessmentItem(1,'Test',1,'First test of the semester',100,CURRENT_DATE,CURRENT_DATE,NULL,1.06);
-SELECT Gradebook.addSectionAssessmentItem(1,'Homework',1,'First homework of the semester',25,'2018-10-02', '2018-10-04',NULL,1.00);
-SELECT Gradebook.addSectionAssessmentItem(1,'Homework',2,'Second homework of the semester',25,'2018-10-06', '2018-10-10',NULL,1.03);
-SELECT Gradebook.addSectionAssessmentItem(1,'Homework',3,'Third homework of the semester',25,'2018-10-12', '2018-10-20','2018-10-12',NULL);
-
-SELECT Gradebook.addSubmission(1,1,'Test',1,85,NULL,NULL,CURRENT_DATE,'Nice job');
-SELECT Gradebook.addSubmission(2,1,'Test',1,90,NULL,NULL,CURRENT_DATE,'Highest grade in class');
-SELECT Gradebook.addSubmission(2,1,'Homework',1,20,NULL,2,'2018-10-02','Early');
-SELECT Gradebook.addSubmission(1,1,'Homework',3,20,5,NULL,'2018-10-09','Bonus points!');
-SELECT Gradebook.addSubmission(2,1,'Homework',3,20,NULL,NULL,'2018-10-09','No comment');
