@@ -669,6 +669,44 @@ app.get('/removeSection', function(request, response) {
    });
  });
 
+ app.get('/assignInstructors', function(request, response) {
+   //Decrypt the password received from the client.
+   //NOTE: We need to substitute superSecret with what we're actually implementing
+   var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
+ 
+   //Connection parameters for the Postgres client received in the request
+   var config = createConnectionParams(request.query.user, request.query.database,
+       passwordText, request.query.host, request.query.port);
+ 
+   //Get the params from the url
+   var sectionNumber = request.query.sectionNum;
+   var instructor1 = request.query.instructor1;
+   var instructor2 = request.query.instructor2;
+   var instructor3 = request.query.instructor3;
+
+  if(instructor2 == -1) {
+   instructor2 = null;
+  }
+  else if(instructor2 == "") {
+     instructor2 = -1;
+  }
+
+  if(instructor3 == -1) {
+     instructor3 = null
+  } else if(instructor3 == "") {
+     instructor3 = -1; 
+  }
+ 
+   //Set the query text
+   var queryText = 'SELECT assignInstructor($1, $2, $3, $4);';
+   var queryParams = [sectionNumber, instructor1, instructor2, instructor3];
+ 
+   //Execute the query
+   executeQuery(response, config, queryText, queryParams, function(result) {
+       response.send(JSON.stringify({}));
+   });
+ });
+
 app.get('/populateSections', function(request, response) {
   //Decrypt the password received from the client.
   //NOTE: We need to substitute superSecret with what we're actually implementing

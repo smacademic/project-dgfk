@@ -748,14 +748,16 @@ Currently, only attendance information is served
 							<div class="collapsible-body">
 								<div class="row">
 									<div class="input-field col s12 m6 l3">
-										<select id="courseNameSelect">
+										<select id="instructorCourseNameSelect">
 											<option value="" disabled="true" selected="true">Choose Course</option>
 										</select>
 										<label>Course Select</label>
 									</div>
 									<div class="input-field col s12 m6 l3">
-										<input placeholder="01" type="number" class="validate" id="removeSectionNumber">
-										<label for="removeSectionNumber">Section Number</label>
+										<select id="instructorRemoveSectionNumber">
+											<option value="" disabled="true" selected="true">Choose Section</option>
+										</select>
+										<label for="instructorRemoveSectionNumber">Section Number</label>
 									</div>
 								</div>
 								<div class="row">
@@ -778,44 +780,6 @@ Currently, only attendance information is served
 							</div>
 						</li>
 					</ul><!--End Assign Instructors Drop Down-->
-
-					<!--Start of Remove Instructors drop down-->
-					<ul id="removeInstructorsBox" class="collapsible" data-collapsible="expandable">
-						<li>
-							<div class="collapsible-header">
-								<i id="dbInfoArrow" class="material-icons">keyboard_arrow_down</i>Remove Instructors
-							</div>
-							<div class="collapsible-body">
-								<div class="row">
-									<div class="input-field col s12 m6 l3">
-										<select id="courseNameSelect">
-											<option value="" disabled="true" selected="true">Choose Course</option>
-										</select>
-										<label>Course Select</label>
-									</div>
-									<div class="input-field col s12 m6 l3">
-										<input placeholder="01" type="number" class="validate" id="removeSectionNumber">
-										<label for="removeSectionNumber">Section Number</label>
-									</div>
-								</div>
-								<div class="row">
-									<table id="removeInstructorTable">
-										<!--
-											This table will be dynamically populated with the instructors for a
-											specific section of a course so that the end user of the site can go
-											in and remove an instructor as long as they are not the primary
-											instructor in the section.
-											This will have the same functionality as the Courses Table and the
-											Sections table where the information will be dynamically populated
-											but there will probably not be an edit button (NOTE:could be a possible
-											extension to the program) only a delete button so that the instructor
-											will be removed from the section.
-										-->
-									</table>
-								</div>
-							</div>
-						</li>
-					</ul><!--End of remove instructors Drop Down-->
 
 					<!--Start of enroll students drop down-->
 					<ul id="enrollStudentsBox" class="collapsible" data-collapsible="expandable">
