@@ -1,0 +1,296 @@
+SET
+Script run on Thu 12/06/2018 at 05:59 PM
+Script run by  fitzgerald077  on server  10.151.168.22  with db  cs305 
+--------------
+Clearing tables of data...
+DELETE 0
+DELETE 0
+DELETE 0
+DELETE 0
+DELETE 0
+DELETE 0
+DELETE 0
+DELETE 0
+DELETE 0
+DELETE 0
+DELETE 0
+DELETE 0
+DELETE 0
+INSERT 0 2
+INSERT 0 3
+INSERT 0 2
+INSERT 0 2
+INSERT 0 2
+INSERT 0 3
+INSERT 0 3
+INSERT 0 2
+INSERT 0 2
+ addsectiongradetier 
+---------------------
+ 
+(1 row)
+
+ addsectiongradetier 
+---------------------
+ 
+(1 row)
+
+ addsectiongradetier 
+---------------------
+ 
+(1 row)
+
+ addsectiongradetier 
+---------------------
+ 
+(1 row)
+
+ addsectiongradetier 
+---------------------
+ 
+(1 row)
+
+ addsectiongradetier 
+---------------------
+ 
+(1 row)
+
+ letter | lowpercentage | highpercentage 
+--------+---------------+----------------
+ A+     |        100.01 |         999.99
+ A      |         89.50 |         100.00
+ B      |         79.50 |          89.49
+ C      |         69.50 |          79.49
+ D      |         59.50 |          69.49
+ F      |          0.00 |          59.49
+(6 rows)
+
+ dropsectiongradetier 
+----------------------
+ 
+(1 row)
+
+this should return an error
+ letter | lowpercentage | highpercentage 
+--------+---------------+----------------
+ A+     |        100.01 |         999.99
+ A      |         89.50 |         100.00
+ B      |         79.50 |          89.49
+ D      |         59.50 |          69.49
+ F      |          0.00 |          59.49
+(5 rows)
+
+ modifysectiongradetier 
+------------------------
+ 
+(1 row)
+
+ modifysectiongradetier 
+------------------------
+ 
+(1 row)
+
+ addsectiongradetier 
+---------------------
+ 
+(1 row)
+
+ letter | lowpercentage | highpercentage 
+--------+---------------+----------------
+ A+     |        100.01 |         999.99
+ A-     |         95.00 |         100.00
+ B      |         79.50 |          89.49
+ C      |         69.50 |          79.49
+ D      |         59.50 |          69.49
+ F      |          0.00 |          59.49
+(6 rows)
+
+ copysectiongradetier 
+----------------------
+ 
+(1 row)
+
+ modifysectiongradetier 
+------------------------
+ 
+(1 row)
+
+ letter | lowpercentage | highpercentage 
+--------+---------------+----------------
+ A-     |         95.00 |         100.00
+(1 row)
+
+ addsectionassessmentkind 
+--------------------------
+ 
+(1 row)
+
+ addsectionassessmentkind 
+--------------------------
+ 
+(1 row)
+
+ addsectionassessmentkind 
+--------------------------
+ 
+(1 row)
+
+     name     |                  description                  | weightage 
+--------------+-----------------------------------------------+-----------
+ Exam         | Tests and Quizzes                             |      1.00
+ Homework     | Work done outside of class                    |      0.50
+ Presentation | Student presentation of concepts to the class |      0.66
+(3 rows)
+
+ dropsectionassessmentkind 
+---------------------------
+ 
+(1 row)
+
+   name   |        description         | weightage 
+----------+----------------------------+-----------
+ Exam     | Tests and Quizzes          |      1.00
+ Homework | Work done outside of class |      0.50
+(2 rows)
+
+ modifysectionassessmentkind 
+-----------------------------
+ 
+(1 row)
+
+ modifysectionassessmentkind 
+-----------------------------
+ 
+(1 row)
+
+   name   |        description         | weightage 
+----------+----------------------------+-----------
+ Homework | Work done outside of class |      0.50
+ Test     | Tests only                 |      1.00
+(2 rows)
+
+ copysectionassessmentkind 
+---------------------------
+ 
+(1 row)
+
+   name   |        description         | weightage 
+----------+----------------------------+-----------
+ Homework | Work done outside of class |      0.50
+(1 row)
+
+ addsectionassessmentitem 
+--------------------------
+ 
+(1 row)
+
+ addsectionassessmentitem 
+--------------------------
+ 
+(1 row)
+
+ addsectionassessmentitem 
+--------------------------
+ 
+(1 row)
+
+ addsectionassessmentitem 
+--------------------------
+ 
+(1 row)
+
+   kind   | assessmentnumber |           description           | basepointspossible | assigneddate |  duedate   | revealdate | curve 
+----------+------------------+---------------------------------+--------------------+--------------+------------+------------+-------
+ Homework |                1 | First homework of the semester  |              25.00 | 2018-10-02   | 2018-10-04 | 2018-10-02 |  1.00
+ Homework |                2 | Second homework of the semester |              25.00 | 2018-10-06   | 2018-10-10 | 2018-10-06 |  1.03
+ Homework |                3 | Third homework of the semester  |              25.00 | 2018-10-12   | 2018-10-20 | 2018-10-12 |  1.00
+(3 rows)
+
+ dropsectionassessmentitem 
+---------------------------
+ 
+(1 row)
+
+   kind   | assessmentnumber |           description           | basepointspossible | assigneddate |  duedate   | revealdate | curve 
+----------+------------------+---------------------------------+--------------------+--------------+------------+------------+-------
+ Homework |                1 | First homework of the semester  |              25.00 | 2018-10-02   | 2018-10-04 | 2018-10-02 |  1.00
+ Homework |                2 | Second homework of the semester |              25.00 | 2018-10-06   | 2018-10-10 | 2018-10-06 |  1.03
+(2 rows)
+
+ modifysectionassessmentitem 
+-----------------------------
+ 
+(1 row)
+
+ modifysectionassessmentitem 
+-----------------------------
+ 
+(1 row)
+
+   kind   | assessmentnumber |          description           | basepointspossible | assigneddate |  duedate   | revealdate | curve 
+----------+------------------+--------------------------------+--------------------+--------------+------------+------------+-------
+ Homework |                1 | First homework of the semester |              25.00 | 2018-10-02   | 2018-10-04 | 2018-10-02 |  1.00
+ Homework |                3 | See updated syllabus           |              30.00 | 2018-10-06   | 2018-10-10 | 2018-10-06 |  1.03
+(2 rows)
+
+ addsubmission 
+---------------
+ 
+(1 row)
+
+ addsubmission 
+---------------
+ 
+(1 row)
+
+ addsubmission 
+---------------
+ 
+(1 row)
+
+ addsubmission 
+---------------
+ 
+(1 row)
+
+ addsubmission 
+---------------
+ 
+(1 row)
+
+Assessment Item Scores for Enrollee 1, Section 1
+    name    | basepointsearned | extracreditearned | penalty | curvedgradepercent | curvedgradeletter | submissiondate |     notes     
+------------+------------------+-------------------+---------+--------------------+-------------------+----------------+---------------
+ Homework 3 |            20.00 |              5.00 |    0.00 |              85.83 | B                 | 2018-10-09     | Bonus points!
+(1 row)
+
+Assessment Item Scores for Section 1 Test 1
+      enrollee       | student | kind | assessmentnumber | basepointsearned | extracreditearned | penalty | grade | submissiondate |         notes          
+---------------------+---------+------+------------------+------------------+-------------------+---------+-------+----------------+------------------------
+ Cristian Fitzgerald |       2 | Test |                1 |            90.00 |              0.00 |    0.00 | 95.40 | 2018-12-06     | Highest grade in class
+ William Blazkowicz  |       1 | Test |                1 |            85.00 |              0.00 |    0.00 | 90.10 | 2018-12-06     | Nice job
+(2 rows)
+
+   kind   |        grade        
+----------+---------------------
+ Homework | 70.3350000000000000
+(1 row)
+
+      enrollee       |        grade        
+---------------------+---------------------
+ Cristian Fitzgerald | 70.3350000000000000
+ William Blazkowicz  | 85.8300000000000000
+(2 rows)
+
+ modifysubmission 
+------------------
+ 
+(1 row)
+
+  name  | basepointsearned | extracreditearned | penalty | curvedgradepercent | curvedgradeletter | submissiondate |  notes   
+--------+------------------+-------------------+---------+--------------------+-------------------+----------------+----------
+ Test 1 |            85.00 |             10.00 |    0.00 |             100.70 | A+                | 2018-12-06     | Nice job
+(1 row)
+
+This next insert should fail, as it is attempting to insert more base points earned than an assessment item is worth.
+This next insert should fail, as it is attempting to insert a submission date that is before the handout date of an assessment item.

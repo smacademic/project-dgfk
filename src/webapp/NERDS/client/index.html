@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+
+<!--
+NERDS
+
+index.html - Gradebook
+
+This script contains the html front end of the NERDS Gradebook product
+
+Based off of Gradebook: https://github.com/DASSL/Gradebook
+
+
+Credit:
+
+Elly Griffin, Andrew Figueroa, Sean Murthy
+Data Science & Systems Lab (DASSL), Western Connecticut State University
+
+Copyright (c) 2017- DASSL. ALL RIGHTS RESERVED.
+Licensed to others under CC 4.0 BY-NC-SA
+https://creativecommons.org/licenses/by-nc-sa/4.0/
+
+ALL ARTIFACTS PROVIDED AS IS. NO WARRANTIES EXPRESSED OR IMPLIED. USE AT YOUR OWN RISK.
+-->
+
+<html>
+	<head>
+	<title>Gradebook</title>
+	<!--Import Google Icon Font-->
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<!--Import Materialize framework - Learn more: http://materializecss.com/-->
+	<link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+	<style>
+		/* Materialize attempts to use the Roboto font family by default */
+		html {
+			font-family: sans-serif;
+			font-size: 16px;
+		}
+		/* Default styling for strong tag is dependent on a specific font */
+		strong {
+			font-weight: bold;
+		}
+		/* Custom CSS for compact table cells */
+		td.compact {
+			padding: 6px 4px;
+			font-size: 13px;
+		}
+	</style>
+	</head>
+	<body>
+
+	<!--Top of screen banner (navbar) - Includes logo, profile, and tabs-->
+	<nav class="nav-extended">
+		<div class="nav-wrapper">
+			<a href="#" class="brand-logo left" style="margin-left: 1%">Gradebook</a>
+			<ul id="profile" class="right" style="display: none">
+				<li><i class="medium material-icons">portrait</i></li>
+				<li><span id="instName" style="margin-left: 10px">Placeholder Name</span></li>
+				<li>
+					<a id="profileArrow" class="dropdown-button" data-belowOrigin="true" data-activates="profileBox">
+						<i class="small material-icons">arrow_drop_down</i>
+					</a>
+					<ul id="profileBox" class="dropdown-content">
+						<li><a id="logout">Logout</a></li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+		<div class="nav-content">
+			<ul class="tabs tabs-transparent">
+				<li id="loginTab" class="tab"><a href="#login">Login</a></li>
+				<li id="rosterTab" class="tab" style="display: none"><a href="#roster">Roster</a></li>
+				<li id="attnTab" class="tab" style="display: none"><a href="#attendance">Attendance</a></li>
+				<li id="gradesTab" class="tab" style="display: none"><a href="#grades">Grades</a></li>
+				<li id="reportsTab" class="tab" style="display: none"><a href="#reports">Reports</a></li>
+				<li id="aboutTab" class="tab"><a href="#about">About</a></li>
+				<!--See http://materializecss.com/navbar.html#navbar-tabs for examples on
+					 how to use tabs for navigation-->
+			</ul>
+		</div>
+	</nav>
+
+
+	<div class="container"> <!--Adds left and right spacing for content-->
+	<div class="section"> <!--Adds spacing between navbar and content-->
+	<!--Already present from Gradebook https://github.com/DASSL/Gradebook-->
+	<div id="login">
+		<div class="row">
+			<h5>Login</h5>
+		</div>
+		<div class="row">
+			<div class="input-field col s12 m6 l3">
+				<i class="material-icons prefix">mail</i>
+				<input id="email" type="email"value="simpson055@connect.wcsu.edu"/>
+				<label for="email">Email</label>
+			</div>
+			<div class="input-field col s12 m6 l3">
+				<i class="material-icons prefix">lock</i>
+				<input id="passwordBox" type="password"value="simpson055"/>
+				<label for="passwordBox">Password</label>
+			</div>
+			<a id="btnLogin" class="waves-effect waves-light btn">Login</a>
+		</div>
+
+		<div class="divider"></div><br/>
+
+		<ul id="dbInfoBox" class="collapsible" data-collapsible="expandable"><li>
+		<div class="collapsible-header">
+			<i id="dbInfoArrow" class="material-icons">keyboard_arrow_down</i>DB Info
+		</div>
+		<div class="collapsible-body">
+			<div class="row">
+			<div class="input-field col s12 m6 l3">
+				<input id="host" type="text" value="10.151.168.22"/>
+				<label for="host">Host name</label>
+			</div>
+			<div class="input-field col s12 m6 l3">
+				<input id="port" type="text" value="5432"/>
+				<label for="port">Port</label>
+			</div>
+			<div class="input-field col s12 m6 l3">
+				<input id="database" type="text" value="cs305"/>
+				<label for="database">Database</label>
+			</div>
+			<div class="input-field col s12 m6 l3">
+				<input id="user" type="text" value="simpson055"/>
+				<label for="user">DB Username</label>
+			</div>
+			</div>
+		</div>
+		</li></ul>
+	</div>
+
+<!--Already present from Gradebook https://github.com/DASSL/Gradebook-->
+<!--Not include in our scope-->
+	<div id="roster">
+		<p class="center-align">The Roster page is not yet implemented</p>
+	</div>
+	<div id="attendance">
+	<div class="row">
+		<div class="input-field col s12 m6 l3">
+			<select id="yearSelect" disabled="true">
+				<option value="" disabled="true" selected="true">Choose year</option>
+			</select>
+			<label>Year</label>
+		</div>
+		<div class="input-field col s12 m6 l3">
+			<select id="seasonSelect" disabled="true">
+				<option value="" disabled="true" selected="true">Choose season</option>
+			</select>
+			<label>Season</label>
+		</div>
+		<div class="input-field col s12 m6 l3">
+			<select id="courseSelect" disabled="true">
+				<option value="" disabled="true" selected="true">Choose course</option>
+			</select>
+			<label>Course</label>
+		</div>
+		<div class="input-field col s12 m6 l3">
+			<select id="sectionSelect" disabled="true">
+				<option value="" disabled="true" selected="true">Choose section</option>
+			</select>
+			<label>Section</label>
+		</div>
+	</div>
+
+	<div class="divider"></div>
+
+	<ul id="attnOptionsBox" class="collapsible" style="display: none" data-collapsible="expandable">
+	<li>
+		<div class="collapsible-header">
+			<i id="optionsArrow" class="material-icons">keyboard_arrow_down</i>Options
+		</div>
+		<div class="collapsible-body">
+			<div class="switch">
+			Display 'P' attendance code
+			<label>
+				<input id="opt-showPresent" type="checkbox">
+				<span class="lever"></span>
+			</label>
+			</div>
+			<br/>
+			<div class="switch">
+			Display compact table
+			<label>
+				<input id="opt-compactTab" type="checkbox">
+				<span class="lever"></span>
+			</label>
+			</div>
+		</div>
+	</li>
+	</ul>
+
+	<br/>
+	<div id="attendanceData" class="col s12" style="overflow-x:auto">
+		<!--Populated dynamically-->
+	</div>
+</div>
+
+<!-- The Grades tab -->
+<div id="grades">
+	<!-- Section overview -->
+	<div id="classSection">
+		<a id="btnAddKind" href="#addAssessmentKind" class="waves-effect waves-light btn sectionBtn instructorView" style="display:none">Add an Assessment Kind</a>
+		<a id="btnCopyKind" href="#copyAssessmentKind" class="waves-effect waves-light btn sectionBtn instructorView" style="display:none">Copy an Assessment Kind</a>
+		<a id="btnViewGradeTiers" href="#gradeTier" class="waves-effect waves-light btn sectionBtn" style="display:none">View Grade Tiers</a>
+		<a id="btnViewScores" href="#scores" class="waves-effect waves-light btn studentView sectionBtn" style="display:none">View My Scores</a>
+		<div id="sectionheading">
+		<!-- Populated dynamically -->
+		</div>
+		<div class="input-field col s12 m6 l3">
+			<select id="sectionSelectGrades" disabled="true">
+				<option value="" disabled="true" selected="true">Choose section</option>
+			</select>
+			<label>Section</label>
+		</div>
+		<div class="input-field col s12 m6 l3">
+			<select id="assessmentKindSelect" disabled="true">
+				<option value="" disabled="true" selected="true">Choose Assessment Kind</option>
+			</select>
+			<label>Assessment Kind</label>
+		</div>
+		<div id="sectionOverview">
+			<div class="input-field col s3">
+				<!--Populated dynamically-->
+			</div>
+		</div>
+	</div>
+	<!-- Kind overview -->
+	<div id="kind" style="display:none">
+		<a id="btnAddItem" href="#addAssessmentItem" class="waves-effect waves-light btn instructorView kindBtn">Add an Assessment Item</a>
+		<a id="btnBackFromAssessmentItem" href="#" class="waves-effect waves-light btn kindBtn">Back</a>
+		<br /><br />
+		<div class="input-field col s12 m6 l3 instructorView">
+			<select id="assessmentItemSelect" disabled="true">
+				<option value="" disabled="true" selected="true">Choose Assessment Item</option>
+			</select>
+			<label>Assessment Item</label>
+		</div>
+		<div id="assessmentKindOverview">
+			<!--Populated dynamically-->
+		</div>
+		<div id="assessmentKindAvg">
+			<!--Populated dynamically-->
+		</div>
+	</div>
+	<!-- Item overview -->
+	<div id="item" style="display:none">
+		<a id="btnBackFromSubmission" href="#" class="waves-effect waves-light btn back itemBtn">Back</a>
+		<a id="btnAddSubmission" href="#addSubmission" class="waves-effect waves-light btn instructorView itemBtn">Add a Submission</a>
+		<br /><br />
+
+		<div id="submissionData">
+			<!--Populated dynamically-->
+		</div>
+	</div>
+
+		<div class="divider"></div>
+
+		<div class="divider"></div>
+
+	<div class="divider"></div>
+
+	<!-- Grade tier view -->
+    <div id="gradeTier">
+		<a id="btnBackFromGradeTiers" href="#" class="waves-effect waves-light btn gradeTierBtn">Back</a>
+		<a id="btnAddGradeTier" href="#addGradeTier" class="waves-effect waves-light btn instructorView gradeTierBtn">Add Grade Tier</a>
+		<a id="btnCopyGradeTier" href="#copyGradeTier" class="waves-effect waves-light btn instructorView gradeTierBtn">Copy Grade Tier</a>
+
+		<br /><br />
+
+		<div id="gradeTierView">
+    	    <div class="input-field inline" style="text-align:center">
+					<!--Populated dynamically-->
+			</div>
+		</div>
+	</div>
+
+	<!-- Scores view -->
+	<div id="scores" class="studentView">
+		<a id="btnBackFromScores" href="#" class="waves-effect waves-light btn scoreBtn">Back</a>
+		<div class="input-field col s12 m6 l3">
+			<select id="assessmentKindSelectScores" disabled="true">
+				<option value="" disabled="true" selected="true">Choose Assessment Kind</option>
+			</select>
+			<label>Assessment Kind</label>
+		</div>
+
+		<div id="scoresView">
+			<div class="input-field inline" style="text-align:center">
+				<!--Populated dynamically-->
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Section options -->
+	<div id="addAssessmentKind" class="sectionOptions" style="display:none">
+	    <h4 align=\"center\">Add an Assessment Kind</h4>
+	    <div class="row">
+	        <div class="input-field col s6">
+	            <input class="field validate" id="addKindName" type="text" maxlength="20">
+	            <label class="active" for="addKindName">Name</label>
+				<span class="helper-text" data-error="wrong" data-success="right"> </span>
+	        </div>
+            <div class="input-field col s6">
+                <input class="field validate" id="addKindDescription" type="text" maxlength="100">
+                <label class="active" for="addKindDescription">Description</label>
+				<span class="helper-text" data-error="wrong" data-success="right"> </span>
+            </div>
+            <div class="input-field col s6">
+                <input min="0" max="9.99" class="field validate" id="addKindWeightage" type="number" step="0.01">
+                <label class="active" for="addKindWeightage">Weightage</label>
+				<span class="helper-text" data-error="wrong" data-success="right"> </span>
+            </div>
+            <a class="waves-effect waves-light btn cancel" href="#">Cancel</a>
+            <a id="submitAddKind" class="waves-effect waves-light btn" href="#">Submit</a>
+        </div>
+	</div>
+
+	<div id="copyAssessmentKind" class="sectionOptions" style="display:none">
+		<h4 align=\"center\">Copy an Assessment Kind</h4>
+		<div class="row">
+			<div class="input-field col s12 m6 l3">
+				<select id="sectionSelectCopyToAK" disabled="true">
+					<option value="" disabled="true" selected="true">Choose destination section</option>
+				</select>
+				<label>Section</label>
+			</div>
+			<div class="input-field col s12 m6 l3">
+				<select id="selectAssessmentKindToCopy" disabled="true">
+					<option value="" disabled="true" selected="true">Choose Assessment Kind</option>
+				</select>
+				<label>Assessment Kind</label>
+			</div>
+		</div>
+		<a class="waves-effect waves-light btn cancel" href="#">Cancel</a>
+		<a id="submitCopyAssessmentKind" class="waves-effect waves-light btn" href="#">Submit</a>
+	</div>
+
+<!-- Kind options -->
+	<div id="addAssessmentItem" class="kindOptions" style="display:none">
+        <h4 align=\"center\">Add an Assessment Item</h4>
+        <div class="row">
+            <div class="input-field col s6">
+                <input class="field validate" id="addItemNum" type="number">
+                <label class="active" for="addItemNum">Item Number</label>
+                <span class="helper-text" data-error="wrong" data-success="right"> </span>
+            </div>
+            <div class="input-field col s6">
+                <input class="field validate" id="addItemDescription" type="text" maxlength="100">
+                <label class="active" for="addItemDescription">Description</label>
+                <span class="helper-text" data-error="wrong" data-success="right"> </span>
+            </div>
+			<div class="input-field col s6">
+                <input min="0" class="field validate" id="addItemPoints" type="number" step="0.01">
+                <label class="active" for="addItemPoints">Base Points</label>
+                <span class="helper-text" data-error="wrong" data-success="right"> </span>
+            </div>
+            <div class="input-field col s6">
+                <input class="field validate" id="addItemDueDate" type="date">
+                <label class="active" for="addItemDueDate">Due Date</label>
+                <span class="helper-text" data-error="wrong" data-success="right"> </span>
+            </div>
+			<div class="input-field col s6">
+                <input class="field validate" id="addItemRevealDate" type="date">
+                <label class="active" for="addItemRevealDate">Reveal Date</label>
+                <span class="helper-text" data-error="wrong" data-success="right"> </span>
+            </div>
+			<div class="input-field col s6">
+                <input min="0" max="9.99" class="field validate" id="addItemCurve" type="number" step="0.01">
+                <label class="active" for="addItemCurve">Curve</label>
+                <span class="helper-text" data-error="wrong" data-success="right"> </span>
+            </div>
+		</div>
+        <a class="waves-effect waves-light btn cancel" href="#">Cancel</a>
+        <a id="submitAddItem" class="waves-effect waves-light btn" href="#">Submit</a>
+	</div>
+
+<!-- Grade tier options -->
+	<div id="addGradeTier" class="gradeTierOptions" style="display:none">
+	   <h4 align=\"center\">Add a Grade Tier</h4>
+	   <div class="row">
+			<div class="input-field col s12 m6 l3">
+				<select id="gradeTierLetterSelect" disabled="true">
+					<option value="" disabled="true" selected="true">Choose Letter</option>
+				</select>
+				<label>Grade Tier Letter</label>
+			</div>
+			<div class="input-field col s6">
+	            <input min="0" max="100" class="field validate" id="addGradeTierLow" type="number" step="0.01">
+	            <label class="active" for="addGradeTierLow">Lower Limit</label>
+	            <span class="helper-text" data-error="wrong" data-success="right"> </span>
+	        </div>
+	        <div class="input-field col s6">
+	            <input min="0" max="100" class="field validate" id="addGradeTierHigh" type="number" step="0.01">
+	            <label class="active" for="addGradeTierHigh">Upper Limit</label>
+	            <span class="helper-text" data-error="wrong" data-success="right"> </span>
+	        </div>
+		</div>
+	    <a class="waves-effect waves-light btn cancel" href="#">Cancel</a>
+	    <a id="submitAddGradeTier" class="waves-effect waves-light btn" href="#gradeTier">Submit</a>
+	</div>
+
+	<div id="copyGradeTier" class="gradeTierOptions" style="display:none">
+		<h3 align=\"center\">Copy a Grade Tier</h3>
+		<div class="row">
+			<div class="input-field col s12 m6 l3 ">
+				<select id="sectionSelectCopyToGT" disabled="true">
+					<option value="" disabled="true" selected="true">Choose destination section</option>
+				</select>
+				<label>Section</label>
+			</div>
+			<div class="input-field col s12 m6 l3">
+				<select id="selectGradeTierToCopy" disabled="true">
+					<option value="" disabled="true" selected="true">Choose Letter</option>
+				</select>
+				<label>Grade Tier</label>
+			</div>
+		</div>
+		<a class="waves-effect waves-light btn cancel" href="#">Cancel</a>
+		<a id="submitCopyGradeTier" class="waves-effect waves-light btn" href="#gradeTier">Submit</a>
+	</div>
+
+<!-- Item options -->
+	<div id="addSubmission" class="itemOptions" style="display:none">
+		<h4 align=\"center\">Add a Submission</h4>
+		<div class="row">
+			<div class="input-field col s6">
+				<input min="0" class="field validate" id="submissionAddStudent" type="number">
+				<label class="active" for="submissionAddStudent">Student ID</label>
+				<span class="helper-text" data-error="wrong" data-success="right"> </span>
+			</div>
+			<div class="input-field col s6">
+				<input min="0" max="100" class="field validate" id="submissionAddBasePointsEarned" type="number" step="0.01">
+				<label class="active" for="submissionAddBasePointsEarned">Base Points Earned</label>
+				<span class="helper-text" data-error="wrong" data-success="right"> </span>
+			</div>
+			<div class="input-field col s6">
+				<input min="0" max="999.99" class="field validate" id="submissionAddExtraCreditEarned" type="number" step="0.01">
+				<label class="active" for="submissionAddExtraCreditEarned">Extra Credit Earned</label>
+				<span class="helper-text" data-error="wrong" data-success="right"> </span>
+			</div>
+			<div class="input-field col s6">
+				<input min="0" max="999.99" class="field validate" id="submissionAddPenalty" type="number" step="0.01">
+				<label class="active" for="submissionAddPenalty">Penalty</label>
+				<span class="helper-text" data-error="wrong" data-success="right"> </span>
+			</div>
+			<div class="input-field col s6">
+				<input class="field validate" id="submissionAddSubmissionDate" type="date">
+				<label class="active" for="submissionAddSubmissionDate">Submission Date</label>
+				<span class="helper-text" data-error="wrong" data-success="right"> </span>
+			</div>
+			<div class="input-field col s6">
+				<input maxlength="50" class="field validate" id="submissionAddNotes" type="text">
+				<label class="active" for="submissionAddNotes">Notes</label>
+				<span class="helper-text" data-error="wrong" data-success="right"> </span>
+			</div>
+		</div>
+		<a class="waves-effect waves-light btn cancel" href="#">Cancel</a>
+		<a id="submitAddSubmission" class="waves-effect waves-light btn" href="#item">Submit</a>
+		<div id="enrolleeData">
+			<!--enrolleeData is populate dyanamically-->
+		</div>
+	</div>
+
+	<!--Already present from Gradebook https://github.com/DASSL/Gradebook-->
+	<div id="reports">
+		<p class="center-align">The Reports page is not yet implemented</p>
+	</div>
+	<!--Already present from Gradebook https://github.com/DASSL/Gradebook-->
+	<div id="about">
+		<h4>About Gradebook</h4>
+		<p>Gradebook is an open-source product for instructors to record student
+		 assessment and attendance. It is developed at the Data Science &amp;
+		 Systems Lab (<a href="https://dassl.github.io" target="_blank">DASSL</a>
+		 , read <em>dazzle</em>) at the Western Connecticut State University
+		 (<a href="http://wcsu.edu/" target="_blank">WCSU</a>).</p>
+		<h5>Goals</h5>
+		<p>Gradebook is developed with the following goals:</p>
+		<ol>
+			<li>Provide instructors a free, open, and modern tool to record
+			 student assessment and attendance</li>
+			<li>Provide instructors a framework to surface, analyze, and visualize
+			 patterns in student performance</li>
+			<li>Use (and demonstrate the use of) modern tools and processes in
+			 software and data engineering</li>
+			<li>Provide Computer Science students a real-life application to
+			 develop and maintain as both curricular and co-curricular activity</li>
+			<li>Provide Computer Science students a framework to experience
+			 first-hand topics such as: web and mobile application development;
+			 RESTful APIs; multi-tenancy; scalability; and cloud-based services.</li>
+		</ol>
+		<h5>Status</h5>
+		<p>Gradebook is still in early stages of development (“alpha stage”).
+		 Much of its external documentation is in the form of README files
+		 contained in various directories within the product repository. The
+		 source code is commented reasonably well. More information about Gradebook
+		 can be found by visiting its
+		 <a href="https://github.com/DASSL/Gradebook" target="_blank"> repository
+		 on GitHub</a>.</p>
+		<p><strong>Caution:</strong> Because the product is still in very early
+		 stages of development, it should not be used as a production system in
+		 its current state. There are no guarantees that future development
+		 releases will provide any kind of backward compatibility or portability.</p>
+		<h5>Contributors</h5>
+		<p>Gradebook was conceived by and is designed by
+		 <a href="http://sites.wcsu.edu/murthys/" target="_blank">Sean Murthy</a>,
+		 a member of the Computer Science faculty at WCSU.</p>
+		<p>The following undergraduate Computer Science students at WCSU
+		 contribute(d) to the development of Gradebook:</p>
+		<ul class="browser-default">
+			<li><a href="https://github.com/bella004" target="_blank">Kyle Bella</a></li>
+			<li><a href="https://github.com/zbhujwala" target="_blank">Zaid Bhujwala</a></li>
+			<li><a href="https://github.com/ZBoylan" target="_blank">Zach Boylan</a></li>
+			<li><a href="https://github.com/afig" target="_blank">Andrew Figueroa</a></li>
+			<li><a href="https://github.com/griffine" target="_blank">Elly Griffin</a></li>
+			<li><a href="https://github.com/srrollo" target="_blank">Steven Rollo</a></li>
+			<li><a href="https://github.com/hunterSchloss" target="_blank">Hunter Schloss</a></li>
+		</ul>
+		<h5>Legal Stuff</h5>
+			<p>© 2017- DASSL. ALL RIGHTS RESERVED.</p>
+			<p>Gradebook is distributed under
+			 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">
+			 Creative Commons License BY-NC-SA 4.0</a>.</p>
+			<p>PROVIDED AS IS. NO WARRANTIES EXPRESSED OR IMPLIED. USE AT YOUR OWN
+			 RISK.</p>
+	</div>
+
+	<!--Generic alert used by showAlert() in index.js-->
+	<div id="msg-genericAlert" class="modal">
+		<div id="genericAlertBody" class="modal-content"></div>
+		<div class="modal-footer">
+			<a href="#!" class="modal-action modal-close waves-effect waves-gray btn-flat">OK</a>
+		</div>
+	</div>
+
+	</div>
+	</div>
+
+	</body>
+
+	<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+	<script type="text/javascript" src="js/materialize.min.js"></script>
+	<script type="text/javascript" src="js/index.js"></script>
+	<script src="https://bitwiseshiftleft.github.io/sjcl/sjcl.js"></script>
+	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+</html>

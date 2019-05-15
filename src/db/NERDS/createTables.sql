@@ -1,43 +1,46 @@
---createTables.sql - GradeBook
+--Team NERDS: Cristian Fitzgerald, Shelby Simpson; CS305-71: Fall 2018
 
---Zaid Bhujwala, Zach Boylan, Steven Rollo, Sean Murthy
---Data Science & Systems Lab (DASSL), Western Connecticut State University (WCSU)
+--create.SQL Version 3
 
---(C) 2017- DASSL. ALL RIGHTS RESERVED.
---Licensed to others under CC 4.0 BY-SA-NC
---https://creativecommons.org/licenses/by-nc-sa/4.0/
+--To create all tables currently described in our concpetual and logical schemas.
 
---PROVIDED AS IS. NO WARRANTIES EXPRESSED OR IMPLIED. USE AT YOUR OWN RISK.
+--Based on: tableandattributesummaries, logicalSchema
 
---This script creates schema, tables, and indexes for the Gradebook application
+--moved all functions and triggers to their respeective table mgmt scripts.
+--replaced curvedGrade attribute in table submission with curvedGradeLetter and curvedGradePercent
+--changed section table PK to serial ID attribute
+--changed name to createTables.sql
 
---E-mail address management is based on the discussion presented at:
--- https://gist.github.com/smurthys/feba310d8cc89c4e05bdb797ca0c6cac
-
---This script should be run after running the script initializeDB.sql
--- in the normal course of operations, this script should not be run
--- individually, but instead should be called from the script prepareDB.sql
-
---This script assumes a schema named "Gradebook" already exists and is empty
-
----------------------------------------------------------------------------------------
--- Original content updated by Team GEEKS
--- Bruno DaSilva, Cristian Fitzgerald, Eliot Griffin, Kenneth Kozlowski 
+--spool results
+\o spoolCreateTables.txt
 
 
-CREATE TABLE Gradebook.Course
+
+--Course Season Term Instructor Section Grade Grade_Tier Student Enrollee 
+--AttendanceStatus AttendanceRecord Assessment_Kind Assessment_Item Submission
+--Diagnostics:
+\qecho -n 'Script run on '
+\qecho -n `date /t`
+\qecho -n 'at '
+\qecho `time /t`
+\qecho -n 'Script run by ' :USER ' on server ' :HOST ' with db ' :DBNAME
+\qecho ' '
+\qecho --------------
+
+--Creating Section Table
+
+CREATE TABLE nerds.Course
 (
-   Number VARCHAR(11) NOT NULL, --e.g., 'CS170'
-   Title VARCHAR(100) NOT NULL, --e.g., 'C++ Programming'
-   Credits INT NOT NULL, --e.g., '4'
-   PRIMARY KEY (Number,Title)
+   --Wonder if this table will eventually need a separate ID field
+   Number VARCHAR(8) NOT NULL PRIMARY KEY, --e.g., 'CS170'
+   Title VARCHAR(100) NOT NULL --e.g., 'C++ Programming'
 );
 
 
-CREATE TABLE Gradebook.Season
+CREATE TABLE nerds.Season
 (
-   --Order denotes the sequence of seasons within a year: 0, 1,...9
-   "Order" NUMERIC(1,0) PRIMARY KEY CHECK ("Order" >= 0),
+   --SeasonOrder denotes the sequence of seasons within a year: 0, 1,...9
+   SeasonOrder NUMERIC(1,0) PRIMARY KEY CHECK (SeasonOrder >= 0),
 
    --Name is a description such as Spring and Summer: must be 2 or more chars
    -- uniqueness is enforced using a case-insensitive index
@@ -49,21 +52,21 @@ CREATE TABLE Gradebook.Season
 );
 
 --enforce case-insensitive uniqueness of season name
-CREATE UNIQUE INDEX idx_Unique_SeasonName ON Gradebook.Season(LOWER(TRIM(Name)));
+CREATE UNIQUE INDEX idx_Unique_SeasonName ON nerds.Season(LOWER(TRIM(Name)));
 
 
-CREATE TABLE Gradebook.Term
+CREATE TABLE nerds.Term
 (
-   ID SERIAL NOT NULL PRIMARY KEY,
    Year NUMERIC(4,0) NOT NULL CHECK (Year > 0), --'2017'
-   Season NUMERIC(1,0) NOT NULL REFERENCES Gradebook.Season,
+   Season NUMERIC(1,0) NOT NULL REFERENCES nerds.Season,
    StartDate DATE NOT NULL, --date the term begins
    EndDate DATE NOT NULL, --date the term ends (last day of  "finals" week)
+   PRIMARY KEY (Year,Season),
    UNIQUE(Year, Season)
 );
 
 
-CREATE TABLE Gradebook.Instructor
+CREATE TABLE nerds.Instructor
 (
    ID SERIAL PRIMARY KEY,
    FName VARCHAR(50) NOT NULL,
@@ -76,31 +79,33 @@ CREATE TABLE Gradebook.Instructor
 
 --enforce case-insensitive uniqueness of instructor e-mail addresses
 CREATE UNIQUE INDEX idx_Unique_InstructorEmail
-ON Gradebook.Instructor(LOWER(TRIM(Email)));
+ON nerds.Instructor(LOWER(TRIM(Email)));
 
 --Create a partial index on the instructor names.  This enforces the CONSTRAINT
 -- that only one of any (FName, NULL, LName) is unique
 CREATE UNIQUE INDEX idx_Unique_Names_NULL
-ON Gradebook.Instructor(FName, LName)
+ON nerds.Instructor(FName, LName)
 WHERE MName IS NULL;
 
-CREATE TABLE Gradebook.Section
+CREATE TABLE nerds.Section
 (
    ID SERIAL PRIMARY KEY,
-   Term INT NOT NULL REFERENCES Gradebook.Term,
-   Course VARCHAR(11) NOT NULL,
+   CRN VARCHAR(5) NOT NULL, 
+   Year NUMERIC(4,0) NOT NULL,
+   Season NUMERIC(1,0) NOT NULL,
+   Course VARCHAR(8) NOT NULL REFERENCES nerds.Course,
    SectionNumber VARCHAR(3) NOT NULL, --'01', '72', etc.
-   CRN VARCHAR(5) NOT NULL, --store this info for the registrar's benefit?
    Schedule VARCHAR(7),  --days the class meets: 'MW', 'TR', 'MWF', etc.
-   Capacity INT, -- capacity of the class
    Location VARCHAR(25), --likely a classroom
-   StartDate DATE, --first date the section meets
-   EndDate DATE, --last date the section meets
-   MidtermDate DATE, --date of the "middle" of term: used to compute mid-term grade
-   Instructor1 INT NOT NULL REFERENCES Gradebook.Instructor, --primary instructor
-   Instructor2 INT REFERENCES Gradebook.Instructor, --optional 2nd instructor
-   Instructor3 INT REFERENCES Gradebook.Instructor, --optional 3rd instructor
-   UNIQUE(Term, Course, SectionNumber, CRN),
+   StartDate DATE NOT NULL, --first date the section meets
+   EndDate DATE NOT NULL, --last date the section meets
+   MidtermDate DATE NOT NULL, --date of the "middle" of term: used to compute mid-term grade
+   Instructor1 INT NOT NULL REFERENCES nerds.Instructor, --primary instructor
+   Instructor2 INT REFERENCES nerds.Instructor, --optional 2nd instructor
+   Instructor3 INT REFERENCES nerds.Instructor, --optional 3rd instructor
+   FOREIGN KEY (Year,Season) REFERENCES nerds.Term,
+   UNIQUE(Year, Season, Course, SectionNumber),
+
    --make sure instructors are distinct
    CONSTRAINT DistinctSectionInstructors
         CHECK (Instructor1 <> Instructor2
@@ -112,7 +117,7 @@ CREATE TABLE Gradebook.Section
 
 --Table to store all possible letter grades
 --some universities permit A+
-CREATE TABLE Gradebook.Grade
+CREATE TABLE nerds.Grade
 (
    Letter VARCHAR(2) NOT NULL PRIMARY KEY,
    GPA NUMERIC(4,3) UNIQUE,
@@ -127,26 +132,26 @@ CREATE TABLE Gradebook.Grade
 
 
 --Table to store mapping of percentage score to a letter grade: varies by section
-CREATE TABLE Gradebook.Section_GradeTier
+CREATE TABLE nerds.Grade_Tier
 (
-   Section INT REFERENCES Gradebook.Section,
-   LetterGrade VARCHAR(2) NOT NULL REFERENCES Gradebook.Grade,
+   Section INT REFERENCES nerds.Section,
+   LetterGrade VARCHAR(2) NOT NULL REFERENCES nerds.Grade,
    LowPercentage NUMERIC(5,2) NOT NULL CHECK (LowPercentage >= 0),
    HighPercentage NUMERIC(5,2) NOT NULL CHECK (HighPercentage >= 0),
-   PRIMARY KEY(Section, LetterGrade),
+   PRIMARY KEY(LetterGrade,Section),
    UNIQUE(Section, LowPercentage, HighPercentage)
 );
 
 
-CREATE TABLE Gradebook.Student
+CREATE TABLE nerds.Student
 (
    ID SERIAL PRIMARY KEY,
-   FName VARCHAR(50), --at least one of the name fields must be used: see below
+   FName VARCHAR(50) NOT NULL, --at least one of the name fields must be used: see below
    MName VARCHAR(50), --permit NULL in all 3 fields because some people have only one name: not sure which field will be used
    LName VARCHAR(50), --use a CONSTRAINT on names instead of NOT NULL until we understand the data
    SchoolIssuedID VARCHAR(50) NOT NULL UNIQUE,
    Email VARCHAR(319) CHECK(TRIM(Email) LIKE '_%@_%._%'),
-   Major VARCHAR(50), --non-matriculated students are not required to have a major
+   Major VARCHAR(50) NOT NULL, --non-matriculated students are not required to have a major
    Year VARCHAR(30), --represents the student year. Ex: Freshman, Sophomore, Junior, Senior
    CONSTRAINT StudentNameRequired --ensure at least one of the name fields is used
       CHECK (FName IS NOT NULL OR MName IS NOT NULL OR LName IS NOT NULL)
@@ -154,49 +159,42 @@ CREATE TABLE Gradebook.Student
 
 --enforce case-insensitive uniqueness of student e-mail addresses
 CREATE UNIQUE INDEX idx_Unique_StudentEmail
-ON Gradebook.Student(LOWER(TRIM(Email)));
+ON nerds.Student(LOWER(TRIM(Email)));
 
 
-CREATE TABLE Gradebook.Enrollee
+CREATE TABLE nerds.Enrollee
 (
-   Student INT NOT NULL REFERENCES Gradebook.Student,
-   Section INT REFERENCES Gradebook.Section,
-   DateEnrolled DATE NULL, --used to figure out which assessment components to include/exclude
-   YearEnrolled VARCHAR(30) NOT NULL,
-   MajorEnrolled VARCHAR(50) NOT NULL,
-   MidtermWeightedAggregate NUMERIC(5,2), --weighted aggregate computed at mid-term
+   Student INT NOT NULL REFERENCES nerds.Student,
+   Section INT REFERENCES nerds.Section,
    MidtermGradeComputed VARCHAR(2), --will eventually move to a view
    MidtermGradeAwarded VARCHAR(2), --actual grade assigned, if any
-   FinalWeightedAggregate NUMERIC(5,2), --weighted aggregate computed at end
    FinalGradeComputed VARCHAR(2),  --will eventually move to a view
    FinalGradeAwarded VARCHAR(2), --actual grade assigned
-   PRIMARY KEY (Student, Section),
-   FOREIGN KEY (Section, MidtermGradeAwarded) REFERENCES Gradebook.Section_GradeTier,
-   FOREIGN KEY (Section, FinalGradeAwarded) REFERENCES Gradebook.Section_GradeTier
+   PRIMARY KEY (Student, Section)
 );
 
 
-CREATE TABLE Gradebook.AttendanceStatus
+CREATE TABLE nerds.AttendanceStatus
 (
    Status CHAR(1) NOT NULL PRIMARY KEY, --'P', 'A', ...
    Description VARCHAR(20) NOT NULL UNIQUE --'Present', 'Absent', ...
 );
 
 
-CREATE TABLE Gradebook.AttendanceRecord
+CREATE TABLE nerds.AttendanceRecord
 (
    Student INT NOT NULL,
    Section INT NOT NULL,
    Date DATE NOT NULL,
-   Status CHAR(1) NOT NULL REFERENCES Gradebook.AttendanceStatus,
+   Status CHAR(1) NOT NULL REFERENCES nerds.AttendanceStatus,
    PRIMARY KEY (Student, Section, Date),
-   FOREIGN KEY (Student, Section) REFERENCES Gradebook.Enrollee
+   FOREIGN KEY (Student, Section) REFERENCES nerds.Enrollee
 );
 
 
-CREATE TABLE Gradebook.Section_AssessmentKind
+CREATE TABLE nerds.Assessment_Kind
 (
-   Section INT NOT NULL REFERENCES Gradebook.Section,
+   Section INT NOT NULL REFERENCES nerds.Section,
    Name VARCHAR(20) NOT NULL CHECK(TRIM(Name) <> ''), --"Assignment", "Quiz", "Exam",...
    Description VARCHAR(100),
    Weightage NUMERIC(3,2) NOT NULL CHECK (Weightage >= 0), --a percentage value: 0.25, 0.5,...
@@ -204,9 +202,9 @@ CREATE TABLE Gradebook.Section_AssessmentKind
 );
 
 
-CREATE TABLE Gradebook.Section_AssessmentItem
+CREATE TABLE nerds.Assessment_Item
 (
-   Section INT NOT NULL REFERENCES Gradebook.Section,
+   Section INT NOT NULL REFERENCES nerds.Section,
    Kind VARCHAR(20) NOT NULL,
    AssessmentNumber INT NOT NULL CHECK (AssessmentNumber > 0),
    Description VARCHAR(100),
@@ -216,11 +214,11 @@ CREATE TABLE Gradebook.Section_AssessmentItem
    RevealDate DATE,
    Curve NUMERIC(3,2) DEFAULT 1.00, --A curve for the item
    PRIMARY KEY(Section, Kind, AssessmentNumber),
-   FOREIGN KEY (Section, Kind) REFERENCES Gradebook.Section_AssessmentKind
+   FOREIGN KEY(Section, Kind) REFERENCES nerds.Assessment_Kind (Section, Name)
 );
 
 
-CREATE TABLE Gradebook.Submission
+CREATE TABLE nerds.Submission
 (
    Student INT NOT NULL,
    Section INT NOT NULL,
@@ -229,11 +227,15 @@ CREATE TABLE Gradebook.Submission
    BasePointsEarned NUMERIC(5,2) CHECK (BasePointsEarned >= 0),
    ExtraCreditEarned NUMERIC(5,2) DEFAULT 1.00 CHECK (ExtraCreditEarned >= 0),
    Penalty NUMERIC(5,2) DEFAULT 1.00 CHECK (Penalty >= 0),
-   CurvedGradeLetter VARCHAR(2),-- NUMERIC(5,2) NOT NULL,
-   CurvedGradePercent NUMERIC(5,2),
+   CurvedGradeLetter VARCHAR(2) NOT NULL,-- NUMERIC(5,2) NOT NULL,
+   CurvedGradePercent NUMERIC(5,2) NOT NULL,
    SubmissionDate DATE,   
    Notes VARCHAR(50), --Optional notes about the submission
    PRIMARY KEY(Student, Section, Kind, AssessmentNumber),
-   FOREIGN KEY (Student, Section) REFERENCES Gradebook.Enrollee,
-   FOREIGN KEY (Section, Kind, AssessmentNumber) REFERENCES Gradebook.Section_AssessmentItem
+   FOREIGN KEY (Student, Section) REFERENCES nerds.Enrollee,
+   FOREIGN KEY (Section, Kind, AssessmentNumber) REFERENCES nerds.Assessment_Item
 );
+
+
+--end spooling
+\o

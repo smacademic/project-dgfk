@@ -1,4 +1,15 @@
 /*
+NERDS
+
+index.js - Gradebook
+
+This script contains all the Node.js API functions that call the gradeTierMgmt.SQL functions
+
+Based off of Gradebook: https://github.com/DASSL/Gradebook
+
+
+Credit:
+
 Zach Boylan, Zaid Bhujwala, Andrew Figueroa, Steven Rollo
 
 Data Science & Systems Lab (DASSL), Western Connecticut State University
@@ -20,9 +31,16 @@ A static page is served at '/', along with some js and css dependencies
 Additionally, five REST calls are implemented that this pages uses to
 get data from the Gradebook db
 */
-//Super secret password - Used for a temporary password encryption scheme
-const superSecret = 'dassl2017';
 
+//Importing necessary modules
+var pg = require('pg'); //Postgres client module   | https://github.com/brianc/node-postgres
+var sjcl = require('sjcl'); //Encryption module    | https://github.com/bitwiseshiftleft/sjcl
+var express = require('express'); //Express module | https://github.com/expressjs/express
+
+//Creating an app object
+var app = express();
+
+//Gradebook code:
 //List of month names used when generating the attendance table
 const monthNames = [
    'Jan.',
@@ -39,16 +57,13 @@ const monthNames = [
    'Dec.'
 ];
 
-var pg = require('pg'); //Postgres client module   | https://github.com/brianc/node-postgres
-var sjcl = require('sjcl'); //Encryption module    | https://github.com/bitwiseshiftleft/sjcl
-var express = require('express'); //Express module | https://github.com/expressjs/express
 
-var app = express();
 
 /*
 This function creates and returns a config object for the pg module based on some
 supplied parameters.
 */
+//Already present from Gradebook https://github.com/DASSL/Gradebook
 function createConnectionParams(user, database, password, host, port) {
    var config = {
       user: user.trim(),
@@ -66,20 +81,21 @@ supplied connection params (var config), and executes queryText with queryParams
 Then, it calls queryCallback with the response recieved from the database.
 This should help cut down on repeated code between the url handlers.
 */
+//Already present from Gradebook https://github.com/DASSL/Gradebook
 function executeQuery(response, config, queryText, queryParams, queryCallback) {
    var client = new pg.Client(config); //Connect to pg instance
    client.connect(function(err) {
       if(err) { //If a connection error happens, 500
-         client.end(); //Close the connection
          response.status(500).send('500 - Database connection error');
          console.log(err);
+		 client.end(); //Close the connection
       }
       else { //Try and execute the query
          client.query(queryText, queryParams, function (err, result) {
             if(err) { //If the query returns an error, 500
-               client.end(); //Close the connection
                response.status(500).send('500 - Query execution error');
                console.log(err);
+			   client.end(); //Close the connection
             }
             else { //Execute the query callback
                queryCallback(result);
@@ -92,37 +108,44 @@ function executeQuery(response, config, queryText, queryParams, queryCallback) {
 
 //Tell the browser we don't have a favicon
 app.get('/favicon.ico', function (request, response) {
-     response.sendFile('GBFavicon.ico', {root: __dirname});
+   response.sendFile('GBFavicon.ico', {root: __dirname});
 });
 
 //Serve our homepage when a user goes to the root
+//Already present from Gradebook https://github.com/DASSL/Gradebook
 app.get('/', function(request, response) {
    response.sendFile('client/index.html', {root: __dirname});
 });
 
 //Serve our homepage when a user goes to the root
+//Already present from Gradebook https://github.com/DASSL/Gradebook
 app.get('/index.html', function(request, response) {
    response.sendFile('client/index.html', {root: __dirname});
 });
 
 //Serve css and js dependencies
+//Already present from Gradebook https://github.com/DASSL/Gradebook
 app.get('/css/materialize.min.css', function(request, response) {
 	response.sendFile('client/css/materialize.min.css', {root: __dirname});
 });
 
+//Already present from Gradebook https://github.com/DASSL/Gradebook
 app.get('/js/materialize.min.js', function(request, response) {
 	response.sendFile('client/js/materialize.min.js', {root: __dirname});
 });
 
+//Already present from Gradebook https://github.com/DASSL/Gradebook
 app.get('/js/index.js', function(request, response) {
 	response.sendFile('client/js/index.js', {root: __dirname});
 });
 
 //Returns instructor id and name from a provided email.
+//Already present from Gradebook https://github.com/DASSL/Gradebook
 app.get('/login', function(request, response) {
    //Decrypt the password recieved from the client.  This is a temporary development
    //feature, since we don't have ssl set up yet
-   var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
+   //var passwordText=request.query.password;
+	var passwordText = request.query.password;
 
    //Connnection parameters for the Postgres client recieved in the request
    var config = createConnectionParams(request.query.user, request.query.database,
@@ -130,39 +153,62 @@ app.get('/login', function(request, response) {
 
    //Get the params from the url
    var instructorEmail = request.query.instructoremail.trim();
-
+   //console.log("INST EMAIL:");
+	//console.log(request.query.instructorEmail);
    //Set the query text
-   var queryText = 'SELECT ID, FName, MName, LName, Department FROM gradebook.getInstructor($1);';
+   var queryText = 'SELECT ID, FName, MName, LName, Department FROM nerds.instructor WHERE nerds.instructor.email LIKE($1);';
    var queryParams = [instructorEmail];
-
+	var jsonReturn='';
    //Execute the query
    executeQuery(response, config, queryText, queryParams, function(result) {
       //Check if any rows are returned.  No rows implies that the provided
       //email does not match an existing instructor
       if(result.rows.length == 0) {
-         response.status(401).send('401 - Login failed');
-      }
+         //response.status(401).send('401 - Login failed');
+
+		 var queryText='SELECT ID, FName, MName, LName, major FROM nerds.student WHERE nerds.student.email LIKE($1);'
+		 var queryParams = [instructorEmail];
+
+		 executeQuery(response, config, queryText, queryParams, function(result) {
+			 if(result.rows.length == 0) {
+			 response.status(401).send('401 - Login failed');
+			 }
+			 else{
+				 jsonReturn = {
+					"student": result.rows[0]
+
+				};//console.log(result.rows[0]);
+			response.send(JSON.stringify(jsonReturn));
+
+		 }
+		});
+	  }
       else {
-         var jsonReturn = {
+         jsonReturn = {
             "instructor": result.rows[0] //getInstructors should return at most one row
-         };
+         };//console.log(result.rows[0]);
          response.send(JSON.stringify(jsonReturn));
       }
    });
 });
 
 //Return a list of years a certain instructor has taught sections
+//Already present from Gradebook https://github.com/DASSL/Gradebook
+//Not included in our scope
 app.get('/years', function(request, response) {
+
+
    //Decrypt the password recieved from the client.  This is a temporary development
    //feature, since we don't have ssl set up yet
-   var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
+   //var passwordText=request.query.password;
+   var passwordText = request.query.password;
 
    //Connnection parameters for the Postgres client recieved in the request
    var config = createConnectionParams(request.query.user, request.query.database,
       passwordText, request.query.host, request.query.port);
 
    //Get the params from the url
-   var instructorID = request.query.instructorid;
+   var instructorID = request.query.userid;
 
    //Set the query text
    var queryText = 'SELECT Year FROM gradebook.getInstructorYears($1);';
@@ -179,47 +225,23 @@ app.get('/years', function(request, response) {
       } //Send the json to the client
       response.send(JSON.stringify(jsonReturn));
    });
-});
 
-//Return a list of instructors
-app.get('/instructors', function(request, response) {
-   //Decrypt the password recieved from the client.  This is a temporary development
-   //feature, since we don't have ssl set up yet
-   var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
-
-   //Connnection parameters for the Postgres client recieved in the request
-   var config = createConnectionParams(request.query.user, request.query.database,
-      passwordText, request.query.host, request.query.port);
-
-   //Set the query text
-   var queryText = 'SELECT * FROM gradebook.getInstructors();';
-   var queryParams = [];
-
-   //Execute the query
-   executeQuery(response, config, queryText, queryParams, function(result) {
-      var instructors = []; //Put the rows from the query into json format
-      for(row in result.rows) {
-         instructors.push(result.rows[row]);
-      }
-      var jsonReturn = {
-         "instructors": instructors
-      } //Send the json to the client
-      response.send(JSON.stringify(jsonReturn));
-   });
 });
 
 //Return a list of seasons an instructor taught in during a certain year
-app.get('/seasons', function(request, response) {
+//Already present from Gradebook https://github.com/DASSL/Gradebook
+//Not included in our scope
+app.get('/seasonsGrades', function(request, response) {
    //Decrypt the password recieved from the client.  This is a temporary development
    //feature, since we don't have ssl set up yet
-   var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
+   var passwordText=request.query.password;
 
    //Connnection parameters for the Postgres client recieved in the request
    var config = createConnectionParams(request.query.user, request.query.database,
       passwordText, request.query.host, request.query.port);
 
    //Get the params from the url
-   var instructorID = request.query.instructorid;
+   var instructorID = request.query.userid;
    var year = request.query.year;
 
    //Set the query text
@@ -245,16 +267,18 @@ app.get('/seasons', function(request, response) {
 });
 
 //Returns a list of courses an instructor has taugh in a certain year
+//Already present from Gradebook https://github.com/DASSL/Gradebook
+//Not included in our scope
 app.get('/courses', function(request, response) {
    //Decrypt the password recieved from the client.  This is a temporary development
    //feature, since we don't have ssl set up yet
-   var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
+   var passwordText=request.query.password;
 
    //Connnection parameters for the Postgres client recieved in the request
    var config = createConnectionParams(request.query.user, request.query.database,
       passwordText, request.query.host, request.query.port);
 
-   var instructorID = request.query.instructorid;
+   var instructorID = request.query.userid;
    var year = request.query.year;
    var seasonOrder = request.query.seasonorder;
 
@@ -274,30 +298,32 @@ app.get('/courses', function(request, response) {
 
 });
 
-//Returns a list of sesctions an instructor taught in a certain term
 app.get('/sections', function(request, response) {
    //Decrypt the password recieved from the client.  This is a temporary development
    //feature, since we don't have ssl set up yet
-   var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
-
+   //var passwordText=request.query.password;
+	var passwordText=request.query.password;
    //Connnection parameters for the Postgres client recieved in the request
    var config = createConnectionParams(request.query.user, request.query.database,
       passwordText, request.query.host, request.query.port);
 
-   var instructorID = request.query.instructorid;
+   var instructorID = request.query.userid;
    var year = request.query.year;
    var seasonOrder = request.query.seasonorder;
-   var courseNumber = request.query.coursenumber;
-   var queryText = 'SELECT SectionID, SectionNumber FROM gradebook.getInstructorSections($1, $2, $3, $4);';
-   var queryParams = [instructorID, year, seasonOrder, courseNumber];
+   //var courseNumber = request.query.coursenumber;
+
+   var queryText = 'SELECT nerds.section.id, nerds.section.course FROM nerds.section WHERE nerds.section.instructor1=$1 OR nerds.section.instructor2=$1 OR nerds.section.instructor3=$1;'; // AND nerds.section.year=$2 AND nerds.section.season=$3 AND nerds.section=$4';
+   var queryParams = [instructorID];//, year, seasonOrder, courseNumber];
 
    executeQuery(response, config, queryText, queryParams, function(result) {
+	   //console.log("please?");
       var sections = [];
       for(row in result.rows) {
+		  //console.log(result);
          sections.push(
             {
-               "sectionid": result.rows[row].sectionid,
-               "sectionnumber": result.rows[row].sectionnumber
+               "sectionid": result.rows[row].id,
+               "sectionnumber": result.rows[row].course
             }
          );
       }
@@ -309,10 +335,12 @@ app.get('/sections', function(request, response) {
 });
 
 //Return a table containing the attendance for a single section
+//Already present from Gradebook https://github.com/DASSL/Gradebook
+//Not included in our scope
 app.get('/attendance', function(request, response) {
    //Decrypt the password recieved from the client.  This is a temporary development
    //feature, since we don't have ssl set up yet
-   var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
+   var passwordText=request.query.password;
 
    //Connnection parameters for the Postgres client recieved in the request
    var config = createConnectionParams(request.query.user, request.query.database,
@@ -438,306 +466,11 @@ app.get('/attendance', function(request, response) {
    });
 });
 
-app.get('/getCourseSections', function(request, response) {
-   //Decrypt the password received from the client.
-   //NOTE: We need to substitute superSecret with what we're actually implementing
-   var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
-
-   //Connection parameters for the Postgres client received in the request
-   var config = createConnectionParams(request.query.user, request.query.database,
-       passwordText, request.query.host, request.query.port);
-
-   //Get the params from the url
-   var title = request.query.num;
-
-   //Set the query text
-   var queryText = 'SELECT getCourseSections($1);';
-   var queryParams = [title];
-
-   //Execute the query
-   executeQuery(response, config, queryText, queryParams, function(result) {
-       response.send(JSON.stringify({}));
-   });
-});
-
-app.get('/insertCourse', function(request, response) {
-    //Decrypt the password received from the client.
-    //NOTE: We need to substitute superSecret with what we're actually implementing
-    var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
-
-    //Connection parameters for the Postgres client received in the request
-    var config = createConnectionParams(request.query.user, request.query.database,
-        passwordText, request.query.host, request.query.port);
-
-    //Get the params from the url
-    var num = request.query.num;
-    var title = request.query.title;
-    var credits = request.query.credits;
-
-    //Set the query text
-    var queryText = 'SELECT insertCourse($1, $2, $3);';
-    var queryParams = [num, title, credits];
-
-    //Execute the query
-    executeQuery(response, config, queryText, queryParams, function(result) {
-        response.send(JSON.stringify({}));
-    });
-});
-
-app.get('/enrollStudent', function(request, response) {
-   //Decrypt the password received from the client.
-   //NOTE: We need to substitute superSecret with what we're actually implementing
-   var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
-
-   //Connection parameters for the Postgres client received in the request
-   var config = createConnectionParams(request.query.user, request.query.database,
-       passwordText, request.query.host, request.query.port);
-
-   //Get the params from the url
-   var couseTitle = request.query.course;
-   var sectionid = request.query.sectionNum;
-   console.log('sectionid: ' + sectionid);
-   var studentid = request.query.studentid;
-
-   //Set the query text
-   var queryText = 'SELECT enrollStudent($1, $2);';
-   var queryParams = [studentid, sectionid];
-
-   //Execute the query
-   executeQuery(response, config, queryText, queryParams, function(result) {
-       response.send(JSON.stringify({}));
-   });
-});
-
-app.get('/removeCourse', function(request, response) {
-   //Decrypt the password received from the client.
-   //NOTE: We need to substitute superSecret with what we're actually implementing
-   var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
-
-   //Connection parameters for the Postgres client received in the request
-   var config = createConnectionParams(request.query.user, request.query.database,
-       passwordText, request.query.host, request.query.port);
-
-   //Get the params from the url
-   var num = request.query.num;
-   var title = request.query.title;
-
-   //Set the query text
-   var queryText = 'SELECT removeCourse($1, $2);';
-   var queryParams = [num, title];
-
-   //Execute the query
-   executeQuery(response, config, queryText, queryParams, function(result) {
-       response.send(JSON.stringify({}));
-   });
-});
-
-app.get('/getCourses', function(request, response){
-   //Decrypt the password received from the client.
-   //NOTE: We need to substitute superSecret with what we're actually implementing
-   var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
-
-   //Connection parameters for the Postgres client received in the request
-   var config = createConnectionParams(request.query.user, request.query.database,
-       passwordText, request.query.host, request.query.port);
-
-   //Set the query text
-   var queryText = 'SELECT * FROM gradebook.getCourses();';
-   var queryParams;
-
-   //Execute the query
-   executeQuery(response, config, queryText, queryParams, function(result) {
-      var courses = []; //Put the rows from the query into json format
-         for (row in result.rows) {
-               courses.push(
-                  {
-                     "Number": result.rows[row].outnumber,
-                     "Title": result.rows[row].outtitle,
-                     "Credits": result.rows[row].outcredits
-                  }
-               );
-         }
-         var jsonReturn = {
-               "courses": courses
-         } //Send the json to the client
-       response.send(JSON.stringify({courses}));
-   });
-});
-
-app.get('/modCourses', function(request, response){
-   //Decrypt the password received from the client.
-   //NOTE: We need to substitute superSecret with what we're actually implementing
-   var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
-
-   //Connection parameters for the Postgres client received in the request
-   var config = createConnectionParams(request.query.user, request.query.database,
-       passwordText, request.query.host, request.query.port);
-
-   //Get the params from the url
-   var num = request.query.num;
-   var title = request.query.title;
-   var newnum = request.query.newnum;
-   var newtitle = request.query.newtitle;
-   var newcredits = request.query.newcredits;
-
-   //Set the query text
-   var queryText = 'SELECT modifyCourse($1, $2, $3, $4, $5)';
-   var queryParams = [num, title, newnum, newtitle, newcredits];
-
-   //execute the query
-   executeQuery(response, config, queryText, queryParams, function(result) {
-      response.send(JSON.stringify({}));
-   });
-});
-
-app.get('/addSection', function(request, response) {
-   //Decrypt the password received from the client.
-   //NOTE: We need to substitute superSecret with what we're actually implementing
-   var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
-
-   //Connection parameters for the Postgres client received in the request
-   var config = createConnectionParams(request.query.user, request.query.database,
-       passwordText, request.query.host, request.query.port);
-
-   //Get the params from the url
-   var term = request.query.term;
-   console.log("term: " + term);
-
-   if(term == 'Fall') {
-      term = 0;
-   }
-   else if(term == 'Spring') {
-      term = 1;
-   }
-   else if(term == 'Summer') {
-      term = 2;
-   }
-   else {
-      term = 3;
-   }
-
-   var course = request.query.course;
-   var capacity = request.query.capacity;
-   var num = request.query.num;
-   var CRN = request.query.CRN;
-   var schedule = request.query.schedule;
-   var location = request.query.location;
-   var start_date = request.query.start_date;
-   var end_date = request.query.end_date;
-   var midterm_date = request.query.midterm_date;
-   var instructor1 = request.query.instructor1;
-
-   var instructor2 = request.query.instructor2;
-   if(instructor2 == ''){
-      instructor2 = null
-   }
-
-   var instructor3 = request.query.instructor3;
-   if(instructor3 == ''){
-      instructor3 = null
-   }
-
-   //Set the query text
-   var queryText = 'SELECT addSection($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13);';
-   var queryParams = [term, course, capacity, num, CRN, schedule, location, start_date, end_date, midterm_date, instructor1, instructor2, instructor3];
-
-   //Execute the query
-   executeQuery(response, config, queryText, queryParams, function(result) {
-       response.send(JSON.stringify({}));
-   });
-});
-
-app.get('/removeSection', function(request, response) {
-   //Decrypt the password received from the client.
-   //NOTE: We need to substitute superSecret with what we're actually implementing
-   var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
- 
-   //Connection parameters for the Postgres client received in the request
-   var config = createConnectionParams(request.query.user, request.query.database,
-       passwordText, request.query.host, request.query.port);
- 
-   //Get the params from the url
-   var removeSectionNumber = request.query.removeSectionNumber;
- 
-   //Set the query text
-   var queryText = 'SELECT removeSection($1);';
-   var queryParams = [removeSectionNumber];
- 
-   //Execute the query
-   executeQuery(response, config, queryText, queryParams, function(result) {
-       response.send(JSON.stringify({}));
-   });
- });
-
-app.get('/populateSections', function(request, response) {
-  //Decrypt the password received from the client.
-  //NOTE: We need to substitute superSecret with what we're actually implementing
-  var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
-
-  //Connection parameters for the Postgres client received in the request
-  var config = createConnectionParams(request.query.user, request.query.database,
-      passwordText, request.query.host, request.query.port);
-
-  //Get the params from the url
-  var coursetitle = request.query.coursetitle;
-
-  //Set the query text
-  var queryText = 'SELECT * from getCourseSections($1);';
-  var queryParams = [coursetitle];
-
-  //Execute the query
-  executeQuery(response, config, queryText, queryParams, function(result) {
-      var sections = []; //Put the rows from the query into json format
-
-      for (row in result.rows) {
-            sections.push(
-               {
-                  "sections": result.rows[row].outid
-               }
-            );
-      }
-      var jsonReturn = {
-            "sections": sections
-      } //Send the json to the client
-      response.send(JSON.stringify({sections}));
-  });
-});
-
-app.get('/getTerms', function(request, response){
-   //Decrypt the password received from the client.
-   //NOTE: We need to substitute superSecret with what we're actually implementing
-   var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
-
-   //Connection parameters for the Postgres client received in the request
-   var config = createConnectionParams(request.query.user, request.query.database,
-       passwordText, request.query.host, request.query.port);
-
-   //Set the query text
-   var queryText = 'SELECT * from gradebook.getTerms();';
-   var queryParams;
-
-   //Execute the query
-   executeQuery(response, config, queryText, queryParams, function(result) {
-      var terms = []; //Put the rows from the query into json format
-         for (row in result.rows) {
-               terms.push(
-                  {
-                     "terms": result.rows[row].outseason
-                  }
-               );
-         }
-         var jsonReturn = {
-               "terms": terms
-         } //Send the json to the client
-       response.send(JSON.stringify({terms}));
-   });
-});
-
 //Add a grade tier to a section
 app.get('/gradeTiersAdd', function(request, response) {
     //Decrypt the password received from the client.
     //NOTE: We need to substitute superSecret with what we're actually implementing
-       var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
+    var passwordText=request.query.password;
 
     //Connection parameters for the Postgres client received in the request
     var config = createConnectionParams(request.query.user, request.query.database,
@@ -750,7 +483,7 @@ app.get('/gradeTiersAdd', function(request, response) {
     var highPercentage = request.query.highpercentage;
 
     //Set the query text
-    var queryText = 'SELECT Gradebook.addSectionGradeTier($1, $2, $3, $4);';
+    var queryText = 'SELECT nerds.addSectionGradeTier($1, $2, $3, $4);';
     var queryParams = [sectionId, letterGrade, lowPercentage, highPercentage];
 
     //Execute the query
@@ -764,7 +497,7 @@ app.get('/gradeTiersAdd', function(request, response) {
 app.get('/gradeTiersDelete', function(request, response) {
     //Decrypt the password received from the client.
     //NOTE: We need to substitute superSecret with what we're actually implementing
-       var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
+    var passwordText=request.query.password;
 
     //Connection parameters for the Postgres client received in the request
     var config = createConnectionParams(request.query.user, request.query.database,
@@ -775,7 +508,7 @@ app.get('/gradeTiersDelete', function(request, response) {
     var letterGrade = request.query.lettergrade;
 
     //Set the query text
-    var queryText = 'SELECT Gradebook.dropSectionGradeTier($1, $2);';
+    var queryText = 'SELECT nerds.dropSectionGradeTier($1, $2);';
     var queryParams = [sectionId, letterGrade];
 
     //Execute the query
@@ -788,7 +521,7 @@ app.get('/gradeTiersDelete', function(request, response) {
 app.get('/gradeTiersGet', function(request, response) {
     //Decrypt the password received from the client.
     //NOTE: We need to substitute superSecret with what we're actually implementing
-       var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
+    var passwordText=request.query.password;
 
     //Connection parameters for the Postgres client received in the request
     var config = createConnectionParams(request.query.user, request.query.database,
@@ -798,7 +531,7 @@ app.get('/gradeTiersGet', function(request, response) {
     var sectionId = request.query.sectionid;
 
     //Set the query text
-    var queryText = 'SELECT * FROM Gradebook.getSectionGradeTiers($1);';
+    var queryText = 'SELECT * FROM nerds.getSectionGradeTiers($1);';
     var queryParams = [sectionId];
 
     //Execute the query
@@ -824,7 +557,7 @@ app.get('/gradeTiersGet', function(request, response) {
 app.get('/gradeTiersMod', function(request, response) {
     //Decrypt the password received from the client.
     //NOTE: We need to substitute superSecret with what we're actually implementing
-       var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
+    var passwordText=request.query.password;
 
     //Connection parameters for the Postgres client received in the request
     var config = createConnectionParams(request.query.user, request.query.database,
@@ -838,7 +571,7 @@ app.get('/gradeTiersMod', function(request, response) {
     var modifiedLetterGrade = request.query.modifiedlettergrade;
 
     //Set the query text
-    var queryText = 'SELECT Gradebook.modifySectionGradeTier($1, $2, $3, $4, $5);';
+    var queryText = 'SELECT nerds.modifySectionGradeTier($1, $2, $3, $4, $5);';
     var queryParams = [sectionId, letterGrade, lowPercentage, highPercentage, modifiedLetterGrade];
 
     //Execute the query
@@ -851,7 +584,7 @@ app.get('/gradeTiersMod', function(request, response) {
 app.get('/gradeTiersCopy', function(request, response) {
     //Decrypt the password received from the client.
     //NOTE: We need to substitute superSecret with what we're actually implementing
-       var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
+    var passwordText=request.query.password;
 
     //Connection parameters for the Postgres client received in the request
     var config = createConnectionParams(request.query.user, request.query.database,
@@ -863,7 +596,7 @@ app.get('/gradeTiersCopy', function(request, response) {
     var newSection = request.query.newsection;
 
     //Set the query text
-    var queryText = 'SELECT Gradebook.copySectionGradeTier($1, $2, $3);';
+    var queryText = 'SELECT nerds.copySectionGradeTier($1, $2, $3);';
     var queryParams = [sectionId, letterGrade, newSection];
 
     //Execute the query
@@ -878,7 +611,8 @@ app.get('/gradeTiersCopy', function(request, response) {
 app.get('/assessmentKindsAdd', function(request, response) {
 	//Decrypt the password received from the client.
 	//NOTE: We need to substitute superSecret with what we're actually implementing
-	   var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
+	//var passwordText=request.query.password;
+	var passwordText=request.query.password;
 	//Connection parameters for the Postgres client received in the request
 	var config = createConnectionParams(request.query.user, request.query.database,
         passwordText, request.query.host, request.query.port);
@@ -890,7 +624,7 @@ app.get('/assessmentKindsAdd', function(request, response) {
     var weightage = request.query.weightage;
 
     //Set the query text
-    var queryText = 'SELECT Gradebook.addSectionAssessmentKind($1, $2, $3, $4);';
+    var queryText = 'SELECT nerds.addSectionAssessmentKind($1, $2, $3, $4);';
     var queryParams = [sectionId, name, description, weightage];
 
     //Execute the query
@@ -904,7 +638,7 @@ app.get('/assessmentKindsDelete', function(request, response) {
 	//Decrypt the password received from the client.
     //NOTE: We need to substitute superSecret with what we're actually implementing
 	//var passwordText=request.query.password;
-       var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
+        var passwordText = request.query.password;
 	//Connection parameters for the Postgres client received in the request
 	var config = createConnectionParams(request.query.user, request.query.database,
         passwordText, request.query.host, request.query.port);
@@ -914,7 +648,7 @@ app.get('/assessmentKindsDelete', function(request, response) {
     var name = request.query.kindname;
 
     //Set the query text
-    var queryText = 'SELECT Gradebook.dropSectionAssessmentKind($1, $2);';
+    var queryText = 'SELECT nerds.dropSectionAssessmentKind($1, $2);';
     var queryParams = [sectionId, name];
 
     //Execute the query
@@ -928,7 +662,7 @@ app.get('/assessmentKindsGet', function(request, response) {
 	//Decrypt the password received from the client.
 	//NOTE: We need to substitute superSecret with what we're actually implementing
 	//var passwordText=request.query.password;
-	   var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
+	var passwordText = request.query.password;
 	//Connection parameters for the Postgres client received in the request
 	var config = createConnectionParams(request.query.user, request.query.database,
         passwordText, request.query.host, request.query.port);
@@ -937,7 +671,7 @@ app.get('/assessmentKindsGet', function(request, response) {
     var sectionId = request.query.sectionid;
 
     //Set the query text
-    var queryText = 'SELECT * FROM Gradebook.getSectionAssessmentKinds($1);';
+    var queryText = 'SELECT * FROM nerds.getSectionAssessmentKinds($1);';
     var queryParams = [sectionId];
 
     //Execute the query
@@ -963,7 +697,7 @@ app.get('/assessmentKindsGet', function(request, response) {
 app.get('/assessmentKindsMod', function(request, response) {
 	//Decrypt the password received from the client.
     //NOTE: We need to substitute superSecret with what we're actually implementing
-	   var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
+	var passwordText=request.query.password;
 
 	//Connection parameters for the Postgres client received in the request
 	var config = createConnectionParams(request.query.user, request.query.database,
@@ -977,7 +711,7 @@ app.get('/assessmentKindsMod', function(request, response) {
     var newName = request.query.newkindname;
 
     //Set the query text
-    var queryText = 'SELECT Gradebook.modifySectionAssessmentKind($1, $2, $3, $4, $5);';
+    var queryText = 'SELECT nerds.modifySectionAssessmentKind($1, $2, $3, $4, $5);';
     var queryParams = [sectionId, name, description, weightage, newName];
 
     //Execute the query
@@ -990,7 +724,7 @@ app.get('/assessmentKindsMod', function(request, response) {
 app.get('/assessmentKindsCopy', function(request, response) {
 	//Decrypt the password received from the client.
 	//NOTE: We need to substitute superSecret with what we're actually implementing
-       var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
+    var passwordText=request.query.password;
 
 	//Connection parameters for the Postgres client received in the request
 	var config = createConnectionParams(request.query.user, request.query.database,
@@ -1002,7 +736,7 @@ app.get('/assessmentKindsCopy', function(request, response) {
     var newSection = request.query.newsection;
 
     //Set the query text
-    var queryText = 'SELECT Gradebook.copySectionAssessmentKind($1, $2, $3);';
+    var queryText = 'SELECT nerds.copySectionAssessmentKind($1, $2, $3);';
     var queryParams = [sectionId, name, newSection];
 
     //Execute the query
@@ -1018,7 +752,7 @@ app.get('/assessmentItemsAdd', function(request, response) {
 	//Decrypt the password received from the client.
 	//NOTE: We need to substitute superSecret with what we're actually implementing
 	//var passwordText=request.query.password;
-	   var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
+	var passwordText=request.query.password;
 	//Connection parameters for the Postgres client received in the request
 	var config = createConnectionParams(request.query.user, request.query.database,
         passwordText, request.query.host, request.query.port);
@@ -1035,7 +769,7 @@ app.get('/assessmentItemsAdd', function(request, response) {
     var curve = request.query.curve;
 
     //Set the query text
-    var queryText = 'SELECT Gradebook.addSectionAssessmentItem($1, $2, $3, $4, $5, $6, $7, $8, $9);';
+    var queryText = 'SELECT nerds.addSectionAssessmentItem($1, $2, $3, $4, $5, $6, $7, $8, $9);';
     var queryParams = [sectionId, kind, number, description, basePoints, assignedDate, dueDate, revealDate, curve];
 
     //Execute the query
@@ -1048,7 +782,7 @@ app.get('/assessmentItemsAdd', function(request, response) {
 app.get('/assessmentItemsDelete', function(request, response) {
 	//Decrypt the password received from the client.
 	//NOTE: We need to substitute superSecret with what we're actually implementing
-	   var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
+	var passwordText=request.query.password;
 
 	//Connection parameters for the Postgres client received in the request
 	var config = createConnectionParams(request.query.user, request.query.database,
@@ -1060,7 +794,7 @@ app.get('/assessmentItemsDelete', function(request, response) {
     var number = request.query.itemnumber;
 
     //Set the query text
-    var queryText = 'SELECT Gradebook.dropSectionAssessmentItem($1, $2, $3);';
+    var queryText = 'SELECT nerds.dropSectionAssessmentItem($1, $2, $3);';
     var queryParams = [sectionId, kind, number];
 
     //Execute the query
@@ -1074,7 +808,7 @@ app.get('/assessmentItemsGet', function(request, response) {
 	//Decrypt the password received from the client.
 	//NOTE: We need to substitute superSecret with what we're actually implementing
 	//var passwordText=request.query.password;
-	   var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
+	var passwordText = request.query.password;
 
 	//Connection parameters for the Postgres client received in the request
 	var config = createConnectionParams(request.query.user, request.query.database,
@@ -1085,7 +819,7 @@ app.get('/assessmentItemsGet', function(request, response) {
     var kind = request.query.kind;
 
     //Set the query text
-    var queryText = 'SELECT * FROM Gradebook.getSectionAssessmentItems($1, $2);';
+    var queryText = 'SELECT * FROM nerds.getSectionAssessmentItems($1, $2);';
     var queryParams = [sectionId, kind];
 
     //Execute the query
@@ -1119,7 +853,7 @@ app.get('/assessmentItemsGet', function(request, response) {
 app.get('/assessmentItemsMod', function(request, response) {
 	//Decrypt the password received from the client.
 	//NOTE: We need to substitute superSecret with what we're actually implementing
-	   var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
+	var passwordText=request.query.password;
 
 	//Connection parameters for the Postgres client received in the request
 	var config = createConnectionParams(request.query.user, request.query.database,
@@ -1138,7 +872,7 @@ app.get('/assessmentItemsMod', function(request, response) {
     var newNumber = request.query.newnumber;
 
     //Set the query text
-    var queryText = 'SELECT Gradebook.modifySectionAssessmentItem($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);';
+    var queryText = 'SELECT nerds.modifySectionAssessmentItem($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);';
     var queryParams = [sectionId, kind, number, description, basePoints, assignedDate, dueDate, revealDate, curve, newNumber];
 
     //Execute the query
@@ -1153,7 +887,7 @@ app.get('/assessmentItemsMod', function(request, response) {
 app.get('/submissionsAdd', function(request, response) {
 	//Decrypt the password received from the client.
 	//NOTE: We need to substitute superSecret with what we're actually implementing
-	   var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
+	var passwordText=request.query.password;
 
 	//Connection parameters for the Postgres client received in the request
 	var config = createConnectionParams(request.query.user, request.query.database,
@@ -1171,7 +905,7 @@ app.get('/submissionsAdd', function(request, response) {
     var notes = request.query.notes;
 
     //Set the query text
-    var queryText = 'SELECT Gradebook.addSubmission($1, $2, $3, $4, $5, $6, $7, $8, $9);';
+    var queryText = 'SELECT nerds.addSubmission($1, $2, $3, $4, $5, $6, $7, $8, $9);';
     var queryParams = [studentId, sectionId, kind, number, basePoints, extraCredit, penalty, submissionDate, notes];
 
     //Execute the query
@@ -1184,7 +918,7 @@ app.get('/submissionsAdd', function(request, response) {
 app.get('/submissionsItemsEnrollee', function(request, response) {
 	//Decrypt the password received from the client.
 	//NOTE: We need to substitute superSecret with what we're actually implementing
-	   var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
+	var passwordText=request.query.password;
 
 	//Connection parameters for the Postgres client received in the request
 	var config = createConnectionParams(request.query.user, request.query.database,
@@ -1196,7 +930,7 @@ app.get('/submissionsItemsEnrollee', function(request, response) {
     var kind = request.query.kind;
 
     //Set the query text
-    var queryText = 'SELECT * FROM Gradebook.getAssessmentItemScoresEnrollee($1, $2, $3);';
+    var queryText = 'SELECT * FROM nerds.getAssessmentItemScoresEnrollee($1, $2, $3);';
     var queryParams = [studentId, sectionId, kind];
 
     //Execute the query
@@ -1229,7 +963,7 @@ app.get('/submissionsItemsInstructor', function(request, response) {
 	//Decrypt the password received from the client.
 	//NOTE: We need to substitute superSecret with what we're actually implementing
 	//var passwordText=request.query.password;
-	   var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
+	var passwordText = request.query.password;
 	//Connection parameters for the Postgres client received in the request
 	var config = createConnectionParams(request.query.user, request.query.database,
         passwordText, request.query.host, request.query.port);
@@ -1240,7 +974,7 @@ app.get('/submissionsItemsInstructor', function(request, response) {
     var number = request.query.itemnumber;
 
     //Set the query text
-    var queryText = 'SELECT * FROM Gradebook.getAssessmentItemScoresInstructor($1, $2, $3);';
+    var queryText = 'SELECT * FROM nerds.getAssessmentItemScoresInstructor($1, $2, $3);';
     var queryParams = [sectionId, kind, number];
 
     //Execute the query
@@ -1274,7 +1008,7 @@ app.get('/submissionsKindsEnrollee', function(request, response) {
 	//Decrypt the password received from the client.
 	//NOTE: We need to substitute superSecret with what we're actually implementing
 	//var passwordText=request.query.password;
-	   var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
+	var passwordText = request.query.password;
 	//Connection parameters for the Postgres client received in the request
 	var config = createConnectionParams(request.query.user, request.query.database,
         passwordText, request.query.host, request.query.port);
@@ -1285,7 +1019,7 @@ app.get('/submissionsKindsEnrollee', function(request, response) {
     var kind = request.query.kind;
 
     //Set the query text
-    var queryText = 'SELECT * FROM Gradebook.getAssessmentKindAvgEnrollee($1, $2, $3);';
+    var queryText = 'SELECT * FROM nerds.getAssessmentKindAvgEnrollee($1, $2, $3);';
     var queryParams = [studentId, sectionId, kind];
 
     //Execute the query
@@ -1311,7 +1045,7 @@ app.get('/submissionsKindsInstructor', function(request, response) {
 	//Decrypt the password received from the client.
 	//NOTE: We need to substitute superSecret with what we're actually implementing
 	//var passwordText=request.query.password;
-	   var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
+	var passwordText=request.query.password;
 	//Connection parameters for the Postgres client received in the request
 	var config = createConnectionParams(request.query.user, request.query.database,
         passwordText, request.query.host, request.query.port);
@@ -1321,7 +1055,7 @@ app.get('/submissionsKindsInstructor', function(request, response) {
     var kind = request.query.kind;
 
     //Set the query text
-    var queryText = 'SELECT * FROM Gradebook.getAssessmentKindAvgInstructor($1, $2);';
+    var queryText = 'SELECT * FROM nerds.getAssessmentKindAvgInstructor($1, $2);';
     var queryParams = [sectionId, kind];
 
     //Execute the query
@@ -1346,7 +1080,7 @@ app.get('/submissionsKindsInstructor', function(request, response) {
 app.get('/submissionsMod', function(request, response) {
 	//Decrypt the password received from the client.
 	//NOTE: We need to substitute superSecret with what we're actually implementing
-	   var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
+	var passwordText=request.query.password;
 
 	//Connection parameters for the Postgres client received in the request
 	var config = createConnectionParams(request.query.user, request.query.database,
@@ -1364,7 +1098,7 @@ app.get('/submissionsMod', function(request, response) {
     var notes = request.query.notes;
 
     //Set the query text
-    var queryText = 'SELECT * FROM Gradebook.modifySubmission($1, $2, $3, $4, $5, $6, $7, $8, $9);';
+    var queryText = 'SELECT * FROM nerds.modifySubmission($1, $2, $3, $4, $5, $6, $7, $8, $9);';
     var queryParams = [studentId, sectionId, kind, number, basePoints, extraCredit, penalty, submissionDate, notes];
 
     //Execute the query
@@ -1377,7 +1111,7 @@ app.get('/submissionsMod', function(request, response) {
 app.get('/getEnrollees', function(request, response) {
 	//Decrypt the password received from the client.
 	//NOTE: We need to substitute superSecret with what we're actually implementing
-	   var passwordText = sjcl.decrypt(superSecret, JSON.parse(request.query.password));
+	var passwordText=request.query.password;
 
 	//Connection parameters for the Postgres client received in the request
 	var config = createConnectionParams(request.query.user, request.query.database,
@@ -1387,7 +1121,7 @@ app.get('/getEnrollees', function(request, response) {
     var sectionId = request.query.sectionid;
 
     //Set the query text
-    var queryText = 'SELECT * FROM Gradebook.getEnrollees($1);';
+    var queryText = 'SELECT * FROM nerds.getEnrollees($1);';
     var queryParams = [sectionId];
 
     //Execute the query
@@ -1408,6 +1142,7 @@ app.get('/getEnrollees', function(request, response) {
 });
 });
 
+//Already present from Gradebook https://github.com/DASSL/Gradebook
 app.use(function(err, req, res, next){
   console.error(err);
   res.status(500).send('Internal Server Error');
