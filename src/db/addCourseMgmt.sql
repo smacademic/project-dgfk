@@ -3,21 +3,17 @@
 -- Bruno DaSilva, Cristian Fitzgerald, Eliot Griffin, Kenneth Kozlowski
 -- CS298-01 Spring 2019, Team GEEKS
 
+----------------------------------------------------------------------------------
 
-
--- function to add a course / add a row to the course table
+-- Function to add a course / add a row to the course table
 -- parameters: Num (VARCHAR)  -- i.e "CS/MAT165"
 --             newTitle (VARCHAR) -- i.e "Discrete Math"
 --             Credits (INT) -- i.e "4"
 
-
 CREATE OR REPLACE FUNCTION insertCourse(Num VARCHAR, newTitle VARCHAR, Credits INT)
-
-
 RETURNS VOID AS
 $$
 BEGIN
-
     -- check if course exists
     -- and throw exception if exists already
 
@@ -35,18 +31,16 @@ $$
 LANGUAGE plpgsql;
 
 
--- function to remove a course / remove a row in the course table
+-- Function to remove a course / remove a row in the course table
 -- parameters: Num (VARCHAR) -- i.e "CS/MAT165"
 --             oldTitle (VARCHAR) -- i.e "Discrete Math"
-
 
 CREATE OR REPLACE FUNCTION removeCourse(Num VARCHAR, oldTitle VARCHAR)
 RETURNS VOID AS
 
 $$
 BEGIN
-
-   -- Make sure course exists
+   -- Check if course exists
    -- throw exception otherwise
    IF courseExists(Num, oldTitle, NULL) IS false
    THEN 
@@ -57,14 +51,12 @@ BEGIN
    DELETE FROM Gradebook.Course WHERE Course.Number = Num 
                                 AND Course.Title = oldTitle;
 
-
 END
 $$
 LANGUAGE plpgsql;
 
 
-
--- function to modify a course / update a row in the course table
+-- Function to modify a course / update a row in the course table
 -- parameters: currentNum (VARCHAR) -- Num of row to update
 --             currentTitle (VARCHAR) -- Title of row to update
 --             modNum (VARCHAR) -- possible new Num for that row
@@ -103,20 +95,18 @@ $$
 LANGUAGE plpgsql;
 
 
--- function to test if a course exists
--- parameters: cNumber(VARCHAR) 
---             cTitle (VARCHAR)
---             cCredits (INT)
+-- Function to test if a course exists in the DB
+-- parameters: cNumber(VARCHAR) -- Course Number -- i.e "CS170"
+--             cTitle (VARCHAR) -- Course title -- i.e "Intro to Programming"
+--             cCredits (INT) -- Course credits -- i.e "4"
 --
--- this function is called by:
---    insertCourse(), removeCourse(), modifyCourse()
+-- parameter cCredits may be NULL
 
 CREATE OR REPLACE FUNCTION courseExists(cNumber VARCHAR, cTitle VARCHAR, cCredits INT)
 RETURNS BOOL AS
 $$
 BEGIN
-
-   -- evaluate if no credits are given
+   -- evaluate if no credits are given (cCredits IS NULL)
    IF cCredits IS NULL
    THEN 
       IF EXISTS 
@@ -144,72 +134,79 @@ BEGIN
    RETURN FALSE;
 
 END
-
 $$
 LANGUAGE plpgsql;
 
--- function to return a list of all current courses
--- parameters: currently none, but if a search functionality is to be implemented, can be added
 
-CREATE OR REPLACE FUNCTION getCourses() --OUT outNumber VARCHAR(11),OUT outTitle VARCHAR(100), OUT outCredits INT
-RETURNS Table(outNumber VARCHAR,outTitle VARCHAR, outCredits INT) AS--SETOF RECORD AS
+-- Function to return a list of all current courses
+-- parameters: none
+
+CREATE OR REPLACE FUNCTION getCourses() 
+RETURNS Table(outNumber VARCHAR,outTitle VARCHAR, outCredits INT) AS
 $$
 BEGIN
+
 RETURN QUERY 
 	SELECT Number,Title,Credits
 	FROM Gradebook.Course;
+
 END
 $$
 LANGUAGE plpgsql;
 
 
---Function to return a list of courses 
--- given course level 
--- parameters: number for level (i.e. 1 for 100 level, 0 for all courses)
+--Function to return a list of courses given course level and credit amount
+-- parameters: number for level (i.e. 1 for 100 level, 0 for all level courses)
+--             number of credits (i.e. 3, 0 for all credit amounts)
+-- will throw exception if either parameter is less than 0
 
 CREATE OR REPLACE FUNCTION getCourses(cLevel INT, cCredits INT) 
-RETURNS Table(outNumber VARCHAR,outTitle VARCHAR, outCredits INT) AS--SETOF RECORD AS
+RETURNS Table(outNumber VARCHAR,outTitle VARCHAR, outCredits INT) AS
 $$
 BEGIN
-
+-- check if parameters cLevel and cCredits are valid 
 IF (cLevel < 0 OR cCredits < 0)
 THEN
    THROW EXCEPTION "Invalid paramaters - cannot be < 0";
 END IF;
 
+-- return if cLevel is specified (greater than 0)
 IF (cLevel > 0)
 THEN
-   -- level is specified
+
+   -- return if both cLevel and cCredits are specified
    IF (cCredits > 0)
    THEN
-   -- credits and level are specified
       RETURN QUERY 
          SELECT Number,Title,Credits
          FROM Gradebook.Course
          WHERE Number LIKE CONCAT('%',cLevel,'__','%')
                AND Credits = cCredits;
    ELSE
-   -- only level specified
+   -- return if only cLevel specified - cCredits = 0
       RETURN QUERY
       SELECT Number,Title,Credits
          FROM Gradebook.Course
          WHERE Number LIKE CONCAT('%',cLevel,'__','%');
    END IF;
 
+-- return if only cCredits is specified - cLevel is 0
 ELSIF (cCredits > 0)
    THEN
-   -- only credits specified
       RETURN QUERY 
          SELECT Number,Title,Credits
          FROM Gradebook.Course
          WHERE Credits = cCredits;
+
 ELSE
--- neither are specified
+-- neither are specified - both parameters are 0
+-- return all courses
    RETURN QUERY 
       SELECT Number,Title,Credits
       FROM Gradebook.Course;
 
 END IF;
+
 END
 $$
 LANGUAGE plpgsql;
