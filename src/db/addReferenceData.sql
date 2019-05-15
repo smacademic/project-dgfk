@@ -50,3 +50,14 @@ VALUES
    ('P', 'Present'),           ('A', 'Absent'),   ('E', 'Explained'),
    ('S', 'Stopped Attending'), ('X', 'Excused'),  ('N', 'Not Registered'),
    ('C', 'Cancelled'),         ('W', 'Withdrawn');
+
+--NERDS, TO COMMENT
+ 
+ INSERT INTO Gradebook.student(ID,FName,MName,LName,SchoolIssuedID,Email,Major,Year) VALUES
+ (DEFAULT,'William','Joseph','Blazkowicz',20519436,'blazkowicz001@connect.wcsu.edu','Applied Physics','Sophomore'),
+ (DEFAULT,'Wall','Strong','E',45612336,'e001@connect.wcsu.edu','Waste Management','Freshman');
+ 
+ INSERT INTO Gradebook.enrollee(Student,Section,DateEnrolled,YearEnrolled,MajorEnrolled,MidtermGradeComputed,MidtermGradeAwarded,FinalGradeComputed,FinalGradeAwarded) VALUES 
+ ((SELECT ID FROM Gradebook.Student WHERE ID = 1),(SELECT ID FROM Gradebook.section WHERE ID = 1),NULL,'2018-01-01','Applied Physics',NULL,NULL,NULL,NULL),
+ ((SELECT ID FROM Gradebook.Student WHERE ID = 2),(SELECT ID FROM Gradebook.section WHERE ID = 1),NULL,'2016-01-10','Waste Management',NULL,NULL,NULL,NULL);
+ 

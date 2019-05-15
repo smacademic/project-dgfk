@@ -21,15 +21,18 @@
 SET LOCAL client_min_messages TO WARNING;
 
 
--- function to check if a course exists
--- parameters: Term, Course, and SectionNumber
+-- Function to check if a Section exists
+-- parameters: sTerm (INT) - i.e "1" 
+--             sCourse (VARCHAR) - i.e "CS170"
+--             num (VARCHAR) - i.e "071"
+--             sCRN (VARCHAR) - i.e "20334"
 
 CREATE OR REPLACE FUNCTION sectionExists(sTerm INT, sCourse VARCHAR(11),
                                          num VARCHAR (3), sCRN VARCHAR(5))
 RETURNS BOOL AS
 $$
 BEGIN
-   -- Test if section exists
+   -- Check if section exists - return true
    IF EXISTS
    (
       SELECT * FROM Gradebook.Section WHERE Section.Term = sTerm AND
@@ -41,14 +44,14 @@ BEGIN
       RETURN true;
    END IF;
 
-   -- Section does not exist
+   -- Section does not exist - return false
    RETURN false;
 END
 $$
 LANGUAGE plpgsql;
 
 
--- function to add a section / add a row to the section table
+-- Function to add a section / add a row to the section table
 -- parameters: all attributes of Section table excluding ID
 
 CREATE OR REPLACE FUNCTION addSection(term INT, course VARCHAR(11),
@@ -61,15 +64,14 @@ CREATE OR REPLACE FUNCTION addSection(term INT, course VARCHAR(11),
 RETURNS VOID AS
 $$
 BEGIN
-
-    -- check if section exists
+    -- Check if section exists
     -- and throw exception if exists already
     IF sectionExists(term, course, num, CRN) IS true
     THEN
        RAISE EXCEPTION 'Section already exists';
     END IF;
 
-    -- insert course
+    -- Insert Section
     INSERT INTO Gradebook.Section VALUES
     (
        DEFAULT, -- ID
@@ -93,15 +95,16 @@ $$
 LANGUAGE plpgsql;
 
 
--- function to remove a section
--- parameters: secID
+-- Function to remove a section
+-- parameters: secID (INT) -- i.e "1" -- DB PK
 
 CREATE OR REPLACE FUNCTION removeSection(secID INT)
-
 RETURNS VOID AS
 $$
 BEGIN
 
+-- Check if Section w/given ID exists
+-- Delete if exists
 IF EXISTS 
 (
    SELECT * FROM Gradebook.Section WHERE Section.ID = secID
@@ -109,6 +112,7 @@ IF EXISTS
 THEN
    DELETE FROM Gradebook.Section WHERE Section.ID = secID;
 ELSE
+   -- Section does not exist
    RAISE EXCEPTION 'Section does not exist';
 END IF;
 
@@ -119,10 +123,11 @@ LANGUAGE plpgsql;
 
 --Function to update a row in the Section table
 -- parameters: 
---  Term, Course, CRN, and SectionNumber of section to be modified.
+--  ID of the Section (DB PK)
+--  Term, Course, CRN, and SectionNumber of section to be modified (curr__).
 --  Possible new SectionNumber, CRN, Schedule, Capacity, Location, MidtermDate.
 --
--- excludes updates to: ID, term, course, instructor(s), startDate, endDate,
+-- excludes updates to: ID, Term, Course, Instructor(s), startDate, endDate,
 
 CREATE OR REPLACE FUNCTION modifySection(secID INT, currTerm INT, 
                                          currCourse VARCHAR(11), 
@@ -139,7 +144,6 @@ CREATE OR REPLACE FUNCTION modifySection(secID INT, currTerm INT,
 RETURNS VOID AS
 $$
 BEGIN
-
    -- check if section attempting to modify exists
     IF sectionExists(currTerm, currCourse, currSecNum, currCRN ) IS false
     THEN
@@ -152,7 +156,7 @@ BEGIN
        RAISE EXCEPTION 'Modifications conflict with an already existing Section';
     END IF;
 
-   -- update
+   -- update section to have mod___ values
    UPDATE Gradebook.Section
       SET Term = modTerm,
           Course = modCourse,
@@ -163,14 +167,15 @@ BEGIN
           Location = modLocation,
           MidtermDate = modMidtermDate
       WHERE Section.ID = secID;
+
 END
 $$
 LANGUAGE plpgsql;
 
 
---Function to get a course's sections 
--- parameters: Course PK (Number, Title)
--- returns: sections' ID and SecNum
+-- Function to get a course's sections 
+-- parameters: cTitle (VARCHAR) -- i.e "Intro to Programming"
+-- returns: sections' ID (DB PK) and SecNum
 
 CREATE OR REPLACE FUNCTION getCourseSections(cTitle VARCHAR(100))
 RETURNS 
@@ -187,8 +192,6 @@ RETURN QUERY
 END
 $$
 LANGUAGE plpgsql;
-
-
 
 
 --Function to get ID of section matching a year-season-course-section# combo
@@ -335,8 +338,9 @@ $$ LANGUAGE sql
 
 
 
---Function to return all sections 
+-- Function to return all sections 
 -- returns sections ordered by Course
+
 CREATE OR REPLACE FUNCTION getSections()
 RETURNS Table(outID INT, outTerm INT, outCourse VARCHAR, outSecNum VARCHAR,
               outCRN VARCHAR, outSchedule VARCHAR, outCap INT, outLoc VARCHAR,
@@ -355,7 +359,10 @@ END
 $$
 LANGUAGE plpgsql;
 
+
 -- Function to return all sections of a Course given its title
+-- parameters: ctitle (VARCHAR) - i.e. "Intro to Programming"
+
 CREATE OR REPLACE FUNCTION getSections(cTitle VARCHAR)
 RETURNS Table(outID INT, outTerm INT, outCourse VARCHAR, outSecNum VARCHAR,
               outCRN VARCHAR, outSchedule VARCHAR, outCap INT, outLoc VARCHAR,
@@ -377,15 +384,15 @@ $$
 LANGUAGE plpgsql;
 
 
---Function to assign (add/remove) an instructor to a section
--- parameters: Section ID and Instructor ID(s)
+-- Function to assign (add/remove) an instructor to a section
+-- parameters: secID (INT) - i.e. "1" - DB PK
+--             I1, I2, I3 (INT) - i.e  "2" - DB PK for Instructor
 
 CREATE OR REPLACE FUNCTION assignInstructor(secID INT, I1 INT, I2 INT, I3 INT)
-
 RETURNS VOID AS
 $$
 BEGIN
-   -- test if Section wanting to add/remove instructor to exists
+   -- Check if Section wanting to add/remove instructor to exists
    IF NOT EXISTS 
    (
       SELECT * FROM Gradebook.Section WHERE Section.ID = secID
@@ -394,20 +401,19 @@ BEGIN
       RAISE EXCEPTION 'Section does not exist';
    END IF;
 
-      -- test if I1 is NULL
+      -- Check if I1 is NULL
    IF(I1 IS NULL)
    THEN
       RAISE EXCEPTION 'Instructor 1 cannot be NULL';
    END IF;
 
-   -- test if I1 equals I2 or I3 or if I2=I3 if not null
+   -- Check if I1 equals I2 or I3 or if I2=I3 if not null
    IF (I1 = I2 OR I1 = I3 OR (I2 IS NOT NULL AND I2 = I3))
    THEN 
        RAISE EXCEPTION 'Section cannot have repeat instructor';
    END IF;
-
    
-   -- test if ID values exist in instructor table
+   -- Check if ID values exist in instructor table
    IF (SELECT instructorExists(I1)) is false
       THEN
          RAISE EXCEPTION 'ID for Instructor 1 does not exist';
@@ -435,7 +441,7 @@ BEGIN
           Instructor2 = I2,
           Instructor3 = I3
       WHERE Section.ID = secID;
+
    END
    $$
 LANGUAGE plpgsql;
-

@@ -199,7 +199,287 @@ Currently, only attendance information is served
 				</div><!--End Attendance Tab-->
 
 				<div id="grades">
-					<p class="center-align">The Grades page is not yet implemented</p>
+						<!-- Section overview -->
+				<div id="classSection">
+					<a id="btnAddKind" href="#addAssessmentKind" class="waves-effect waves-light btn sectionBtn instructorView" style="display:none">Add an Assessment Kind</a>
+					<a id="btnCopyKind" href="#copyAssessmentKind" class="waves-effect waves-light btn sectionBtn instructorView" style="display:none">Copy an Assessment Kind</a>
+					<a id="btnViewGradeTiers" href="#gradeTier" class="waves-effect waves-light btn sectionBtn" style="display:none">View Grade Tiers</a>
+					<!--<a id="btnViewScores" href="#scores" class="waves-effect waves-light btn studentView sectionBtn" style="display:none">View My Scores</a>-->
+					<div id="sectionheading">
+					<!-- Populated dynamically -->
+					</div>
+					<div class="input-field col s12 m6 l3">
+							<select id="yearSelectGrades" disabled="true">
+								<option value="" disabled="true" selected="true">Choose year</option>
+							</select>
+							<label>Year</label>
+						</div>
+					<div class="input-field col s12 m6 l3">
+							<select id="seasonSelectGrades" disabled="true">
+								<option value="" disabled="true" selected="true">Choose season</option>
+							</select>
+							<label>Season</label>
+						</div>
+					<div class="input-field col s12 m6 l3">
+							<select id="courseSelectGrades" disabled="true">
+								<option value="" disabled="true" selected="true">Choose course</option>
+							</select>
+							<label>Course</label>
+					</div>
+					<div class="input-field col s12 m6 l3">
+						<select id="sectionSelectGrades" disabled="true">
+							<option value="" disabled="true" selected="true">Choose section</option>
+						</select>
+						<label>Section</label>
+					</div>
+					<div class="input-field col s12 m6 l3">
+						<select id="assessmentKindSelect" disabled="true">
+							<option value="" disabled="true" selected="true">Choose Assessment Kind</option>
+						</select>
+						<label>Assessment Kind</label>
+					</div>
+					<div id="sectionOverview">
+						<div class="input-field col s3">
+							<!--Populated dynamically-->
+						</div>
+					</div>
+				</div>
+				<!-- Kind overview -->
+				<div id="kind" style="display:none">
+					<a id="btnAddItem" href="#addAssessmentItem" class="waves-effect waves-light btn instructorView kindBtn">Add an Assessment Item</a>
+					<a id="btnBackFromAssessmentItem" href="#" class="waves-effect waves-light btn kindBtn">Back</a>
+					<br /><br />
+					<div class="input-field col s12 m6 l3 instructorView">
+						<select id="assessmentItemSelect" disabled="true">
+							<option value="" disabled="true" selected="true">Choose Assessment Item</option>
+						</select>
+						<label>Assessment Item</label>
+					</div>
+					<div id="assessmentKindOverview">
+						<!--Populated dynamically-->
+					</div>
+					<div id="assessmentKindAvg">
+						<!--Populated dynamically-->
+					</div>
+				</div>
+				<!-- Item overview -->
+				<div id="item" style="display:none">
+					<a id="btnBackFromSubmission" href="#" class="waves-effect waves-light btn back itemBtn">Back</a>
+					<a id="btnAddSubmission" href="#addSubmission" class="waves-effect waves-light btn instructorView itemBtn">Add a Submission</a>
+					<br /><br />
+
+					<div id="submissionData">
+						<!--Populated dynamically-->
+					</div>
+				</div>
+
+					<div class="divider"></div>
+
+					<div class="divider"></div>
+
+				<div class="divider"></div>
+
+				<!-- Grade tier view -->
+				<div id="gradeTier" style="display:none">
+					<a id="btnBackFromGradeTiers" href="#" class="waves-effect waves-light btn gradeTierBtn">Back</a>
+					<a id="btnAddGradeTier" href="#addGradeTier" class="waves-effect waves-light btn instructorView gradeTierBtn">Add Grade Tier</a>
+					<a id="btnCopyGradeTier" href="#copyGradeTier" class="waves-effect waves-light btn instructorView gradeTierBtn">Copy Grade Tier</a>
+
+					<br /><br />
+
+					<div id="gradeTierView">
+						<div class="input-field inline" style="text-align:center">
+								<!--Populated dynamically-->
+						</div>
+					</div>
+				</div>
+
+				<!-- Scores view -->
+				<div id="scores" class="studentView" style="display:none">
+					<a id="btnBackFromScores" href="#" class="waves-effect waves-light btn scoreBtn">Back</a>
+					<div class="input-field col s12 m6 l3">
+						<select id="assessmentKindSelectScores" disabled="true">
+							<option value="" disabled="true" selected="true">Choose Assessment Kind</option>
+						</select>
+						<label>Assessment Kind</label>
+					</div>
+
+					<div id="scoresView">
+						<div class="input-field inline" style="text-align:center">
+							<!--Populated dynamically-->
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Section options -->
+				<div id="addAssessmentKind" class="sectionOptions" style="display:none">
+					<h4 align=\"center\">Add an Assessment Kind</h4>
+					<div class="row">
+						<div class="input-field col s6">
+							<input class="field validate" id="addKindName" type="text" maxlength="20">
+							<label class="active" for="addKindName">Name</label>
+							<span class="helper-text" data-error="wrong" data-success="right"> </span>
+						</div>
+						<div class="input-field col s6">
+							<input class="field validate" id="addKindDescription" type="text" maxlength="100">
+							<label class="active" for="addKindDescription">Description</label>
+							<span class="helper-text" data-error="wrong" data-success="right"> </span>
+						</div>
+						<div class="input-field col s6">
+							<input min="0" max="9.99" class="field validate" id="addKindWeightage" type="number" step="0.01">
+							<label class="active" for="addKindWeightage">Weightage</label>
+							<span class="helper-text" data-error="wrong" data-success="right"> </span>
+						</div>
+						<a class="waves-effect waves-light btn cancel" href="#">Cancel</a>
+						<a id="submitAddKind" class="waves-effect waves-light btn" href="#">Submit</a>
+					</div>
+				</div>
+
+				<div id="copyAssessmentKind" class="sectionOptions" style="display:none">
+					<h4 align=\"center\">Copy an Assessment Kind</h4>
+					<div class="row">
+						<div class="input-field col s12 m6 l3">
+							<select id="sectionSelectCopyToAK" disabled="true">
+								<option value="" disabled="true" selected="true">Choose destination section</option>
+							</select>
+							<label>Section</label>
+						</div>
+						<div class="input-field col s12 m6 l3">
+							<select id="selectAssessmentKindToCopy" disabled="true">
+								<option value="" disabled="true" selected="true">Choose Assessment Kind</option>
+							</select>
+							<label>Assessment Kind</label>
+						</div>
+					</div>
+					<a class="waves-effect waves-light btn cancel" href="#">Cancel</a>
+					<a id="submitCopyAssessmentKind" class="waves-effect waves-light btn" href="#">Submit</a>
+				</div>
+
+			<!-- Kind options -->
+				<div id="addAssessmentItem" class="kindOptions" style="display:none">
+					<h4 align=\"center\">Add an Assessment Item</h4>
+					<div class="row">
+						<div class="input-field col s6">
+							<input class="field validate" id="addItemNum" type="number">
+							<label class="active" for="addItemNum">Item Number</label>
+							<span class="helper-text" data-error="wrong" data-success="right"> </span>
+						</div>
+						<div class="input-field col s6">
+							<input class="field validate" id="addItemDescription" type="text" maxlength="100">
+							<label class="active" for="addItemDescription">Description</label>
+							<span class="helper-text" data-error="wrong" data-success="right"> </span>
+						</div>
+						<div class="input-field col s6">
+							<input min="0" class="field validate" id="addItemPoints" type="number" step="0.01">
+							<label class="active" for="addItemPoints">Base Points</label>
+							<span class="helper-text" data-error="wrong" data-success="right"> </span>
+						</div>
+						<div class="input-field col s6">
+							<input class="field validate" id="addItemDueDate" type="date">
+							<label class="active" for="addItemDueDate">Due Date</label>
+							<span class="helper-text" data-error="wrong" data-success="right"> </span>
+						</div>
+						<div class="input-field col s6">
+							<input class="field validate" id="addItemRevealDate" type="date">
+							<label class="active" for="addItemRevealDate">Reveal Date</label>
+							<span class="helper-text" data-error="wrong" data-success="right"> </span>
+						</div>
+						<div class="input-field col s6">
+							<input min="0" max="9.99" class="field validate" id="addItemCurve" type="number" step="0.01">
+							<label class="active" for="addItemCurve">Curve</label>
+							<span class="helper-text" data-error="wrong" data-success="right"> </span>
+						</div>
+					</div>
+					<a class="waves-effect waves-light btn cancel" href="#">Cancel</a>
+					<a id="submitAddItem" class="waves-effect waves-light btn" href="#">Submit</a>
+				</div>
+
+			<!-- Grade tier options -->
+				<div id="addGradeTier" class="gradeTierOptions" style="display:none">
+				   <h4 align=\"center\">Add a Grade Tier</h4>
+				   <div class="row">
+						<div class="input-field col s12 m6 l3">
+							<select id="gradeTierLetterSelect" disabled="true">
+								<option value="" disabled="true" selected="true">Choose Letter</option>
+							</select>
+							<label>Grade Tier Letter</label>
+						</div>
+						<div class="input-field col s6">
+							<input min="0" max="100" class="field validate" id="addGradeTierLow" type="number" step="0.01">
+							<label class="active" for="addGradeTierLow">Lower Limit</label>
+							<span class="helper-text" data-error="wrong" data-success="right"> </span>
+						</div>
+						<div class="input-field col s6">
+							<input min="0" max="100" class="field validate" id="addGradeTierHigh" type="number" step="0.01">
+							<label class="active" for="addGradeTierHigh">Upper Limit</label>
+							<span class="helper-text" data-error="wrong" data-success="right"> </span>
+						</div>
+					</div>
+					<a class="waves-effect waves-light btn cancel" href="#">Cancel</a>
+					<a id="submitAddGradeTier" class="waves-effect waves-light btn" href="#gradeTier">Submit</a>
+				</div>
+
+				<div id="copyGradeTier" class="gradeTierOptions" style="display:none">
+					<h3 align=\"center\">Copy a Grade Tier</h3>
+					<div class="row">
+						<div class="input-field col s12 m6 l3 ">
+							<select id="sectionSelectCopyToGT" disabled="true">
+								<option value="" disabled="true" selected="true">Choose destination section</option>
+							</select>
+							<label>Section</label>
+						</div>
+						<div class="input-field col s12 m6 l3">
+							<select id="selectGradeTierToCopy" disabled="true">
+								<option value="" disabled="true" selected="true">Choose Letter</option>
+							</select>
+							<label>Grade Tier</label>
+						</div>
+					</div>
+					<a class="waves-effect waves-light btn cancel" href="#">Cancel</a>
+					<a id="submitCopyGradeTier" class="waves-effect waves-light btn" href="#gradeTier">Submit</a>
+				</div>
+
+			<!-- Item options -->
+				<div id="addSubmission" class="itemOptions" style="display:none">
+					<h4 align=\"center\">Add a Submission</h4>
+					<div class="row">
+						<div class="input-field col s6">
+							<input min="0" class="field validate" id="submissionAddStudent" type="number">
+							<label class="active" for="submissionAddStudent">Student ID</label>
+							<span class="helper-text" data-error="wrong" data-success="right"> </span>
+						</div>
+						<div class="input-field col s6">
+							<input min="0" max="100" class="field validate" id="submissionAddBasePointsEarned" type="number" step="0.01">
+							<label class="active" for="submissionAddBasePointsEarned">Base Points Earned</label>
+							<span class="helper-text" data-error="wrong" data-success="right"> </span>
+						</div>
+						<div class="input-field col s6">
+							<input min="0" max="999.99" class="field validate" id="submissionAddExtraCreditEarned" type="number" step="0.01">
+							<label class="active" for="submissionAddExtraCreditEarned">Extra Credit Earned</label>
+							<span class="helper-text" data-error="wrong" data-success="right"> </span>
+						</div>
+						<div class="input-field col s6">
+							<input min="0" max="999.99" class="field validate" id="submissionAddPenalty" type="number" step="0.01">
+							<label class="active" for="submissionAddPenalty">Penalty</label>
+							<span class="helper-text" data-error="wrong" data-success="right"> </span>
+						</div>
+						<div class="input-field col s6">
+							<input class="field validate" id="submissionAddSubmissionDate" type="date">
+							<label class="active" for="submissionAddSubmissionDate">Submission Date</label>
+							<span class="helper-text" data-error="wrong" data-success="right"> </span>
+						</div>
+						<div class="input-field col s6">
+							<input maxlength="50" class="field validate" id="submissionAddNotes" type="text">
+							<label class="active" for="submissionAddNotes">Notes</label>
+							<span class="helper-text" data-error="wrong" data-success="right"> </span>
+						</div>
+					</div>
+					<a class="waves-effect waves-light btn cancel" href="#">Cancel</a>
+					<a id="submitAddSubmission" class="waves-effect waves-light btn" href="#item">Submit</a>
+					<div id="enrolleeData">
+						<!--enrolleeData is populate dyanamically-->
+					</div>
 				</div><!--End Grades Tab-->
 
 				<div id="reports">
@@ -468,14 +748,16 @@ Currently, only attendance information is served
 							<div class="collapsible-body">
 								<div class="row">
 									<div class="input-field col s12 m6 l3">
-										<select id="courseNameSelect">
+										<select id="instructorCourseNameSelect">
 											<option value="" disabled="true" selected="true">Choose Course</option>
 										</select>
 										<label>Course Select</label>
 									</div>
 									<div class="input-field col s12 m6 l3">
-										<input placeholder="01" type="number" class="validate" id="removeSectionNumber">
-										<label for="removeSectionNumber">Section Number</label>
+										<select id="instructorRemoveSectionNumber">
+											<option value="" disabled="true" selected="true">Choose Section</option>
+										</select>
+										<label for="instructorRemoveSectionNumber">Section Number</label>
 									</div>
 								</div>
 								<div class="row">
@@ -498,44 +780,6 @@ Currently, only attendance information is served
 							</div>
 						</li>
 					</ul><!--End Assign Instructors Drop Down-->
-
-					<!--Start of Remove Instructors drop down-->
-					<ul id="removeInstructorsBox" class="collapsible" data-collapsible="expandable">
-						<li>
-							<div class="collapsible-header">
-								<i id="dbInfoArrow" class="material-icons">keyboard_arrow_down</i>Remove Instructors
-							</div>
-							<div class="collapsible-body">
-								<div class="row">
-									<div class="input-field col s12 m6 l3">
-										<select id="courseNameSelect">
-											<option value="" disabled="true" selected="true">Choose Course</option>
-										</select>
-										<label>Course Select</label>
-									</div>
-									<div class="input-field col s12 m6 l3">
-										<input placeholder="01" type="number" class="validate" id="removeSectionNumber">
-										<label for="removeSectionNumber">Section Number</label>
-									</div>
-								</div>
-								<div class="row">
-									<table id="removeInstructorTable">
-										<!--
-											This table will be dynamically populated with the instructors for a
-											specific section of a course so that the end user of the site can go
-											in and remove an instructor as long as they are not the primary
-											instructor in the section.
-											This will have the same functionality as the Courses Table and the
-											Sections table where the information will be dynamically populated
-											but there will probably not be an edit button (NOTE:could be a possible
-											extension to the program) only a delete button so that the instructor
-											will be removed from the section.
-										-->
-									</table>
-								</div>
-							</div>
-						</li>
-					</ul><!--End of remove instructors Drop Down-->
 
 					<!--Start of enroll students drop down-->
 					<ul id="enrollStudentsBox" class="collapsible" data-collapsible="expandable">

@@ -1,19 +1,28 @@
 -- addEnrolleeMgmt.sql
 
--- Team GEEKS, CS298 Spring 2019
+-- Bruno DaSilva, Cristian Fitzgerald, Eliot Griffin, Kenneth Kozlowski
+-- CS298-01 Spring 2019, Team GEEKS
 
+----------------------------------------------------------------------------------
 
 -- Function to enroll a student to a section
--- parameters: student's school ID, and section ID
+-- parameters: schoolID (VARCHAR) - i.e "50225892"
+--             section ID (INT) - i.e "072"
+--
+-- This function sets the following attributes of the enrollee to NULL:
+--    Date Enrolled, 
+--    Midterm (weight aggregate, grade computed, grade awarded)
+--    Final (weight aggregate, grade computed, grade awarded)
+
 CREATE OR REPLACE FUNCTION enrollStudent(schoolID VARCHAR(50), secID INT)
 RETURNS VOID AS
 $$
 DECLARE 
-   studentID INT; -- hold student ID (PK for student)
-   studentMajor VARCHAR;
-   studentYear VARCHAR;
+   studentID INT; -- hold student DB ID (PK for student table)
+   studentMajor VARCHAR; -- student major - i.e. "Nursing"
+   studentYear VARCHAR; -- hold student year - i.e "Junior"
 BEGIN
- -- test if Section exists
+ -- Check if Section exists
    IF NOT EXISTS 
    (
       SELECT * FROM Gradebook.Section WHERE Section.ID = secID
@@ -22,7 +31,7 @@ BEGIN
       RAISE EXCEPTION 'Section does not exist';
    END IF;
 
--- test if Student exists
+-- Check if Student exists
    IF NOT EXISTS 
    (
       SELECT * FROM Gradebook.Student
@@ -32,15 +41,13 @@ BEGIN
       RAISE EXCEPTION 'Student with that ID does not exist';
    END IF;
 
--- get studentID (PK) for the student instance
-   SELECT ID
-   INTO studentID
+-- get studentID for the student instance
+   SELECT ID INTO studentID
    FROM Gradebook.Student
    WHERE Student.SchoolIssuedID = schoolID;
 
 -- get student's major
-   SELECT Major
-   INTO studentMajor
+   SELECT Major INTO studentMajor
    FROM Gradebook.Student
    WHERE Student.SchoolIssuedID = schoolID;
 
@@ -53,8 +60,7 @@ BEGIN
    END IF;
 
 -- get student's year
-   SELECT Year
-   INTO studentYear
+   SELECT Year INTO studentYear
    FROM Gradebook.Student
    WHERE Student.SchoolIssuedID = schoolID;
 
@@ -63,30 +69,33 @@ BEGIN
    (
       studentID,
       secID,
-      NULL,
+      NULL, -- date enrolled
       studentYear,
       studentMajor,
-      NULL,
-      NULL,
-      NULL,
-      NULL,
-      NULL,
-      NULL
+      NULL, -- midterm weighted aggregate 
+      NULL, -- midterm grade computed
+      NULL, -- midterm grade awarded
+      NULL, -- final weighted aggregate
+      NULL, -- final grade computed
+      NULL -- final grade awarded
    );
 
 END
 $$
 LANGUAGE plpgsql;
 
+
 --Function to remove a student from a section / delete enrollee
--- parameters: student's school ID, and the section ID
+-- parameters: schoolID (VARCHAR) - i.e "50225892"
+--             section ID (INT) - i.e "072"
+
 CREATE OR REPLACE FUNCTION removeEnrollee(schoolID VARCHAR(50), secID INT)
 RETURNS VOID AS
 $$
 DECLARE 
-   studentID INT; -- hold student ID (PK for student)
+   studentID INT; -- hold student DB ID (PK for student table)
 BEGIN
- -- test if Section exists
+ -- Check if Section exists
     IF NOT EXISTS 
     (
         SELECT * FROM Gradebook.Section WHERE Section.ID = secID
@@ -101,7 +110,7 @@ BEGIN
    FROM Gradebook.Student
    WHERE Student.SchoolIssuedID = schoolID;
 
--- test if Enrollee exists
+-- Check if Enrollee exists
    IF NOT EXISTS 
    (
       SELECT * FROM Gradebook.Enrollee
@@ -109,13 +118,14 @@ BEGIN
             Enrollee.Section = secID
    )
    THEN
-      RAISE EXCEPTION 'Student with that ID does not exist';
+      RAISE EXCEPTION 'Enrollee with that ID does not exist';
    END IF;
 
 -- remove enrollee from section
    DELETE FROM Gradebook.Enrollee 
    WHERE Enrollee.Section = secID AND
          Enrollee.Student = studentID;
+         
 END
 $$
 LANGUAGE plpgsql;
