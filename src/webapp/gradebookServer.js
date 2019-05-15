@@ -685,15 +685,18 @@ app.get('/removeSection', function(request, response) {
    var instructor2 = request.query.instructor2;
    var instructor3 = request.query.instructor3;
 
-  if(instructor2 == "") {
+  if(instructor2 == -1) {
    instructor2 = null;
   }
-
-  if(instructor3 == "") {
-     instructor3 = null
+  else if(instructor2 == "") {
+     instructor2 = -1;
   }
 
-   console.log(sectionNumber + " " + instructor1);
+  if(instructor3 == -1) {
+     instructor3 = null
+  } else if(instructor3 == "") {
+     instructor3 = -1; 
+  }
  
    //Set the query text
    var queryText = 'SELECT assignInstructor($1, $2, $3, $4);';
