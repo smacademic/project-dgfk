@@ -184,7 +184,7 @@ $(document).ready(function() {
 	$('#btnEnrollStudent').click(function() {
 		var course = $('#enrollChooseCourse').val();
 		var sectionNum = $('#enrollChooseSection').val();
-		var studentid = $('enrollStudentByIDNumber').val();
+		var studentid = document.getElementById('enrollStudentID').value;
 
 		enrollStudent(dbInfo, course, sectionNum, studentid);
 	});
@@ -196,12 +196,7 @@ $(document).ready(function() {
 		var instructor2 = $('#assignInstructorTwo').val();
 		var instructor3 = $('#assignInstructorThree').val();
 
-		if(instructor1 != null) {
-			assignInstructors(dbInfo, sectionNum, instructor1, instructor2, instructor3);
-		}
-		else {
-			console.log("Instructor1 must be set.");
-		}
+		assignInstructors(dbInfo, sectionNum, instructor1, instructor2, instructor3);
 		
 	});
 	
@@ -1059,9 +1054,8 @@ function populateSections(connInfo, coursetitle) {
 
 			var sections = '';
 			for (var i = 0; i < result.sections.length; i++) {
-				console.log("sections: " + result.sections[i].sections);
 				sections += '<option value="' + result.sections[i].sections + '">' +
-				result.sections[i].sections + '</option>';
+				result.sections[i].sectionsTitle + '</option>';
 			}
 
 			popRemoveSectionSections(sections);
@@ -1151,7 +1145,7 @@ function setInstructors(htmlText) {
 
 function setTerms(htmlText) {
 	var content = '<option value="" disabled="true" selected="true">' +
-	'Choose term</option>' + htmlText;
+	'Choose Season</option>' + htmlText;
 
 	$('#TermSelect').html(content);
 
@@ -1425,7 +1419,7 @@ function getCourses(connInfo){
 
 		var popCourses = '';
 		for (var i = 0; i < result.courses.length; i++) {
-			popCourses += '<option value="' + result.courses[i].Title + '">' +
+			popCourses += '<option value="' + result.courses[i].Number + '">' +
 			 result.courses[i].Title + '</option>';
 		}
 		populateCourses(popCourses);
