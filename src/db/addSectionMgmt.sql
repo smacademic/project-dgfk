@@ -387,6 +387,10 @@ LANGUAGE plpgsql;
 -- Function to assign (add/remove) an instructor to a section
 -- parameters: secID (INT) - i.e. "1" - DB PK
 --             I1, I2, I3 (INT) - i.e  "2" - DB PK for Instructor
+-- if value of '-1' is sent in for an instructor value,
+-- then it is assumed that no change is wanted for that instructor value
+-- currently all code is in 1 function
+-- did not have enough time to split into multiple functions
 
 CREATE OR REPLACE FUNCTION assignInstructor(secID INT, I1 INT, I2 INT, I3 INT)
 RETURNS VOID AS
@@ -408,18 +412,21 @@ BEGIN
    END IF;
 
    -- Check if I1 equals I2 or I3 or if I2=I3 if not null
-   IF (I1 = I2 OR I1 = I3 OR (I2 IS NOT NULL AND I2 = I3))
+   IF ((I1 > -1 AND (I1 = I2 OR I1 = I3 )) OR (I2 IS NOT NULL AND I2 > 0 AND I2 = I3))
    THEN 
        RAISE EXCEPTION 'Section cannot have repeat instructor';
    END IF;
    
-   -- Check if ID values exist in instructor table
-   IF (SELECT instructorExists(I1)) is false
-      THEN
-         RAISE EXCEPTION 'ID for Instructor 1 does not exist';
+   IF(I1 > -1)
+   THEN
+      -- Check if ID values exist in instructor table
+      IF (SELECT instructorExists(I1)) is false
+         THEN
+            RAISE EXCEPTION 'ID for Instructor 1 does not exist';
+      END IF;
    END IF;
 
-   IF(I2 IS NOT NULL)
+   IF(I2 IS NOT NULL AND I2 > -1)
    THEN
       IF (SELECT instructorExists(I2)) is false
       THEN
@@ -427,7 +434,7 @@ BEGIN
       END IF;
    END IF;
 
-   IF(I3 IS NOT NULL)
+   IF(I3 IS NOT NULL AND I3 > -1)
    THEN
       IF(SELECT instructorExists(I3)) IS false
       THEN
@@ -435,13 +442,78 @@ BEGIN
       END IF;
    END IF;
 
-   -- update if all parameters are valid
-   UPDATE Gradebook.Section
-      SET Instructor1 = I1,
-          Instructor2 = I2,
-          Instructor3 = I3
+
+   -- Check which instructors need changing
+
+   -- At least I1 and I2 and/or I3
+   IF(I1 > -1 AND (I2 > -1 OR I3 > -1 OR I2 IS NULL OR I3 IS NULL))
+   THEN
+
+         -- Check if I2 needs changing
+         IF(I2 > -1 OR I2 IS NULL)
+         THEN
+
+            -- Check if I3 needs changing,
+            -- if so, update all instructors
+            IF(I3 > -1 OR I3 IS NULL)
+            THEN
+               UPDATE Gradebook.Section
+                  SET Instructor1 = I1,
+                     Instructor2 = I2,
+                     Instructor3 = I3
+                  WHERE Section.ID = secID;
+            ELSE
+            -- update I1 and I2. I3 is confirmed not changed
+               UPDATE Gradebook.Section
+               SET Instructor1 = I1,
+                   Instructor2 = I2
+               WHERE Section.ID = secID;
+            END IF;
+         ELSE
+         -- update I1 and I3. I2 is confirmed not changed
+            UPDATE Gradebook.Section
+            SET Instructor1 = I1,
+                Instructor3 = I3
+            WHERE Section.ID = secID;
+         END IF;
+
+   -- update I1. I2 and I3 are confirmed not changed
+   ELSIF(I1 > -1)
+   THEN
+      UPDATE Gradebook.Section
+      SET Instructor1 = I1
       WHERE Section.ID = secID;
 
-   END
-   $$
+   
+   ELSIF(I2 > -1 OR I3 > -1 OR I2 IS NULL OR I3 IS NULL)
+   THEN
+
+      -- Check if I2 needs changing
+      IF(I2 > -1 OR I2 IS NULL)
+      THEN
+         -- Check if I3 needs changing,
+         -- if so, update I2 and I3 instructors
+         IF(I3 > -1 OR I3 IS NULL)
+         THEN
+            UPDATE Gradebook.Section
+               SET Instructor2 = I2,
+                   Instructor3 = I3
+               WHERE Section.ID = secID;
+         ELSE
+         -- update I2. I1 and I3 is confirmed not changed
+            UPDATE Gradebook.Section
+            SET Instructor2 = I2
+            WHERE Section.ID = secID;
+         END IF;
+      ELSE
+      -- update I3. I1 and I2 are confirmed not changed
+         UPDATE Gradebook.Section
+         SET Instructor3 = I3
+         WHERE Section.ID = secID;
+      END IF;
+   END IF;
+      
+
+END
+$$
 LANGUAGE plpgsql;
