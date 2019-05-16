@@ -684,6 +684,9 @@ app.get('/removeSection', function(request, response) {
    var instructor2 = request.query.instructor2;
    var instructor3 = request.query.instructor3;
 
+   if(instructor1 == "")
+      instructor1 = -1;
+
   if(instructor2 == -1) {
    instructor2 = null;
   }
@@ -720,17 +723,18 @@ app.get('/populateSections', function(request, response) {
   var coursetitle = request.query.coursetitle;
 
   //Set the query text
-  var queryText = 'SELECT * from getCourseSections($1);';
+  var queryText = 'SELECT getCourseSections($1);';
   var queryParams = [coursetitle];
 
   //Execute the query
   executeQuery(response, config, queryText, queryParams, function(result) {
       var sections = []; //Put the rows from the query into json format
-
+      
       for (row in result.rows) {
             sections.push(
                {
-                  "sections": result.rows[row].outid
+                  "sections": result.rows[row].getcoursesections[1] + result.rows[row].getcoursesections[2],
+                  "sectionsTitle": result.rows[row].getcoursesections[4] + result.rows[row].getcoursesections[5]
                }
             );
       }
